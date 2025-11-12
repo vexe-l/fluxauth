@@ -191,7 +191,7 @@ export default function TransparencyPage() {
                 <Text color="white">
                     Real-time system metrics and performance data (SDG 16: Accountability)
                 </Text>
-                <Text fontSize="sm" color="green.600" mt={1}>
+                <Text fontSize="sm" color="green.400" mt={1}>
                     ✅ Connected to real backend metrics service
                 </Text>
             </Box>
@@ -264,21 +264,21 @@ export default function TransparencyPage() {
                         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
                             <Box>
                                 <Text fontSize="sm" color="white">True Positive Rate (TPR)</Text>
-                                <Text fontSize="2xl" fontWeight="bold">
+                                <Text fontSize="2xl" fontWeight="bold" color="white">
                                     {(modelMetrics.tpr * 100).toFixed(1)}%
                                 </Text>
                                 <Text fontSize="xs" color="white">Sensitivity / Recall</Text>
                             </Box>
                             <Box>
                                 <Text fontSize="sm" color="white">False Positive Rate (FPR)</Text>
-                                <Text fontSize="2xl" fontWeight="bold">
+                                <Text fontSize="2xl" fontWeight="bold" color="white">
                                     {(modelMetrics.fpr * 100).toFixed(1)}%
                                 </Text>
                                 <Text fontSize="xs" color="white">Type I Error</Text>
                             </Box>
                             <Box>
                                 <Text fontSize="sm" color="white">Precision</Text>
-                                <Text fontSize="2xl" fontWeight="bold">
+                                <Text fontSize="2xl" fontWeight="bold" color="white">
                                     {(modelMetrics.precision * 100).toFixed(1)}%
                                 </Text>
                                 <Text fontSize="xs" color="white">Positive Predictive Value</Text>
@@ -477,11 +477,11 @@ export default function TransparencyPage() {
                                 </Tbody>
                             </Table>
 
-                            <Alert status="info" borderRadius="md">
-                                <AlertIcon />
+                            <Alert status="info" borderRadius="md" bg="rgba(59, 130, 246, 0.2)" borderColor="blue.400">
+                                <AlertIcon color="blue.400" />
                                 <Box>
-                                    <Text fontWeight="bold" fontSize="sm">Fairness Criteria</Text>
-                                    <Text fontSize="xs">
+                                    <Text fontWeight="bold" fontSize="sm" color="white">Fairness Criteria</Text>
+                                    <Text fontSize="xs" color="gray.200">
                                         Device types are considered fair if anomaly rate &lt; 10% and average trust score &gt; 70.
                                         Significant disparities may indicate bias requiring model adjustment.
                                     </Text>
@@ -489,9 +489,9 @@ export default function TransparencyPage() {
                             </Alert>
                         </VStack>
                     ) : (
-                        <Alert status="info" borderRadius="md">
-                            <AlertIcon />
-                            <Text>No demographic data available yet. Complete enrollment and authentication to see fairness metrics.</Text>
+                        <Alert status="info" borderRadius="md" bg="rgba(59, 130, 246, 0.2)" borderColor="blue.400">
+                            <AlertIcon color="blue.400" />
+                            <Text color="white">No demographic data available yet. Complete enrollment and authentication to see fairness metrics.</Text>
                         </Alert>
                     )}
                 </CardBody>
@@ -501,11 +501,11 @@ export default function TransparencyPage() {
             <Card w="full" bg="brand.800" borderTop="4px" borderColor="blue.500">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">Bias Audit Report</Heading>
-                    <Alert status="info" borderRadius="md">
-                        <AlertIcon />
+                    <Alert status="info" borderRadius="md" bg="rgba(59, 130, 246, 0.2)" borderColor="blue.400">
+                        <AlertIcon color="blue.400" />
                         <Box>
-                            <Text fontWeight="bold">Bias Auditing Not Yet Implemented</Text>
-                            <Text fontSize="sm">
+                            <Text fontWeight="bold" color="white">Bias Auditing Not Yet Implemented</Text>
+                            <Text fontSize="sm" color="gray.200">
                                 Bias auditing requires demographic data collection and statistical analysis across protected attributes.
                                 This is a planned feature for production deployment.
                             </Text>

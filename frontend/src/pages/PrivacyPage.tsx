@@ -84,11 +84,11 @@ export default function PrivacyPage() {
                 </Text>
             </Box>
 
-            <Alert status="success" borderRadius="md">
-                <AlertIcon />
+            <Alert status="success" borderRadius="md" bg="rgba(34, 197, 94, 0.2)" borderColor="green.400">
+                <AlertIcon color="green.400" />
                 <Box>
-                    <Text fontWeight="bold">Privacy-First Design</Text>
-                    <Text fontSize="sm">
+                    <Text fontWeight="bold" color="white">Privacy-First Design</Text>
+                    <Text fontSize="sm" color="gray.200">
                         We never store what you type — only timing patterns. Your actual keystrokes are never captured or transmitted.
                     </Text>
                 </Box>

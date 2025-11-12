@@ -781,27 +781,27 @@ function SecuritySection() {
                     <List spacing={3} color="white">
                         <ListItem>
                             <strong>1. API Key Management</strong>
-                            <Text fontSize="sm">Generate strong keys, rotate regularly, never commit to git</Text>
+                            <Text fontSize="sm" color="gray.200">Generate strong keys, rotate regularly, never commit to git</Text>
                         </ListItem>
                         <ListItem>
                             <strong>2. HTTPS Only</strong>
-                            <Text fontSize="sm">Always use HTTPS in production</Text>
+                            <Text fontSize="sm" color="gray.200">Always use HTTPS in production</Text>
                         </ListItem>
                         <ListItem>
                             <strong>3. Rate Limiting</strong>
-                            <Text fontSize="sm">Prevent abuse with rate limits (100 req/15min default)</Text>
+                            <Text fontSize="sm" color="gray.200">Prevent abuse with rate limits (100 req/15min default)</Text>
                         </ListItem>
                         <ListItem>
                             <strong>4. Input Validation</strong>
-                            <Text fontSize="sm">Validate all inputs, use parameterized queries</Text>
+                            <Text fontSize="sm" color="gray.200">Validate all inputs, use parameterized queries</Text>
                         </ListItem>
                         <ListItem>
                             <strong>5. Encryption</strong>
-                            <Text fontSize="sm">Encrypt data at rest and in transit</Text>
+                            <Text fontSize="sm" color="gray.200">Encrypt data at rest and in transit</Text>
                         </ListItem>
                         <ListItem>
                             <strong>6. Audit Logging</strong>
-                            <Text fontSize="sm">Log all security events for compliance</Text>
+                            <Text fontSize="sm" color="gray.200">Log all security events for compliance</Text>
                         </ListItem>
                     </List>
 

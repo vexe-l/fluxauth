@@ -71,25 +71,25 @@ export default function InnovationLogPage() {
             {/* Roadmap Progress */}
             <Card w="full">
                 <CardBody>
-                    <Heading size="md" mb={4}>Development Roadmap</Heading>
+                    <Heading size="md" mb={4} color="white">Development Roadmap</Heading>
                     <VStack spacing={4} align="stretch">
                         <Box>
                             <HStack justify="space-between" mb={2}>
-                                <Text fontWeight="medium">Phase 1: Foundation</Text>
+                                <Text fontWeight="medium" color="white">Phase 1: Foundation</Text>
                                 <Text fontSize="sm" color="white">{roadmapProgress.phase1}%</Text>
                             </HStack>
                             <Progress value={roadmapProgress.phase1} colorScheme="green" />
                         </Box>
                         <Box>
                             <HStack justify="space-between" mb={2}>
-                                <Text fontWeight="medium">Phase 2: Advanced Features</Text>
+                                <Text fontWeight="medium" color="white">Phase 2: Advanced Features</Text>
                                 <Text fontSize="sm" color="white">{roadmapProgress.phase2}%</Text>
                             </HStack>
                             <Progress value={roadmapProgress.phase2} colorScheme="blue" />
                         </Box>
                         <Box>
                             <HStack justify="space-between" mb={2}>
-                                <Text fontWeight="medium">Phase 3: Production Hardening</Text>
+                                <Text fontWeight="medium" color="white">Phase 3: Production Hardening</Text>
                                 <Text fontSize="sm" color="white">{roadmapProgress.phase3}%</Text>
                             </HStack>
                             <Progress value={roadmapProgress.phase3} colorScheme="purple" />
@@ -143,27 +143,27 @@ export default function InnovationLogPage() {
             {/* Open Source Contributions */}
             <Card w="full">
                 <CardBody>
-                    <Heading size="md" mb={4}>Open Source Impact</Heading>
+                    <Heading size="md" mb={4} color="white">Open Source Impact</Heading>
                     <VStack align="stretch" spacing={3}>
                         <HStack justify="space-between">
-                            <Text>Total Commits</Text>
-                            <Text fontWeight="bold">127</Text>
+                            <Text color="white">Total Commits</Text>
+                            <Text fontWeight="bold" color="white">127</Text>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text>Contributors</Text>
-                            <Text fontWeight="bold">3</Text>
+                            <Text color="white">Contributors</Text>
+                            <Text fontWeight="bold" color="white">3</Text>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text>Issues Resolved</Text>
-                            <Text fontWeight="bold">24</Text>
+                            <Text color="white">Issues Resolved</Text>
+                            <Text fontWeight="bold" color="white">24</Text>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text>Documentation Pages</Text>
-                            <Text fontWeight="bold">18</Text>
+                            <Text color="white">Documentation Pages</Text>
+                            <Text fontWeight="bold" color="white">18</Text>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text>Test Coverage</Text>
-                            <Text fontWeight="bold">82%</Text>
+                            <Text color="white">Test Coverage</Text>
+                            <Text fontWeight="bold" color="white">82%</Text>
                         </HStack>
                     </VStack>
                 </CardBody>
@@ -172,16 +172,16 @@ export default function InnovationLogPage() {
             {/* SDG Alignment */}
             <Card w="full" bg="brand.800">
                 <CardBody>
-                    <Heading size="sm" mb={3}>SDG Alignment</Heading>
-                    <Text fontSize="sm" mb={3}>
+                    <Heading size="sm" mb={3} color="white">SDG Alignment</Heading>
+                    <Text fontSize="sm" mb={3} color="white">
                         This project contributes to UN Sustainable Development Goals:
                     </Text>
                     <VStack align="stretch" spacing={2} fontSize="sm">
-                        <Text>
+                        <Text color="white">
                             <strong>SDG 9:</strong> Building resilient, open-source infrastructure with minimal
                             energy footprint (~100x more efficient than ML alternatives)
                         </Text>
-                        <Text>
+                        <Text color="white">
                             <strong>SDG 16:</strong> Enabling transparent, accountable authentication without
                             data exploitation. All decisions are explainable and auditable.
                         </Text>

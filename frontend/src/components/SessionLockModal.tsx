@@ -63,11 +63,13 @@ export default function SessionLockModal({
                         <Alert
                             status={policyAction.severity === 'critical' ? 'error' : 'warning'}
                             borderRadius="md"
+                            bg={policyAction.severity === 'critical' ? 'rgba(220, 38, 38, 0.2)' : 'rgba(251, 191, 36, 0.2)'}
+                            borderColor={policyAction.severity === 'critical' ? 'red.500' : 'yellow.500'}
                         >
-                            <AlertIcon />
+                            <AlertIcon color={policyAction.severity === 'critical' ? 'red.400' : 'yellow.400'} />
                             <Box>
-                                <Text fontWeight="bold">{policyAction.message}</Text>
-                                <Text fontSize="sm" mt={1}>
+                                <Text fontWeight="bold" color="white">{policyAction.message}</Text>
+                                <Text fontSize="sm" mt={1} color="white">
                                     Policy Action: {policyAction.type}
                                 </Text>
                             </Box>

@@ -237,9 +237,9 @@ export default function TestPage() {
                                     Compute trust score client-side using JS function
                                 </Text>
                                 {offlineMode && (
-                                    <Alert status="success" borderRadius="md" mt={2} fontSize="xs">
-                                        <AlertIcon />
-                                        <Text fontSize="xs">✓ Offline mode enabled. Scoring happens client-side using localStorage.</Text>
+                                    <Alert status="success" borderRadius="md" mt={2} fontSize="xs" bg="rgba(34, 197, 94, 0.2)" borderColor="green.400">
+                                        <AlertIcon color="green.400" />
+                                        <Text fontSize="xs" color="white">✓ Offline mode enabled. Scoring happens client-side using localStorage.</Text>
                                     </Alert>
                                 )}
                             </VStack>
@@ -259,9 +259,9 @@ export default function TestPage() {
                                     Automatically score every 30 seconds during active session
                                 </Text>
                                 {continuousAuth && isCapturing && (
-                                    <Alert status="info" borderRadius="md" mt={2} fontSize="xs">
-                                        <AlertIcon />
-                                        <Text fontSize="xs">🔄 Active: Trust score updates every 30s</Text>
+                                    <Alert status="info" borderRadius="md" mt={2} fontSize="xs" bg="rgba(59, 130, 246, 0.2)" borderColor="blue.400">
+                                        <AlertIcon color="blue.400" />
+                                        <Text fontSize="xs" color="white">🔄 Active: Trust score updates every 30s</Text>
                                     </Alert>
                                 )}
                             </VStack>
@@ -280,20 +280,22 @@ export default function TestPage() {
 
             {
                 errorMessage && (
-                    <Alert status="error" borderRadius="md" color="red.900">
-                        <AlertIcon />
-                        {errorMessage}
+                    <Alert status="error" borderRadius="md" bg="rgba(220, 38, 38, 0.2)" borderColor="red.500">
+                        <AlertIcon color="red.400" />
+                        <Text color="white">{errorMessage}</Text>
                     </Alert>
                 )
             }
 
             <FormControl>
-                <FormLabel>User ID</FormLabel>
+                <FormLabel color="white">User ID</FormLabel>
                 <Input
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
                     placeholder="Enter your enrolled user ID"
                     isDisabled={isCapturing}
+                    bg="white"
+                    color="gray.800"
                 />
             </FormControl>
 
@@ -302,7 +304,7 @@ export default function TestPage() {
                     <Card w="full">
                         <CardBody>
                             <VStack spacing={4}>
-                                <Text fontWeight="medium">Authentication Test</Text>
+                                <Text fontWeight="medium" color="white">Authentication Test</Text>
                                 <Text fontSize="sm" color="white">
                                     Type the following text naturally:
                                 </Text>
@@ -313,6 +315,8 @@ export default function TestPage() {
                                     placeholder="Start typing here..."
                                     rows={3}
                                     isDisabled={!isCapturing}
+                                    bg="white"
+                                    color="gray.800"
                                 />
                                 {!isCapturing ? (
                                     <HStack w="full" spacing={3}>

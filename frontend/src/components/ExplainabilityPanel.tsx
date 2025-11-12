@@ -217,7 +217,7 @@ export default function ExplainabilityPanel({ reasons, threshold = 2.5 }: Explai
                                     transition="width 0.5s ease"
                                 />
                             </Box>
-                            <Text fontSize="xs" color="gray.500" minW="40px">
+                            <Text fontSize="xs" color="gray.300" minW="40px">
                                 {Math.abs(reason.zscore) > threshold ? 'Anomaly' : 'Normal'}
                             </Text>
                         </HStack>

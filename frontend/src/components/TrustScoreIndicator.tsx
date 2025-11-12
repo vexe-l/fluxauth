@@ -108,7 +108,7 @@ export default function TrustScoreIndicator({ score, isAnomaly, animate = true }
                     <Text fontSize="4xl" fontWeight="bold" color={getColor()}>
                         {displayScore}
                     </Text>
-                    <Text fontSize="sm" color="gray.500">
+                    <Text fontSize="sm" color="gray.300">
                         Trust Score
                     </Text>
                 </Box>
