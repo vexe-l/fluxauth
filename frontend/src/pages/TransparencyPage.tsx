@@ -81,7 +81,7 @@ export default function TransparencyPage() {
         <VStack spacing={6} maxW="6xl" mx="auto">
             <Box textAlign="center">
                 <HStack justify="center" mb={2}>
-                    <Heading size="lg">Transparency Dashboard</Heading>
+                    <Heading size="lg" color="white">Transparency Dashboard</Heading>
                     <Badge colorScheme="yellow" fontSize="sm">Mock Data</Badge>
                 </HStack>
                 <Text color="white">
@@ -156,7 +156,7 @@ export default function TransparencyPage() {
             {modelMetrics && (
                 <Card w="full">
                     <CardBody>
-                        <Heading size="md" mb={4}>Model Performance Metrics</Heading>
+                        <Heading size="md" mb={4} color="white">Model Performance Metrics</Heading>
                         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
                             <Box>
                                 <Text fontSize="sm" color="white">True Positive Rate (TPR)</Text>
@@ -187,7 +187,7 @@ export default function TransparencyPage() {
             {/* Recent API Calls */}
             <Card w="full">
                 <CardBody>
-                    <Heading size="md" mb={4}>Recent API Activity</Heading>
+                    <Heading size="md" mb={4} color="white">Recent API Activity</Heading>
                     <Text fontSize="sm" color="white" mb={4}>
                         Last 10 API calls (user IDs anonymized for privacy)
                     </Text>
@@ -231,7 +231,7 @@ export default function TransparencyPage() {
             {/* Fairness Metrics by Cohort */}
             <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
                 <CardBody>
-                    <Heading size="md" mb={4} color="navy.500">Fairness Metrics by Device Type</Heading>
+                    <Heading size="md" mb={4} color="white">Fairness Metrics by Device Type</Heading>
                     <Text fontSize="sm" color="white" mb={4}>
                         Detection performance across different user cohorts to ensure equitable treatment
                     </Text>
@@ -291,22 +291,22 @@ export default function TransparencyPage() {
             {/* Mock Bias Report */}
             <Card w="full" bg="blue.50" borderTop="4px" borderColor="blue.500">
                 <CardBody>
-                    <Heading size="md" mb={4} color="navy.500">Bias Audit Report</Heading>
+                    <Heading size="md" mb={4} color="white">Bias Audit Report</Heading>
                     <VStack align="stretch" spacing={3}>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium">Last Audit Date:</Text>
-                            <Text>November 10, 2025</Text>
+                            <Text fontWeight="medium" color="white">Last Audit Date:</Text>
+                            <Text color="white">November 10, 2025</Text>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium">Demographic Parity:</Text>
+                            <Text fontWeight="medium" color="white">Demographic Parity:</Text>
                             <Badge colorScheme="green">PASS (0.97)</Badge>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium">Equal Opportunity:</Text>
+                            <Text fontWeight="medium" color="white">Equal Opportunity:</Text>
                             <Badge colorScheme="green">PASS (0.95)</Badge>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium">Disparate Impact Ratio:</Text>
+                            <Text fontWeight="medium" color="white">Disparate Impact Ratio:</Text>
                             <Badge colorScheme="green">PASS (0.89)</Badge>
                         </HStack>
                         <Text fontSize="sm" color="white" pt={2}>

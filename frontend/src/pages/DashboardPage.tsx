@@ -163,7 +163,7 @@ export default function DashboardPage() {
 
     return (
         <VStack spacing={6} maxW="6xl" mx="auto">
-            <Heading size="lg" color="navy.500">Bot/Fraud Detection Dashboard</Heading>
+            <Heading size="lg" color="white">Bot/Fraud Detection Dashboard</Heading>
             <Text color="white" textAlign="center">
                 Detects non-human or repetitive behavior using pattern heuristics and anomaly thresholds
             </Text>
@@ -175,7 +175,7 @@ export default function DashboardPage() {
 
             <Card w="full">
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         Recent Sessions
                     </Heading>
                     <Table variant="simple" size="sm">
@@ -243,7 +243,7 @@ export default function DashboardPage() {
                 <CardBody>
                     <HStack justify="space-between" mb={4}>
                         <VStack align="start">
-                            <Heading size="md" color="navy.500">🤖 AI Threat Analysis</Heading>
+                            <Heading size="md" color="white">🤖 AI Threat Analysis</Heading>
                             <Badge colorScheme="purple">Powered by Gemini</Badge>
                         </VStack>
                         <Button

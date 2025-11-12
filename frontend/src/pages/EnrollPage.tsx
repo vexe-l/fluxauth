@@ -137,11 +137,11 @@ export default function EnrollPage() {
                             <Progress value={progress} colorScheme="brand" />
                         </Box>
 
-                        <Box w="full" p={4} bg="gray.50" borderRadius="md">
-                            <Text fontSize="sm" color="gray.800" mb={2}>
+                        <Box w="full" p={4} bg="rgba(255, 255, 255, 0.1)" borderRadius="md">
+                            <Text fontSize="sm" color="white" mb={2}>
                                 Prompt {currentPrompt + 1}:
                             </Text>
-                            <Text fontSize="lg" fontWeight="medium" color="gray.800">
+                            <Text fontSize="lg" fontWeight="medium" color="white">
                                 {PROMPTS[currentPrompt]}
                             </Text>
                         </Box>

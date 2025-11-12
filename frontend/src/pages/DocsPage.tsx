@@ -16,17 +16,17 @@ import { CheckCircleIcon } from '@chakra-ui/icons';
 export default function DocsPage() {
     return (
         <VStack spacing={6} maxW="4xl" mx="auto" align="stretch">
-            <Heading size="lg">Developer Documentation</Heading>
+            <Heading size="lg" color="white">Developer Documentation</Heading>
             <Text color="white">
                 Quick start guide for integrating BIaaS into your application.
             </Text>
 
             <Card>
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         SDK Installation
                     </Heading>
-                    <Text mb={3}>
+                    <Text mb={3} color="white">
                         Copy the SDK module into your project:
                     </Text>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm">
@@ -44,11 +44,11 @@ const sdk = new BehaviorSDK({
 
             <Card>
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         Basic Usage
                     </Heading>
 
-                    <Heading size="sm" mb={2}>
+                    <Heading size="sm" mb={2} color="white">
                         1. Start a Session
                     </Heading>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm" mb={4}>
@@ -61,7 +61,7 @@ await sdk.startSession('session-123', 'user-456');
 sdk.endSession();`}
                     </Code>
 
-                    <Heading size="sm" mb={2}>
+                    <Heading size="sm" mb={2} color="white">
                         2. Enroll a User
                     </Heading>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm" mb={4}>
@@ -76,7 +76,7 @@ const sessions = [
 await sdk.enroll('user-456', sessions);`}
                     </Code>
 
-                    <Heading size="sm" mb={2}>
+                    <Heading size="sm" mb={2} color="white">
                         3. Score an Authentication Attempt
                     </Heading>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm">
@@ -95,11 +95,11 @@ console.log(result.topReasons);  // Explanation`}
 
             <Card>
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         API Reference
                     </Heading>
 
-                    <Heading size="sm" mb={2}>
+                    <Heading size="sm" mb={2} color="white">
                         POST /api/session/start
                     </Heading>
                     <Text fontSize="sm" color="white" mb={2}>
@@ -117,7 +117,7 @@ console.log(result.topReasons);  // Explanation`}
 
                     <Divider my={4} />
 
-                    <Heading size="sm" mb={2}>
+                    <Heading size="sm" mb={2} color="white">
                         POST /api/session/score
                     </Heading>
                     <Text fontSize="sm" color="white" mb={2}>
@@ -142,7 +142,7 @@ console.log(result.topReasons);  // Explanation`}
 
                     <Divider my={4} />
 
-                    <Heading size="sm" mb={2}>
+                    <Heading size="sm" mb={2} color="white">
                         POST /api/enroll
                     </Heading>
                     <Text fontSize="sm" color="white" mb={2}>
@@ -167,7 +167,7 @@ console.log(result.topReasons);  // Explanation`}
 
             <Card>
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         Response Format
                     </Heading>
                     <Text fontSize="sm" color="white" mb={3}>
@@ -192,10 +192,10 @@ console.log(result.topReasons);  // Explanation`}
 
             <Card>
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         Best Practices
                     </Heading>
-                    <List spacing={3}>
+                    <List spacing={3} color="white">
                         <ListItem>
                             <ListIcon as={CheckCircleIcon} color="green.500" />
                             <strong>Obtain consent</strong> before capturing behavioral data
@@ -226,13 +226,13 @@ console.log(result.topReasons);  // Explanation`}
 
             <Card>
                 <CardBody>
-                    <Heading size="md" mb={4}>
+                    <Heading size="md" mb={4} color="white">
                         Security Notes
                     </Heading>
                     <Text fontSize="sm" color="white" mb={3}>
                         This is a Phase-1 prototype. Before production deployment:
                     </Text>
-                    <List spacing={2} fontSize="sm">
+                    <List spacing={2} fontSize="sm" color="white">
                         <ListItem>• Rotate all API keys and use secure key management</ListItem>
                         <ListItem>• Enable HTTPS/TLS for all endpoints</ListItem>
                         <ListItem>• Configure proper CORS policies</ListItem>

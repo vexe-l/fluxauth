@@ -134,7 +134,7 @@ export default function LiveMonitorPage() {
         <VStack spacing={6} maxW="7xl" mx="auto">
             <Box textAlign="center">
                 <HStack justify="center" mb={2}>
-                    <Heading size="lg" color="navy.500">Real-Time Behavioral Monitor</Heading>
+                    <Heading size="lg" color="white">Real-Time Behavioral Monitor</Heading>
                     {useDemoData ? (
                         <Badge colorScheme="yellow" fontSize="sm">Demo Mode</Badge>
                     ) : (
@@ -157,7 +157,7 @@ export default function LiveMonitorPage() {
                     <Card bg="brand.50" borderLeft="4px" borderColor="brand.400">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="navy.500">Active Sessions</StatLabel>
+                                <StatLabel color="white">Active Sessions</StatLabel>
                                 <StatNumber color="brand.500">{stats.activeSessions}</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type="increase" />
@@ -172,7 +172,7 @@ export default function LiveMonitorPage() {
                     <Card bg="accent.50" borderLeft="4px" borderColor="accent.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="navy.500">Avg Trust Score</StatLabel>
+                                <StatLabel color="white">Avg Trust Score</StatLabel>
                                 <StatNumber color="accent.500">{stats.avgTrustScore}</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type="increase" />
@@ -187,7 +187,7 @@ export default function LiveMonitorPage() {
                     <Card bg="red.50" borderLeft="4px" borderColor="red.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="navy.500">Anomalies</StatLabel>
+                                <StatLabel color="white">Anomalies</StatLabel>
                                 <StatNumber color="red.500">{stats.anomaliesDetected}</StatNumber>
                                 <StatHelpText>Last 5 minutes</StatHelpText>
                             </Stat>
@@ -199,7 +199,7 @@ export default function LiveMonitorPage() {
                     <Card bg="purple.50" borderLeft="4px" borderColor="purple.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="navy.500">Total Events</StatLabel>
+                                <StatLabel color="white">Total Events</StatLabel>
                                 <StatNumber color="purple.500">{stats.totalEvents}</StatNumber>
                                 <StatHelpText>Captured today</StatHelpText>
                             </Stat>
@@ -211,7 +211,7 @@ export default function LiveMonitorPage() {
             {/* Live Sessions Table */}
             <Card w="full">
                 <CardBody>
-                    <Heading size="md" mb={4} color="navy.500">Live Sessions</Heading>
+                    <Heading size="md" mb={4} color="white">Live Sessions</Heading>
                     <Table variant="simple" size="sm">
                         <Thead>
                             <Tr>
@@ -274,7 +274,7 @@ export default function LiveMonitorPage() {
 
             <Card w="full" bg="blue.50">
                 <CardBody>
-                    <Text fontSize="sm" color="navy.500">
+                    <Text fontSize="sm" color="white">
                         <strong>Demo Mode:</strong> This dashboard shows simulated real-time data.
                         In production, it would connect via WebSocket to display actual user sessions.
                     </Text>

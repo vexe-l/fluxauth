@@ -137,7 +137,7 @@ export default function TestPage() {
 
     return (
         <VStack spacing={6} maxW="2xl" mx="auto">
-            <Heading size="lg" color="navy.500">Edge/Offline SDK Mode</Heading>
+            <Heading size="lg" color="white">Edge/Offline SDK Mode</Heading>
             <Text color="white" textAlign="center">
                 Browser SDK scores locally before sending summary to server — privacy-first & efficient
             </Text>
@@ -147,178 +147,184 @@ export default function TestPage() {
                 <CardBody>
                     <HStack justify="space-between">
                         <VStack align="start" spacing={1}>
-                            <Text fontWeight="bold" color="navy.500">Local Mode (Offline Scoring)</Text>
-                            <Text fontSize="sm" color="white">
-                                Compute trust score client-side using JS function
-                            </Text>
-                        </VStack>
-                        <Button
-                            colorScheme={offlineMode ? 'green' : 'gray'}
-                            onClick={() => setOfflineMode(!offlineMode)}
-                            size="sm"
-                        >
-                            {offlineMode ? 'Enabled ✓' : 'Disabled'}
-                        </Button>
-                    </HStack>
+                            <Text fontWeight="bold" color="white">Local Mode (Offline Scoring)</Text>
+                            <parameter name="text fontSize=" sm" color="white">
+                            Compute trust score client-side using JS function
+                        </Text>
+                    </VStack>
+                    <Button
+                        colorScheme={offlineMode ? 'green' : 'gray'}
+                        onClick={() => setOfflineMode(!offlineMode)}
+                        size="sm"
+                    >
+                        {offlineMode ? 'Enabled ✓' : 'Disabled'}
+                    </Button>
+                </HStack>
+            </CardBody>
+        </Card>
+
+            {
+        errorMessage && (
+            <Alert status="error" borderRadius="md">
+                <AlertIcon />
+                {errorMessage}
+            </Alert>
+        )
+    }
+
+    <FormControl>
+        <FormLabel>User ID</FormLabel>
+        <Input
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            placeholder="Enter your enrolled user ID"
+            isDisabled={isCapturing}
+        />
+    </FormControl>
+
+    {
+        !scoreResult && (
+            <Card w="full">
+                <CardBody>
+                    <VStack spacing={4}>
+                        <Text fontWeight="medium">Authentication Test</Text>
+                        <Text fontSize="sm" color="white">
+                            Type the following text naturally:
+                        </Text>
+                        <Text fontSize="lg" fontWeight="medium" textAlign="center" p={4} bg="gray.50" borderRadius="md">
+                            {TEST_PROMPT}
+                        </Text>
+                        <Textarea
+                            placeholder="Start typing here..."
+                            rows={3}
+                            isDisabled={!isCapturing}
+                        />
+                        {!isCapturing ? (
+                            <HStack w="full" spacing={3}>
+                                <Button colorScheme="brand" onClick={handleStartCapture} flex={1}>
+                                    Start Test
+                                </Button>
+                                <Button variant="outline" onClick={handleSimulateAttack} flex={1}>
+                                    Simulate Attack
+                                </Button>
+                            </HStack>
+                        ) : (
+                            <Button
+                                colorScheme="green"
+                                onClick={handleScore}
+                                isLoading={isScoring}
+                                w="full"
+                            >
+                                Complete & Score
+                            </Button>
+                        )}
+                    </VStack>
                 </CardBody>
             </Card>
+        )
+    }
 
-            {errorMessage && (
-                <Alert status="error" borderRadius="md">
-                    <AlertIcon />
-                    {errorMessage}
-                </Alert>
-            )}
-
-            <FormControl>
-                <FormLabel>User ID</FormLabel>
-                <Input
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    placeholder="Enter your enrolled user ID"
-                    isDisabled={isCapturing}
-                />
-            </FormControl>
-
-            {!scoreResult && (
-                <Card w="full">
-                    <CardBody>
-                        <VStack spacing={4}>
-                            <Text fontWeight="medium">Authentication Test</Text>
-                            <Text fontSize="sm" color="white">
-                                Type the following text naturally:
-                            </Text>
-                            <Text fontSize="lg" fontWeight="medium" textAlign="center" p={4} bg="gray.50" borderRadius="md">
-                                {TEST_PROMPT}
-                            </Text>
-                            <Textarea
-                                placeholder="Start typing here..."
-                                rows={3}
-                                isDisabled={!isCapturing}
-                            />
-                            {!isCapturing ? (
-                                <HStack w="full" spacing={3}>
-                                    <Button colorScheme="brand" onClick={handleStartCapture} flex={1}>
-                                        Start Test
-                                    </Button>
-                                    <Button variant="outline" onClick={handleSimulateAttack} flex={1}>
-                                        Simulate Attack
-                                    </Button>
-                                </HStack>
-                            ) : (
-                                <Button
-                                    colorScheme="green"
-                                    onClick={handleScore}
-                                    isLoading={isScoring}
-                                    w="full"
-                                >
-                                    Complete & Score
-                                </Button>
-                            )}
-                        </VStack>
-                    </CardBody>
-                </Card>
-            )}
-
-            {scoreResult && (
-                <Card w="full" borderWidth={2} borderColor={scoreResult.isAnomaly ? 'red.300' : 'green.300'}>
-                    <CardBody>
-                        <VStack spacing={4} align="stretch">
-                            <HStack justify="space-between">
-                                <Heading size="md">Authentication Result</Heading>
-                                <HStack>
-                                    {offlineMode && (
-                                        <Badge colorScheme="purple" fontSize="sm">
-                                            Offline Mode
-                                        </Badge>
-                                    )}
-                                    <Badge colorScheme={scoreResult.isAnomaly ? 'red' : 'green'} fontSize="lg" px={3} py={1}>
-                                        {scoreResult.isAnomaly ? 'ANOMALY' : 'VERIFIED'}
+    {
+        scoreResult && (
+            <Card w="full" borderWidth={2} borderColor={scoreResult.isAnomaly ? 'red.300' : 'green.300'}>
+                <CardBody>
+                    <VStack spacing={4} align="stretch">
+                        <HStack justify="space-between">
+                            <Heading size="md">Authentication Result</Heading>
+                            <HStack>
+                                {offlineMode && (
+                                    <Badge colorScheme="purple" fontSize="sm">
+                                        Offline Mode
                                     </Badge>
-                                </HStack>
+                                )}
+                                <Badge colorScheme={scoreResult.isAnomaly ? 'red' : 'green'} fontSize="lg" px={3} py={1}>
+                                    {scoreResult.isAnomaly ? 'ANOMALY' : 'VERIFIED'}
+                                </Badge>
                             </HStack>
+                        </HStack>
 
-                            <Divider />
+                        <Divider />
 
-                            <Box>
-                                <Text fontSize="sm" color="white" mb={2}>
-                                    Trust Score
+                        <Box>
+                            <Text fontSize="sm" color="white" mb={2}>
+                                Trust Score
+                            </Text>
+                            <HStack>
+                                <Heading size="2xl" color={scoreResult.trustScore > 70 ? 'green.500' : 'red.500'}>
+                                    {scoreResult.trustScore}
+                                </Heading>
+                                <Text fontSize="xl" color="white">
+                                    / 100
                                 </Text>
-                                <HStack>
-                                    <Heading size="2xl" color={scoreResult.trustScore > 70 ? 'green.500' : 'red.500'}>
-                                        {scoreResult.trustScore}
-                                    </Heading>
-                                    <Text fontSize="xl" color="white">
-                                        / 100
+                            </HStack>
+                        </Box>
+
+                        <Divider />
+
+                        {scoreResult.aiAnalysis && (
+                            <>
+                                <Box bg="purple.50" p={4} borderRadius="md" borderLeft="4px" borderColor="purple.500">
+                                    <HStack mb={2}>
+                                        <Text fontSize="sm" fontWeight="bold" color="white">
+                                            🤖 AI Security Analysis
+                                        </Text>
+                                        <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
+                                    </HStack>
+                                    <Text fontSize="sm" color="white">
+                                        {scoreResult.aiAnalysis}
                                     </Text>
-                                </HStack>
-                            </Box>
+                                </Box>
+                                <Divider />
+                            </>
+                        )}
 
-                            <Divider />
+                        {scoreResult.aiExplanation && (
+                            <>
+                                <Box bg="blue.50" p={4} borderRadius="md" borderLeft="4px" borderColor="blue.500">
+                                    <Text fontSize="sm" fontWeight="bold" color="white" mb={2}>
+                                        💡 What This Means For You
+                                    </Text>
+                                    <Text fontSize="sm" color="white">
+                                        {scoreResult.aiExplanation}
+                                    </Text>
+                                </Box>
+                                <Divider />
+                            </>
+                        )}
 
-                            {scoreResult.aiAnalysis && (
-                                <>
-                                    <Box bg="purple.50" p={4} borderRadius="md" borderLeft="4px" borderColor="purple.500">
-                                        <HStack mb={2}>
-                                            <Text fontSize="sm" fontWeight="bold" color="purple.700">
-                                                🤖 AI Security Analysis
-                                            </Text>
-                                            <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
-                                        </HStack>
-                                        <Text fontSize="sm" color="white">
-                                            {scoreResult.aiAnalysis}
-                                        </Text>
-                                    </Box>
-                                    <Divider />
-                                </>
-                            )}
-
-                            {scoreResult.aiExplanation && (
-                                <>
-                                    <Box bg="blue.50" p={4} borderRadius="md" borderLeft="4px" borderColor="blue.500">
-                                        <Text fontSize="sm" fontWeight="bold" color="blue.700" mb={2}>
-                                            💡 What This Means For You
-                                        </Text>
-                                        <Text fontSize="sm" color="white">
-                                            {scoreResult.aiExplanation}
-                                        </Text>
-                                    </Box>
-                                    <Divider />
-                                </>
-                            )}
-
-                            <Box>
-                                <Text fontSize="sm" color="white" mb={3}>
-                                    Technical Details
-                                </Text>
-                                <VStack spacing={2} align="stretch">
-                                    {scoreResult.topReasons.map((reason, idx) => (
-                                        <Card key={idx} size="sm" bg="gray.50">
-                                            <CardBody>
-                                                <HStack justify="space-between" mb={1}>
-                                                    <Text fontWeight="medium" fontSize="sm">
-                                                        {reason.feature}
-                                                    </Text>
-                                                    <Badge colorScheme={Math.abs(reason.zscore) > 2 ? 'red' : 'yellow'}>
-                                                        {reason.zscore > 0 ? '+' : ''}{reason.zscore}σ
-                                                    </Badge>
-                                                </HStack>
-                                                <Text fontSize="xs" color="white">
-                                                    {reason.message}
+                        <Box>
+                            <Text fontSize="sm" color="white" mb={3}>
+                                Technical Details
+                            </Text>
+                            <VStack spacing={2} align="stretch">
+                                {scoreResult.topReasons.map((reason, idx) => (
+                                    <Card key={idx} size="sm" bg="gray.50">
+                                        <CardBody>
+                                            <HStack justify="space-between" mb={1}>
+                                                <Text fontWeight="medium" fontSize="sm">
+                                                    {reason.feature}
                                                 </Text>
-                                            </CardBody>
-                                        </Card>
-                                    ))}
-                                </VStack>
-                            </Box>
+                                                <Badge colorScheme={Math.abs(reason.zscore) > 2 ? 'red' : 'yellow'}>
+                                                    {reason.zscore > 0 ? '+' : ''}{reason.zscore}σ
+                                                </Badge>
+                                            </HStack>
+                                            <Text fontSize="xs" color="white">
+                                                {reason.message}
+                                            </Text>
+                                        </CardBody>
+                                    </Card>
+                                ))}
+                            </VStack>
+                        </Box>
 
-                            <Button variant="outline" onClick={handleReset}>
-                                Test Again
-                            </Button>
-                        </VStack>
-                    </CardBody>
-                </Card>
-            )}
-        </VStack>
+                        <Button variant="outline" onClick={handleReset}>
+                            Test Again
+                        </Button>
+                    </VStack>
+                </CardBody>
+            </Card>
+        )
+    }
+        </VStack >
     );
 }
