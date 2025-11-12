@@ -181,7 +181,10 @@ export default function EnrollPage() {
         }
     };
 
-    const progress = ((currentPrompt + (isCapturing ? 0.5 : 0)) / PROMPTS.length) * 100;
+    // Calculate progress: use sessions.length if all completed, otherwise use currentPrompt
+    const progress = sessions.length >= PROMPTS.length 
+        ? 100 
+        : ((currentPrompt + (isCapturing ? 0.5 : 0)) / PROMPTS.length) * 100;
 
     if (success) {
         return (
