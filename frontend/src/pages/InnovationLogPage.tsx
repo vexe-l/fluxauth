@@ -170,7 +170,7 @@ export default function InnovationLogPage() {
             </Card>
 
             {/* SDG Alignment */}
-            <Card w="full" bg="blue.50">
+            <Card w="full" bg="brand.800">
                 <CardBody>
                     <Heading size="sm" mb={3}>SDG Alignment</Heading>
                     <Text fontSize="sm" mb={3}>

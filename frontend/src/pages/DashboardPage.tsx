@@ -170,6 +170,7 @@ export default function DashboardPage() {
             <Text color="white" textAlign="center">
                 Detects non-human or repetitive behavior using pattern heuristics and anomaly thresholds
             </Text>
+            <Badge colorScheme="green" fontSize="sm">✅ Real Bot Detection Active</Badge>
 
             <Alert status="info" borderRadius="md" color="blue.900">
                 <AlertIcon />
@@ -210,9 +211,14 @@ export default function DashboardPage() {
                                         </Badge>
                                     </Td>
                                     <Td>
-                                        <Badge colorScheme={session.isAnomaly ? 'red' : 'green'}>
-                                            {session.isAnomaly ? 'Anomaly' : 'Verified'}
-                                        </Badge>
+                                        <HStack>
+                                            <Badge colorScheme={session.isAnomaly ? 'red' : 'green'}>
+                                                {session.isAnomaly ? 'Anomaly' : 'Verified'}
+                                            </Badge>
+                                            {(session as any).isBot && (
+                                                <Badge colorScheme="orange">Bot</Badge>
+                                            )}
+                                        </HStack>
                                     </Td>
                                     <Td fontSize="sm" color="white">
                                         {new Date(session.timestamp).toLocaleString()}
@@ -242,11 +248,11 @@ export default function DashboardPage() {
             )}
 
             {/* AI Threat Report */}
-            <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
+            <Card w="full" bg="brand.800" borderTop="4px" borderColor="purple.500">
                 <CardBody>
                     <HStack justify="space-between" mb={4}>
                         <VStack align="start">
-                            <Heading size="md" color="purple.900">🤖 AI Threat Analysis</Heading>
+                            <Heading size="md" color="white">🤖 AI Threat Analysis</Heading>
                             <Badge colorScheme="purple">Powered by Gemini</Badge>
                         </VStack>
                         <Button

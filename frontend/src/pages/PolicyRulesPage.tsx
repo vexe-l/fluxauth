@@ -18,7 +18,9 @@ import {
     IconButton,
     Code,
     Divider,
-    useToast
+    useToast,
+    Alert,
+    AlertIcon
 } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
@@ -115,18 +117,25 @@ export default function PolicyRulesPage() {
             <Box textAlign="center">
                 <HStack justify="center" mb={2}>
                     <Heading size="lg" color="white">Custom Policy Engine</Heading>
-                    <Badge colorScheme="purple" fontSize="sm">UI Demo</Badge>
+                    <Badge colorScheme="orange" fontSize="sm">UI Only - Not Executed</Badge>
                 </HStack>
                 <Text color="white" mt={2}>
                     Admin UI for writing policies as logic: IF trustScore&lt;40 THEN REQUIRE_OTP
                 </Text>
-                <Text fontSize="sm" color="purple.600" mt={1}>
-                    ℹ️ UI fully functional - backend policy execution would be next phase
-                </Text>
+                <Alert status="warning" borderRadius="md" mt={2}>
+                    <AlertIcon />
+                    <Box>
+                        <Text fontWeight="bold">Policy Execution Not Implemented</Text>
+                        <Text fontSize="sm">
+                            Rules can be created and managed in the UI, but they are not automatically executed by the backend.
+                            This requires a policy engine service that evaluates rules against session scores in real-time.
+                        </Text>
+                    </Box>
+                </Alert>
             </Box>
 
             {/* Add New Rule */}
-            <Card w="full" bg="brand.50" borderTop="4px" borderColor="brand.400">
+            <Card w="full" bg="brand.800" borderTop="4px" borderColor="brand.400">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">
                         <AddIcon mr={2} boxSize={4} />
@@ -252,7 +261,7 @@ export default function PolicyRulesPage() {
             </Card>
 
             {/* Example Syntax */}
-            <Card w="full" bg="purple.50">
+            <Card w="full" bg="brand.800">
                 <CardBody>
                     <Heading size="sm" mb={3} color="white">Policy Syntax Examples</Heading>
                     <VStack align="stretch" spacing={2} fontSize="sm" fontFamily="mono">

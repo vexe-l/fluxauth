@@ -7,6 +7,7 @@
 FluxAuth is a **Behavioral Biometrics as a Service (BaaS)** platform that provides continuous authentication throughout a user's session. Instead of relying solely on passwords, it analyzes typing patterns, mouse movements, and behavioral rhythms to create a unique "typing fingerprint" for each user.
 
 **The Problem It Solves:**
+
 - 81% of data breaches involve stolen credentials
 - Passwords can be phished, leaked, or guessed
 - Traditional MFA only protects the login moment
@@ -60,6 +61,7 @@ Frontend (React) → Backend API (Node.js) → SQLite DB
 ## 🔧 Configuration
 
 Edit `backend/.env`:
+
 ```env
 PORT=3001
 API_KEY=dev_key_12345
@@ -70,16 +72,28 @@ DATABASE_PATH=./data/biaas.db
 ## 📊 What's Real vs Demo
 
 **100% Real & Working:**
-- ✅ Enrollment flow
-- ✅ Authentication & scoring
-- ✅ Bot detection algorithm
-- ✅ AI analysis (Gemini)
-- ✅ Database storage
 
-**Demo Data (until you use it):**
-- ⚠️ Live Monitor (shows demo until real sessions exist)
-- ⚠️ Transparency metrics (mock data)
-- ⚠️ Policy engine (UI only, doesn't execute)
+- ✅ Enrollment flow - Fully functional, stores to SQLite
+- ✅ Authentication & scoring - Real z-score calculation
+- ✅ Bot detection algorithm - Heuristic-based detection (5 patterns)
+- ✅ AI analysis (Gemini) - Real API calls (requires GEMINI_API_KEY)
+- ✅ Database storage - SQLite with proper schema
+- ✅ Feature extraction - Real algorithm (flight time, hold time, etc.)
+- ✅ Metrics service - Logs API calls and scoring results
+- ✅ Live Monitor - Uses real data when available, calculates stats from DB
+
+**Partially Implemented:**
+
+- ⚠️ Transparency metrics - Real API metrics, but fairness analysis not implemented
+- ⚠️ Policy engine - UI fully functional, but rules are NOT executed by backend
+- ⚠️ Offline mode - Toggle exists but still requires backend API (not implemented)
+
+**Not Implemented:**
+
+- ❌ Fairness metrics by device/demographic - Would require additional data collection
+- ❌ Bias auditing - Requires demographic data and statistical analysis
+- ❌ Policy rule execution - Backend doesn't evaluate or enforce rules
+- ❌ True offline scoring - Client-side scoring algorithm not ported to frontend
 
 ## 🚀 Deploy to GitHub
 
@@ -135,16 +149,19 @@ fluxauth/
 ## 🐛 Troubleshooting
 
 **Backend won't start?**
+
 ```bash
 cd backend && npm install
 ```
 
 **Frontend shows errors?**
+
 ```bash
 cd frontend && npm install
 ```
 
 **Database errors?**
+
 ```bash
 rm -rf backend/data/*.db
 # Restart backend - it will recreate
@@ -171,13 +188,13 @@ import { BehaviorSDK } from './sdk/browser';
 const fluxAuth = new BehaviorSDK({
   apiUrl: 'https://your-fluxauth-api.com/api',
   apiKey: 'your-api-key',
-  batchInterval: 5000  // Send data every 5s
+  batchInterval: 5000 // Send data every 5s
 });
 
 // 3. Enroll new users (one-time)
 async function enrollUser(userId) {
   const sessions = [];
-  
+
   // Collect 4 typing samples
   for (let i = 0; i < 4; i++) {
     await fluxAuth.startSession(`enroll-${i}`, userId);
@@ -189,41 +206,33 @@ async function enrollUser(userId) {
     });
     fluxAuth.clearEvents();
   }
-  
+
   await fluxAuth.enroll(userId, sessions);
 }
 
 // 4. Authenticate during login
 async function authenticateUser(userId) {
   const sessionId = `auth-${Date.now()}`;
-  
+
   await fluxAuth.startSession(sessionId, userId);
   // User types password/form...
   fluxAuth.endSession();
-  
-  const result = await fluxAuth.score(
-    userId, 
-    sessionId, 
-    fluxAuth.getEvents()
-  );
-  
+
+  const result = await fluxAuth.score(userId, sessionId, fluxAuth.getEvents());
+
   if (result.trustScore < 40) {
     // Trigger MFA or block access
     console.log('Suspicious behavior detected!');
     return false;
   }
-  
+
   return true;
 }
 
 // 5. Continuous monitoring (optional)
 setInterval(async () => {
-  const result = await fluxAuth.score(
-    userId, 
-    sessionId, 
-    fluxAuth.getEvents()
-  );
-  
+  const result = await fluxAuth.score(userId, sessionId, fluxAuth.getEvents());
+
   if (result.isAnomaly) {
     // Log out user or require re-authentication
     handleSuspiciousActivity(result);
@@ -289,15 +298,15 @@ curl -X POST https://your-api.com/api/session/score \
 // Handle webhook in your backend
 app.post('/webhooks/fluxauth', (req, res) => {
   const { event, userId, trustScore, sessionId } = req.body;
-  
+
   if (event === 'anomaly_detected') {
     // Force logout
     logoutUser(userId);
-    
+
     // Send alert
     sendSecurityAlert(userId, 'Suspicious activity detected');
   }
-  
+
   res.sendStatus(200);
 });
 ```
@@ -305,6 +314,7 @@ app.post('/webhooks/fluxauth', (req, res) => {
 ### Real-World Use Cases
 
 #### 1. Banking App - Account Takeover Prevention
+
 ```javascript
 // After user logs in with password
 const authResult = await fluxAuth.score(userId, sessionId, events);
@@ -324,11 +334,12 @@ if (authResult.trustScore < 60) {
 ```
 
 #### 2. Enterprise SaaS - Insider Threat Detection
+
 ```javascript
 // Continuous monitoring during work session
 setInterval(async () => {
   const score = await fluxAuth.score(employeeId, sessionId, events);
-  
+
   if (score.isAnomaly) {
     // Log security event
     auditLog.write({
@@ -337,7 +348,7 @@ setInterval(async () => {
       trustScore: score.trustScore,
       timestamp: Date.now()
     });
-    
+
     // Alert security team
     notifySecurityTeam(employeeId, score);
   }
@@ -345,6 +356,7 @@ setInterval(async () => {
 ```
 
 #### 3. E-commerce - Bot Detection
+
 ```javascript
 // During checkout
 const result = await fluxAuth.score(userId, sessionId, events);
@@ -359,6 +371,7 @@ if (result.topReasons.some(r => r.code.includes('BOT'))) {
 ### Deployment Options
 
 #### Self-Hosted (Docker)
+
 ```bash
 # Clone and deploy on your infrastructure
 git clone https://github.com/yourusername/fluxauth.git
@@ -377,6 +390,7 @@ docker-compose up -d
 #### Cloud Deployment
 
 **Backend (Railway/Render/Heroku):**
+
 ```bash
 # Deploy backend API
 cd backend
@@ -384,6 +398,7 @@ railway up  # or: render deploy, heroku deploy
 ```
 
 **Frontend (Vercel/Netlify):**
+
 ```bash
 # Deploy dashboard
 cd frontend
@@ -427,9 +442,11 @@ CORS_ORIGIN=https://your-app.com
 ### Endpoints
 
 #### `POST /api/enroll`
+
 Enroll a new user with behavioral baseline.
 
 **Request:**
+
 ```json
 {
   "userId": "string",
@@ -449,6 +466,7 @@ Enroll a new user with behavioral baseline.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -458,9 +476,11 @@ Enroll a new user with behavioral baseline.
 ```
 
 #### `POST /api/session/score`
+
 Score a behavioral session against user baseline.
 
 **Request:**
+
 ```json
 {
   "userId": "string",
@@ -470,6 +490,7 @@ Score a behavioral session against user baseline.
 ```
 
 **Response:**
+
 ```json
 {
   "trustScore": 88,
@@ -488,12 +509,15 @@ Score a behavioral session against user baseline.
 ```
 
 #### `POST /api/session/start`
+
 Start a new behavioral tracking session.
 
 #### `GET /api/sessions/recent`
+
 Get recent session history.
 
 #### `GET /api/ai/threat-report`
+
 Generate AI-powered security analysis.
 
 ## 🎯 Next Steps

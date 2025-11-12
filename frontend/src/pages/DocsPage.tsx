@@ -86,7 +86,7 @@ export default function DocsPage() {
 function IntroductionSection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>What is FluxAuth?</Heading>
                     <Text color="white" mb={4}>
@@ -118,7 +118,7 @@ function IntroductionSection() {
 function GettingStartedSection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>Getting Started</Heading>
                     <Text color="white" mb={4}>Get FluxAuth running in under 5 minutes.</Text>
@@ -177,7 +177,7 @@ cd ../frontend && npm install`}
 function IntegrationSection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>Integration Guide</Heading>
 
@@ -278,7 +278,7 @@ function LoginForm() {
 function APIReferenceSection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>API Reference</Heading>
 
@@ -355,7 +355,7 @@ function APIReferenceSection() {
 function UseCasesSection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>Real-World Use Cases</Heading>
 
@@ -741,7 +741,7 @@ async function handleVPNConnection(employeeId, vpnCredentials) {
 function SecuritySection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>Security & Privacy</Heading>
 
@@ -825,7 +825,7 @@ function SecuritySection() {
 function DeploymentSection() {
     return (
         <VStack spacing={6} align="stretch">
-            <Card bg="rgba(26, 32, 44, 0.6)" backdropFilter="blur(10px)">
+            <Card bg="rgba(26, 26, 26, 0.6)" backdropFilter="blur(10px)">
                 <CardBody>
                     <Heading size="lg" color="white" mb={4}>Deployment Guide</Heading>
 

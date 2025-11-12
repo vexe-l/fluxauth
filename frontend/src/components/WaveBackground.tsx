@@ -29,7 +29,7 @@ function AnimatedWave() {
         <mesh ref={meshRef} rotation={[-Math.PI / 4, 0, 0]} position={[0, -2, -5]}>
             <planeGeometry args={[20, 20, 32, 32]} />
             <meshPhysicalMaterial
-                color="#14B8A6"
+                color="#616161"
                 transparent
                 opacity={0.1}
                 wireframe

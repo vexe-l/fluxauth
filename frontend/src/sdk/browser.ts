@@ -23,6 +23,7 @@ export interface SDKConfig {
 export interface ScoreResult {
     trustScore: number;
     isAnomaly: boolean;
+    isBot?: boolean; // Bot detection flag
     topReasons: Array<{
         code: string;
         message: string;

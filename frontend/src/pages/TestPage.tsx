@@ -144,7 +144,7 @@ export default function TestPage() {
             </Text>
 
             {/* Offline Mode Toggle */}
-            <Card w="full" bg="accent.50" borderTop="4px" borderColor="accent.500">
+            <Card w="full" bg="brand.800" borderTop="4px" borderColor="accent.500">
                 <CardBody>
                     <HStack justify="space-between">
                         <VStack align="start" spacing={1}>
@@ -152,6 +152,12 @@ export default function TestPage() {
                             <Text fontSize="sm" color="white">
                                 Compute trust score client-side using JS function
                             </Text>
+                            {offlineMode && (
+                                <Alert status="warning" borderRadius="md" mt={2} fontSize="xs">
+                                    <AlertIcon />
+                                    <Text fontSize="xs">Offline mode not yet implemented. Still requires backend API.</Text>
+                                </Alert>
+                            )}
                         </VStack>
                         <Button
                             colorScheme={offlineMode ? 'green' : 'gray'}
@@ -192,7 +198,7 @@ export default function TestPage() {
                                 <Text fontSize="sm" color="white">
                                     Type the following text naturally:
                                 </Text>
-                                <Text fontSize="lg" fontWeight="medium" color="gray.800" textAlign="center" p={4} bg="gray.50" borderRadius="md">
+                                <Text fontSize="lg" fontWeight="medium" color="white" textAlign="center" p={4} bg="brand.800" borderRadius="md">
                                     {TEST_PROMPT}
                                 </Text>
                                 <Textarea
@@ -264,9 +270,9 @@ export default function TestPage() {
 
                                 {scoreResult.aiAnalysis && (
                                     <>
-                                        <Box bg="purple.50" p={4} borderRadius="md" borderLeft="4px" borderColor="purple.500">
+                                        <Box bg="brand.800" p={4} borderRadius="md" borderLeft="4px" borderColor="purple.500">
                                             <HStack mb={2}>
-                                                <Text fontSize="sm" fontWeight="bold" color="purple.900">
+                                                <Text fontSize="sm" fontWeight="bold" color="white">
                                                     🤖 AI Security Analysis
                                                 </Text>
                                                 <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
@@ -281,8 +287,8 @@ export default function TestPage() {
 
                                 {scoreResult.aiExplanation && (
                                     <>
-                                        <Box bg="blue.50" p={4} borderRadius="md" borderLeft="4px" borderColor="blue.500">
-                                            <Text fontSize="sm" fontWeight="bold" color="blue.900" mb={2}>
+                                        <Box bg="brand.800" p={4} borderRadius="md" borderLeft="4px" borderColor="blue.500">
+                                            <Text fontSize="sm" fontWeight="bold" color="white" mb={2}>
                                                 💡 What This Means For You
                                             </Text>
                                             <Text fontSize="sm" color="white">
@@ -299,7 +305,7 @@ export default function TestPage() {
                                     </Text>
                                     <VStack spacing={2} align="stretch">
                                         {scoreResult.topReasons.map((reason, idx) => (
-                                            <Card key={idx} size="sm" bg="gray.50">
+                                            <Card key={idx} size="sm" bg="brand.800">
                                                 <CardBody>
                                                     <HStack justify="space-between" mb={1}>
                                                         <Text fontWeight="medium" fontSize="sm">

@@ -2,6 +2,43 @@ import { FeatureVector, ScoreResult, ScoreReason } from './types';
 
 const ANOMALY_THRESHOLD = parseFloat(process.env.ANOMALY_THRESHOLD || '2.5');
 
+/**
+ * Detect bot-like behavior patterns
+ * Returns true if behavior suggests automation/script
+ */
+export function detectBotPatterns(testVector: FeatureVector, centroid: FeatureVector, stdDevs: FeatureVector): boolean {
+    // Bot detection heuristics:
+    
+    // 1. Extremely consistent timing (low variance) suggests automation
+    const flightVariability = stdDevs.stdFlight / (centroid.meanFlight || 1);
+    if (flightVariability < 0.1 && testVector.stdFlight < centroid.stdFlight * 0.5) {
+        return true; // Too consistent
+    }
+    
+    // 2. Very fast typing with no variation
+    if (testVector.meanFlight < 50 && testVector.stdFlight < 10) {
+        return true; // Unnaturally fast and consistent
+    }
+    
+    // 3. Perfect timing (no human-like variation)
+    const holdVariability = stdDevs.stdHold / (centroid.meanHold || 1);
+    if (holdVariability < 0.05 && testVector.stdHold < 5) {
+        return true; // Too perfect
+    }
+    
+    // 4. No backspaces (humans make mistakes)
+    if (testVector.backspaceRate < 0.01 && centroid.backspaceRate > 0.03) {
+        return true; // Suspiciously perfect typing
+    }
+    
+    // 5. Very high key count with low time variance
+    if (testVector.totalKeys > 100 && testVector.stdFlight < 20) {
+        return true; // High volume with machine-like consistency
+    }
+    
+    return false;
+}
+
 interface ZScores {
     [key: string]: number;
 }
@@ -59,9 +96,13 @@ export function scoreVector(
             zscore: parseFloat(zscore.toFixed(2))
         }));
 
+    // Check for bot patterns
+    const isBot = detectBotPatterns(testVector, centroid, stdDevs);
+    
     return {
         trustScore: parseFloat(trustScore.toFixed(1)),
-        isAnomaly,
+        isAnomaly: isAnomaly || isBot, // Mark as anomaly if bot detected
+        isBot, // Add bot flag
         topReasons: reasons
     };
 }

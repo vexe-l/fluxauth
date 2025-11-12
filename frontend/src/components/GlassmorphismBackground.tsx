@@ -19,9 +19,9 @@ function FloatingCard() {
     const material = useMemo(
         () =>
             new THREE.MeshPhysicalMaterial({
-                color: 0xD65A31,
+                color: 0x616161,
                 transparent: true,
-                opacity: 0.12,
+                opacity: 0.08,
                 roughness: 0.1,
                 metalness: 0.1,
                 clearcoat: 1,

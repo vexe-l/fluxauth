@@ -53,7 +53,7 @@ export default function LiveMonitorPage() {
                 if (response.ok) {
                     const data = await response.json();
                     if (data.sessions && data.sessions.length > 0) {
-                        setSessions(data.sessions.map((s: any) => ({
+                        const mappedSessions = data.sessions.map((s: any) => ({
                             sessionId: s.session_id,
                             userId: s.user_id || 'anonymous',
                             trustScore: s.trust_score || 0,
@@ -61,8 +61,23 @@ export default function LiveMonitorPage() {
                             startTime: new Date(s.created_at),
                             keystrokes: s.events ? JSON.parse(s.events).filter((e: any) => e.type.includes('key')).length : 0,
                             mouseEvents: s.events ? JSON.parse(s.events).filter((e: any) => e.type === 'mousemove').length : 0
-                        })));
+                        }));
+                        setSessions(mappedSessions);
                         setUseDemoData(false);
+                        
+                        // Calculate real stats from sessions
+                        const totalEvents = mappedSessions.reduce((sum: number, s: any) => sum + s.keystrokes + s.mouseEvents, 0);
+                        const avgTrustScore = mappedSessions.length > 0 
+                            ? mappedSessions.reduce((sum: number, s: any) => sum + s.trustScore, 0) / mappedSessions.length 
+                            : 0;
+                        const anomaliesDetected = mappedSessions.filter((s: any) => s.status === 'suspicious').length;
+                        
+                        setStats({
+                            activeSessions: mappedSessions.length,
+                            avgTrustScore: Math.round(avgTrustScore),
+                            anomaliesDetected,
+                            totalEvents
+                        });
                     } else {
                         // No real data, use demo
                         setUseDemoData(true);
@@ -111,14 +126,16 @@ export default function LiveMonitorPage() {
     }, []);
 
     const [stats, setStats] = useState({
-        activeSessions: 3,
-        avgTrustScore: 75,
-        anomaliesDetected: 1,
-        totalEvents: 647
+        activeSessions: 0,
+        avgTrustScore: 0,
+        anomaliesDetected: 0,
+        totalEvents: 0
     });
 
-    // Simulate live updates
+    // Only simulate live updates in demo mode
     useEffect(() => {
+        if (!useDemoData) return; // Don't simulate if using real data
+        
         const interval = setInterval(() => {
             setSessions(prev => prev.map(s => ({
                 ...s,
@@ -129,7 +146,7 @@ export default function LiveMonitorPage() {
         }, 2000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [useDemoData]);
 
     return (
         <VStack spacing={6} maxW="7xl" mx="auto">
@@ -146,7 +163,7 @@ export default function LiveMonitorPage() {
                     Live tracking of typing/mouse rhythm with trust meter updates
                 </Text>
                 {useDemoData && (
-                    <Text fontSize="sm" color="orange.600" mt={1}>
+                    <Text fontSize="sm" color="brand.400" mt={1}>
                         ⚠️ No real sessions yet - showing demo data. Complete enrollment to see real data!
                     </Text>
                 )}
@@ -155,7 +172,7 @@ export default function LiveMonitorPage() {
             {/* Stats Grid */}
             <Grid templateColumns="repeat(4, 1fr)" gap={6} w="full">
                 <GridItem>
-                    <Card bg="brand.50" borderLeft="4px" borderColor="brand.400">
+                    <Card bg="brand.800" borderLeft="4px" borderColor="brand.400">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Active Sessions</StatLabel>
@@ -170,7 +187,7 @@ export default function LiveMonitorPage() {
                 </GridItem>
 
                 <GridItem>
-                    <Card bg="accent.50" borderLeft="4px" borderColor="accent.500">
+                    <Card bg="accent.800" borderLeft="4px" borderColor="accent.500">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Avg Trust Score</StatLabel>
@@ -197,7 +214,7 @@ export default function LiveMonitorPage() {
                 </GridItem>
 
                 <GridItem>
-                    <Card bg="purple.50" borderLeft="4px" borderColor="purple.500">
+                    <Card bg="brand.800" borderLeft="4px" borderColor="purple.500">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Total Events</StatLabel>
@@ -273,14 +290,15 @@ export default function LiveMonitorPage() {
                 </CardBody>
             </Card>
 
-            <Card w="full" bg="blue.50">
-                <CardBody>
-                    <Text fontSize="sm" color="white">
-                        <strong>Demo Mode:</strong> This dashboard shows simulated real-time data.
-                        In production, it would connect via WebSocket to display actual user sessions.
-                    </Text>
-                </CardBody>
-            </Card>
+            {useDemoData && (
+                <Card w="full" bg="brand.800">
+                    <CardBody>
+                        <Text fontSize="sm" color="white">
+                            <strong>Demo Mode:</strong> No real sessions found. Complete enrollment and authentication to see live data.
+                        </Text>
+                    </CardBody>
+                </Card>
+            )}
         </VStack>
     );
 }

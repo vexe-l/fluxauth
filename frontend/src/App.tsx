@@ -20,7 +20,7 @@ function App() {
                 <Box position="relative" zIndex={1}>
                     {/* Navigation */}
                     <Box
-                        bg="rgba(57, 62, 70, 0.95)"
+                        bg="rgba(26, 26, 26, 0.95)"
                         backdropFilter="blur(10px)"
                         borderBottom="1px"
                         borderColor="brand.500"

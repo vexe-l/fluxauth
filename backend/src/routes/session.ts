@@ -5,6 +5,7 @@ import { extractFeatures } from '../features/extractor';
 import { scoreVector } from '../features/scorer';
 import { BehaviorEvent, FeatureVector } from '../features/types';
 import { analyzeSessionWithAI, explainAnomalyToUser } from '../services/geminiService';
+import { metricsService } from '../services/metricsService';
 import crypto from 'crypto';
 
 const router = Router();
@@ -145,6 +146,9 @@ router.post('/score', async (req, res, next) => {
             now,
             sessionId
         );
+
+        // Log scoring result for metrics
+        metricsService.logScore(result.isAnomaly);
 
         res.json({
             ...result,

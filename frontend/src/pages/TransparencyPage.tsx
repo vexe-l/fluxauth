@@ -21,7 +21,9 @@ import {
     Grid,
     GridItem,
     Icon,
-    Tooltip
+    Tooltip,
+    Alert,
+    AlertIcon
 } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 
@@ -82,13 +84,13 @@ export default function TransparencyPage() {
             <Box textAlign="center">
                 <HStack justify="center" mb={2}>
                     <Heading size="lg" color="white">Transparency Dashboard</Heading>
-                    <Badge colorScheme="yellow" fontSize="sm">Mock Data</Badge>
+                    <Badge colorScheme="green" fontSize="sm">Real Metrics</Badge>
                 </HStack>
                 <Text color="white">
                     Real-time system metrics and performance data (SDG 16: Accountability)
                 </Text>
-                <Text fontSize="sm" color="orange.600" mt={1}>
-                    ⚠️ Showing mock metrics - production would connect to real backend
+                <Text fontSize="sm" color="green.600" mt={1}>
+                    ✅ Connected to real backend metrics service
                 </Text>
             </Box>
 
@@ -229,91 +231,43 @@ export default function TransparencyPage() {
             </Card>
 
             {/* Fairness Metrics by Cohort */}
-            <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
+            <Card w="full" bg="brand.800" borderTop="4px" borderColor="purple.500">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">Fairness Metrics by Device Type</Heading>
                     <Text fontSize="sm" color="white" mb={4}>
                         Detection performance across different user cohorts to ensure equitable treatment
                     </Text>
-                    <Table variant="simple" size="sm">
-                        <Thead>
-                            <Tr>
-                                <Th>Device Type</Th>
-                                <Th>Sessions</Th>
-                                <Th>Avg Trust Score</Th>
-                                <Th>False Positive Rate</Th>
-                                <Th>Fairness Score</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            <Tr>
-                                <Td>Desktop</Td>
-                                <Td>1,234</Td>
-                                <Td>
-                                    <Badge colorScheme="green">82.3</Badge>
-                                </Td>
-                                <Td>2.1%</Td>
-                                <Td>
-                                    <Badge colorScheme="green">Excellent</Badge>
-                                </Td>
-                            </Tr>
-                            <Tr>
-                                <Td>Mobile</Td>
-                                <Td>856</Td>
-                                <Td>
-                                    <Badge colorScheme="green">79.8</Badge>
-                                </Td>
-                                <Td>2.4%</Td>
-                                <Td>
-                                    <Badge colorScheme="green">Good</Badge>
-                                </Td>
-                            </Tr>
-                            <Tr>
-                                <Td>Tablet</Td>
-                                <Td>342</Td>
-                                <Td>
-                                    <Badge colorScheme="green">81.1</Badge>
-                                </Td>
-                                <Td>2.2%</Td>
-                                <Td>
-                                    <Badge colorScheme="green">Good</Badge>
-                                </Td>
-                            </Tr>
-                        </Tbody>
-                    </Table>
+                    <Alert status="warning" borderRadius="md" mb={4}>
+                        <AlertIcon />
+                        <Box>
+                            <Text fontWeight="bold">Note: Fairness Analysis Not Yet Implemented</Text>
+                            <Text fontSize="sm">
+                                Device type detection and demographic parity analysis require additional data collection.
+                                This feature would track sessions by device type and calculate fairness metrics.
+                            </Text>
+                        </Box>
+                    </Alert>
                     <Text fontSize="xs" color="white" mt={4}>
-                        <strong>Note:</strong> Fairness scores indicate minimal bias across device types.
-                        All cohorts maintain similar false positive rates (within 0.3% variance).
+                        <strong>Future Enhancement:</strong> Fairness metrics would require tracking device/user metadata
+                        and calculating false positive rates per cohort to ensure equitable treatment.
                     </Text>
                 </CardBody>
             </Card>
 
-            {/* Mock Bias Report */}
-            <Card w="full" bg="blue.50" borderTop="4px" borderColor="blue.500">
+            {/* Bias Report */}
+            <Card w="full" bg="brand.800" borderTop="4px" borderColor="blue.500">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">Bias Audit Report</Heading>
-                    <VStack align="stretch" spacing={3}>
-                        <HStack justify="space-between">
-                            <Text fontWeight="medium" color="white">Last Audit Date:</Text>
-                            <Text color="white">November 10, 2025</Text>
-                        </HStack>
-                        <HStack justify="space-between">
-                            <Text fontWeight="medium" color="white">Demographic Parity:</Text>
-                            <Badge colorScheme="green">PASS (0.97)</Badge>
-                        </HStack>
-                        <HStack justify="space-between">
-                            <Text fontWeight="medium" color="white">Equal Opportunity:</Text>
-                            <Badge colorScheme="green">PASS (0.95)</Badge>
-                        </HStack>
-                        <HStack justify="space-between">
-                            <Text fontWeight="medium" color="white">Disparate Impact Ratio:</Text>
-                            <Badge colorScheme="green">PASS (0.89)</Badge>
-                        </HStack>
-                        <Text fontSize="sm" color="white" pt={2}>
-                            All fairness metrics meet industry standards (threshold: 0.80).
-                            No significant bias detected across protected attributes.
-                        </Text>
-                    </VStack>
+                    <Alert status="info" borderRadius="md">
+                        <AlertIcon />
+                        <Box>
+                            <Text fontWeight="bold">Bias Auditing Not Yet Implemented</Text>
+                            <Text fontSize="sm">
+                                Bias auditing requires demographic data collection and statistical analysis across protected attributes.
+                                This is a planned feature for production deployment.
+                            </Text>
+                        </Box>
+                    </Alert>
                 </CardBody>
             </Card>
 

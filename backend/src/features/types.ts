@@ -30,6 +30,7 @@ export interface EnrollmentProfile {
 export interface ScoreResult {
     trustScore: number;
     isAnomaly: boolean;
+    isBot?: boolean; // Bot detection flag
     topReasons: ScoreReason[];
 }
 

@@ -14,60 +14,59 @@ const theme = extendTheme({
     },
     colors: {
         brand: {
-            50: '#FDF0EC',
-            100: '#F9D4C9',
-            200: '#F4B8A6',
-            300: '#EF9C83',
-            400: '#EA7F60',
-            500: '#D65A31',
-            600: '#C24A21',
-            700: '#9A3B1A',
-            800: '#722C13',
-            900: '#4A1D0C'
+            50: '#F5F5F5',
+            100: '#E0E0E0',
+            200: '#BDBDBD',
+            300: '#9E9E9E',
+            400: '#757575',
+            500: '#616161',
+            600: '#424242',
+            700: '#303030',
+            800: '#212121',
+            900: '#0A0A0A'
         },
         accent: {
-            50: '#FDF0EC',
-            100: '#F9D4C9',
-            200: '#F4B8A6',
-            300: '#EF9C83',
-            400: '#EA7F60',
-            500: '#D65A31',
-            600: '#C24A21',
-            700: '#9A3B1A',
-            800: '#722C13',
-            900: '#4A1D0C'
+            50: '#FAFAFA',
+            100: '#F5F5F5',
+            200: '#EEEEEE',
+            300: '#E0E0E0',
+            400: '#BDBDBD',
+            500: '#9E9E9E',
+            600: '#757575',
+            700: '#616161',
+            800: '#424242',
+            900: '#212121'
         },
         navy: {
-            50: '#F5F5F5',
-            100: '#EEEEEE',
-            200: '#D1D1D1',
-            300: '#B4B4B4',
-            400: '#7A7D82',
-            500: '#393E46',
-            600: '#2F333A',
-            700: '#25282E',
-            800: '#222831',
-            900: '#1A1D23'
+            50: '#FAFAFA',
+            100: '#F5F5F5',
+            200: '#EEEEEE',
+            300: '#E0E0E0',
+            400: '#BDBDBD',
+            500: '#9E9E9E',
+            600: '#757575',
+            700: '#616161',
+            800: '#424242',
+            900: '#212121'
         },
         cyber: {
-            bg: '#222831',
-            surface: '#393E46',
-            border: '#4A4F57',
-            text: '#EEEEEE',
-            muted: '#7A7D82'
+            bg: '#0A0A0A',
+            surface: '#1A1A1A',
+            border: '#2A2A2A',
+            text: '#FFFFFF',
+            muted: '#757575'
         }
     },
     styles: {
         global: {
             body: {
-                bg: '#222831',
-                color: '#EEEEEE',
-                backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(214, 90, 49, 0.05) 0%, transparent 50%)',
+                bg: '#0A0A0A',
+                color: '#FFFFFF',
                 backgroundAttachment: 'fixed'
             },
             '*::selection': {
-                bg: 'brand.500',
-                color: 'navy.100'
+                bg: 'brand.400',
+                color: 'white'
             }
         }
     },
@@ -93,27 +92,27 @@ const theme = extendTheme({
             },
             variants: {
                 solid: {
-                    bg: 'brand.500',
-                    color: 'navy.100',
+                    bg: 'brand.600',
+                    color: 'white',
                     _hover: {
-                        bg: 'brand.400',
+                        bg: 'brand.500',
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 0 20px rgba(214, 90, 49, 0.4)'
+                        boxShadow: '0 0 20px rgba(97, 97, 97, 0.3)'
                     }
                 },
                 outline: {
-                    borderColor: 'brand.500',
-                    color: 'brand.500',
+                    borderColor: 'brand.400',
+                    color: 'brand.300',
                     _hover: {
-                        bg: 'rgba(214, 90, 49, 0.1)',
+                        bg: 'rgba(158, 158, 158, 0.1)',
                         transform: 'translateY(-2px)'
                     }
                 },
                 ghost: {
-                    color: 'navy.200',
+                    color: 'brand.200',
                     _hover: {
-                        bg: 'rgba(214, 90, 49, 0.1)',
-                        color: 'brand.500'
+                        bg: 'rgba(158, 158, 158, 0.1)',
+                        color: 'brand.100'
                     }
                 }
             }
@@ -121,15 +120,15 @@ const theme = extendTheme({
         Card: {
             baseStyle: {
                 container: {
-                    bg: '#393E46',
+                    bg: '#1A1A1A',
                     borderRadius: 'xl',
                     border: '1px solid',
-                    borderColor: '#4A4F57',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+                    borderColor: '#2A2A2A',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
                     transition: 'all 0.2s',
                     _hover: {
                         borderColor: 'brand.500',
-                        boxShadow: '0 0 20px rgba(214, 90, 49, 0.2)'
+                        boxShadow: '0 0 20px rgba(97, 97, 97, 0.2)'
                     }
                 }
             }
