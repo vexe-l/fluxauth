@@ -15,8 +15,7 @@ import {
     FormLabel,
     HStack,
     Badge,
-    Divider,
-    Code
+    Divider
 } from '@chakra-ui/react';
 import { BehaviorSDK, ScoreResult } from '../sdk/browser';
 import ConsentBanner from '../components/ConsentBanner';
@@ -30,7 +29,7 @@ export default function TestPage() {
     const [offlineMode, setOfflineMode] = useState(false);
     const [sdk] = useState(() => new BehaviorSDK({
         apiUrl: '/api',
-        apiKey: import.meta.env.VITE_API_KEY || 'dev_key_12345'
+        apiKey: 'dev_key_12345'
     }));
     const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
     const [isScoring, setIsScoring] = useState(false);

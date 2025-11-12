@@ -242,10 +242,10 @@ export default function DashboardPage() {
             <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
                 <CardBody>
                     <HStack justify="space-between" mb={4}>
-                        <HStack>
+                        <VStack align="start">
                             <Heading size="md" color="navy.500">🤖 AI Threat Analysis</Heading>
                             <Badge colorScheme="purple">Powered by Gemini</Badge>
-                        </HStack>
+                        </VStack>
                         <Button
                             size="sm"
                             colorScheme="purple"
