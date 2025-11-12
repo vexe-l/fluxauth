@@ -40,11 +40,56 @@ export default function LiveMonitorPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [useDemoData, setUseDemoData] = useState(false);
 
-    // Fetch real sessions from backend
+    // Load demo data immediately, then try to fetch real data
     useEffect(() => {
+        const loadDemoData = () => {
+            const demoSessions = [
+                {
+                    sessionId: 'demo-001',
+                    userId: 'demo-alice',
+                    trustScore: 92,
+                    status: 'verified' as const,
+                    startTime: new Date(Date.now() - 120000),
+                    keystrokes: 234,
+                    mouseEvents: 89
+                },
+                {
+                    sessionId: 'demo-002',
+                    userId: 'demo-bob',
+                    trustScore: 45,
+                    status: 'suspicious' as const,
+                    startTime: new Date(Date.now() - 45000),
+                    keystrokes: 89,
+                    mouseEvents: 12
+                },
+                {
+                    sessionId: 'demo-003',
+                    userId: 'demo-charlie',
+                    trustScore: 88,
+                    status: 'verified' as const,
+                    startTime: new Date(Date.now() - 30000),
+                    keystrokes: 156,
+                    mouseEvents: 67
+                }
+            ];
+            setSessions(demoSessions);
+            setStats({
+                activeSessions: demoSessions.length,
+                avgTrustScore: Math.round(demoSessions.reduce((sum, s) => sum + s.trustScore, 0) / demoSessions.length),
+                anomaliesDetected: demoSessions.filter(s => s.status === 'suspicious').length,
+                totalEvents: demoSessions.reduce((sum, s) => sum + s.keystrokes + s.mouseEvents, 0)
+            });
+            setIsLoading(false);
+        };
+
+        // Load demo data immediately
+        loadDemoData();
+        setUseDemoData(true);
+
+        // Try to fetch real data (but don't block on it)
         const fetchSessions = async () => {
             try {
-                const response = await fetch('/api/sessions/recent', {
+                const response = await fetch(`${API_CONFIG.API_URL}/sessions/recent`, {
                     headers: {
                         'x-api-key': API_CONFIG.API_KEY
                     }
@@ -57,7 +102,7 @@ export default function LiveMonitorPage() {
                             sessionId: s.session_id,
                             userId: s.user_id || 'anonymous',
                             trustScore: s.trust_score || 0,
-                            status: s.is_anomaly ? 'suspicious' : 'verified',
+                            status: s.is_anomaly ? 'suspicious' as const : 'verified' as const,
                             startTime: new Date(s.created_at),
                             keystrokes: s.events ? JSON.parse(s.events).filter((e: any) => e.type.includes('key')).length : 0,
                             mouseEvents: s.events ? JSON.parse(s.events).filter((e: any) => e.type === 'mousemove').length : 0
@@ -78,48 +123,15 @@ export default function LiveMonitorPage() {
                             anomaliesDetected,
                             totalEvents
                         });
-                    } else {
-                        // No real data, use demo
-                        setUseDemoData(true);
-                        loadDemoData();
                     }
-                } else {
-                    // Backend error, use demo
-                    setUseDemoData(true);
-                    loadDemoData();
                 }
             } catch (error) {
-                // Network error, use demo
-                setUseDemoData(true);
-                loadDemoData();
-            } finally {
-                setIsLoading(false);
+                // Silently fail - demo data is already loaded
+                console.log('Using demo data (backend unavailable)');
             }
         };
 
-        const loadDemoData = () => {
-            setSessions([
-                {
-                    sessionId: 'demo-001',
-                    userId: 'demo-alice',
-                    trustScore: 92,
-                    status: 'verified',
-                    startTime: new Date(Date.now() - 120000),
-                    keystrokes: 234,
-                    mouseEvents: 89
-                },
-                {
-                    sessionId: 'demo-002',
-                    userId: 'demo-bob',
-                    trustScore: 45,
-                    status: 'suspicious',
-                    startTime: new Date(Date.now() - 45000),
-                    keystrokes: 89,
-                    mouseEvents: 12
-                }
-            ]);
-        };
-
+        // Try to fetch real data in background (non-blocking)
         fetchSessions();
         const interval = setInterval(fetchSessions, 5000); // Refresh every 5s
         return () => clearInterval(interval);
@@ -172,7 +184,7 @@ export default function LiveMonitorPage() {
             {/* Stats Grid */}
             <Grid templateColumns="repeat(4, 1fr)" gap={6} w="full">
                 <GridItem>
-                    <Card bg="brand.800" borderLeft="4px" borderColor="brand.400">
+                    <Card bg="rgba(0, 0, 0, 0.3)" borderLeft="4px" borderColor="brand.400">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Active Sessions</StatLabel>
@@ -187,7 +199,7 @@ export default function LiveMonitorPage() {
                 </GridItem>
 
                 <GridItem>
-                    <Card bg="accent.800" borderLeft="4px" borderColor="accent.500">
+                    <Card bg="rgba(0, 0, 0, 0.3)" borderLeft="4px" borderColor="blue.400">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Avg Trust Score</StatLabel>
@@ -202,7 +214,7 @@ export default function LiveMonitorPage() {
                 </GridItem>
 
                 <GridItem>
-                    <Card bg="red.50" borderLeft="4px" borderColor="red.500">
+                    <Card bg="rgba(220, 38, 38, 0.2)" borderLeft="4px" borderColor="red.500">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Anomalies</StatLabel>
@@ -214,7 +226,7 @@ export default function LiveMonitorPage() {
                 </GridItem>
 
                 <GridItem>
-                    <Card bg="brand.800" borderLeft="4px" borderColor="purple.500">
+                    <Card bg="rgba(0, 0, 0, 0.3)" borderLeft="4px" borderColor="purple.500">
                         <CardBody>
                             <Stat>
                                 <StatLabel color="white">Total Events</StatLabel>
@@ -227,25 +239,25 @@ export default function LiveMonitorPage() {
             </Grid>
 
             {/* Live Sessions Table */}
-            <Card w="full">
+            <Card w="full" bg="rgba(0, 0, 0, 0.3)" borderColor="rgba(255, 255, 255, 0.1)">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">Live Sessions</Heading>
-                    <Table variant="simple" size="sm">
+                    <Table variant="simple" size="sm" colorScheme="whiteAlpha">
                         <Thead>
                             <Tr>
-                                <Th>Session ID</Th>
-                                <Th>User</Th>
-                                <Th>Trust Score</Th>
-                                <Th>Status</Th>
-                                <Th>Duration</Th>
-                                <Th>Events</Th>
+                                <Th color="white">Session ID</Th>
+                                <Th color="white">User</Th>
+                                <Th color="white">Trust Score</Th>
+                                <Th color="white">Status</Th>
+                                <Th color="white">Duration</Th>
+                                <Th color="white">Events</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {sessions.map((session) => (
                                 <Tr key={session.sessionId}>
-                                    <Td fontFamily="mono" fontSize="xs">{session.sessionId}</Td>
-                                    <Td>{session.userId}</Td>
+                                    <Td fontFamily="mono" fontSize="xs" color="white">{session.sessionId}</Td>
+                                    <Td color="white">{session.userId}</Td>
                                     <Td>
                                         <VStack align="start" spacing={1}>
                                             <HStack>
@@ -277,10 +289,10 @@ export default function LiveMonitorPage() {
                                             {session.status}
                                         </Badge>
                                     </Td>
-                                    <Td fontSize="sm">
+                                    <Td fontSize="sm" color="white">
                                         {Math.floor((Date.now() - session.startTime.getTime()) / 1000)}s
                                     </Td>
-                                    <Td fontSize="sm">
+                                    <Td fontSize="sm" color="white">
                                         {session.keystrokes}k / {session.mouseEvents}m
                                     </Td>
                                 </Tr>
@@ -291,7 +303,7 @@ export default function LiveMonitorPage() {
             </Card>
 
             {useDemoData && (
-                <Card w="full" bg="brand.800">
+                <Card w="full" bg="rgba(0, 0, 0, 0.3)" borderColor="rgba(255, 255, 255, 0.1)">
                     <CardBody>
                         <Text fontSize="sm" color="white">
                             <strong>Demo Mode:</strong> No real sessions found. Complete enrollment and authentication to see live data.

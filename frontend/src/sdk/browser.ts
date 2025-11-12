@@ -199,6 +199,8 @@ export class BehaviorSDK {
         // Store locally for offline mode
         if (this.config.offlineMode) {
             localStorage.setItem(`fluxauth_profile_${userId}`, JSON.stringify(profile));
+            console.log(`✅ Profile saved locally for user: ${userId}`);
+            console.log('Profile:', profile);
             return Promise.resolve();
         }
         

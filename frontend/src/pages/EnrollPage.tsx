@@ -152,6 +152,15 @@ export default function EnrollPage() {
         
         try {
             await sdk.enroll(userId, sessions);
+            
+            // Verify profile was saved
+            const savedProfile = localStorage.getItem(`fluxauth_profile_${userId}`);
+            if (!savedProfile) {
+                console.error('Profile not found in localStorage after enrollment');
+                throw new Error('Profile was not saved. Please try again.');
+            }
+            console.log('✅ Enrollment successful - profile verified in localStorage');
+            
             // Clear saved progress on success
             localStorage.removeItem(`enroll_progress_${userId}`);
             setSuccess(true);
