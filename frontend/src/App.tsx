@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Box, Container, Flex, Heading, Button, HStack } from '@chakra-ui/react';
+import { Box, Container, Flex, Heading, Button, HStack, Badge } from '@chakra-ui/react';
 import HomePage from './pages/HomePage';
 import LiveMonitorPage from './pages/LiveMonitorPage';
 import EnrollPage from './pages/EnrollPage';
@@ -18,29 +18,48 @@ function App() {
 
                 <Box position="relative" zIndex={1}>
                     {/* Navigation */}
-                    <Box bg="navy.500" borderBottom="2px" borderColor="brand.400" py={4}>
+                    <Box
+                        bg="rgba(21, 27, 61, 0.8)"
+                        backdropFilter="blur(10px)"
+                        borderBottom="1px"
+                        borderColor="brand.400"
+                        py={4}
+                        position="sticky"
+                        top={0}
+                        zIndex={100}
+                    >
                         <Container maxW="container.xl">
                             <Flex justify="space-between" align="center">
-                                <Heading size="md" color="white" fontWeight="bold" letterSpacing="wide">
-                                    FLUXAUTH
-                                </Heading>
-                                <HStack spacing={4}>
-                                    <Button as={Link} to="/" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
+                                <HStack spacing={3}>
+                                    <Box
+                                        w="8px"
+                                        h="8px"
+                                        bg="brand.400"
+                                        borderRadius="full"
+                                        animation="pulse 2s infinite"
+                                    />
+                                    <Heading size="md" color="brand.400" fontWeight="bold" letterSpacing="wider">
+                                        FLUXAUTH
+                                    </Heading>
+                                    <Badge colorScheme="green" fontSize="xs">LIVE</Badge>
+                                </HStack>
+                                <HStack spacing={2}>
+                                    <Button as={Link} to="/" variant="ghost" size="sm">
                                         Home
                                     </Button>
-                                    <Button as={Link} to="/enroll" colorScheme="accent" size="sm">
+                                    <Button as={Link} to="/enroll" colorScheme="brand" size="sm">
                                         Try It
                                     </Button>
-                                    <Button as={Link} to="/live-monitor" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
-                                        Live Monitor
+                                    <Button as={Link} to="/live-monitor" variant="ghost" size="sm">
+                                        Monitor
                                     </Button>
-                                    <Button as={Link} to="/dashboard" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
-                                        Bot Detection
+                                    <Button as={Link} to="/dashboard" variant="ghost" size="sm">
+                                        Detection
                                     </Button>
-                                    <Button as={Link} to="/transparency" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
+                                    <Button as={Link} to="/transparency" variant="ghost" size="sm">
                                         Fairness
                                     </Button>
-                                    <Button as={Link} to="/policy" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
+                                    <Button as={Link} to="/policy" variant="ghost" size="sm">
                                         Policy
                                     </Button>
                                 </HStack>
