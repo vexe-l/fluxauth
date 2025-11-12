@@ -103,7 +103,7 @@ export default function EnrollPage() {
     return (
         <VStack spacing={6} maxW="2xl" mx="auto">
             <Heading size="lg" color="white">Enroll Your Behavioral Profile</Heading>
-            <Text color="gray.300" textAlign="center">
+            <Text color="white" textAlign="center">
                 Type 4 short prompts naturally to create your unique behavioral baseline
             </Text>
 
@@ -138,7 +138,7 @@ export default function EnrollPage() {
                         </Box>
 
                         <Box w="full" p={4} bg="gray.50" borderRadius="md">
-                            <Text fontSize="sm" color="gray.400" mb={2}>
+                            <Text fontSize="sm" color="white" mb={2}>
                                 Prompt {currentPrompt + 1}:
                             </Text>
                             <Text fontSize="lg" fontWeight="medium" color="white">
@@ -171,7 +171,7 @@ export default function EnrollPage() {
                             </Button>
                         )}
 
-                        <Text fontSize="xs" color="gray.400">
+                        <Text fontSize="xs" color="white">
                             {sessions.length} / {PROMPTS.length} prompts completed
                         </Text>
                     </VStack>

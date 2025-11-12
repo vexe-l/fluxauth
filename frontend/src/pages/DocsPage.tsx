@@ -17,7 +17,7 @@ export default function DocsPage() {
     return (
         <VStack spacing={6} maxW="4xl" mx="auto" align="stretch">
             <Heading size="lg">Developer Documentation</Heading>
-            <Text color="gray.600">
+            <Text color="white">
                 Quick start guide for integrating BIaaS into your application.
             </Text>
 
@@ -102,7 +102,7 @@ console.log(result.topReasons);  // Explanation`}
                     <Heading size="sm" mb={2}>
                         POST /api/session/start
                     </Heading>
-                    <Text fontSize="sm" color="gray.600" mb={2}>
+                    <Text fontSize="sm" color="white" mb={2}>
                         Register a new behavioral session.
                     </Text>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm" mb={4}>
@@ -120,7 +120,7 @@ console.log(result.topReasons);  // Explanation`}
                     <Heading size="sm" mb={2}>
                         POST /api/session/score
                     </Heading>
-                    <Text fontSize="sm" color="gray.600" mb={2}>
+                    <Text fontSize="sm" color="white" mb={2}>
                         Score a behavioral session against user profile.
                     </Text>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm" mb={4}>
@@ -145,7 +145,7 @@ console.log(result.topReasons);  // Explanation`}
                     <Heading size="sm" mb={2}>
                         POST /api/enroll
                     </Heading>
-                    <Text fontSize="sm" color="gray.600" mb={2}>
+                    <Text fontSize="sm" color="white" mb={2}>
                         Enroll a user with behavioral samples.
                     </Text>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm">
@@ -170,7 +170,7 @@ console.log(result.topReasons);  // Explanation`}
                     <Heading size="md" mb={4}>
                         Response Format
                     </Heading>
-                    <Text fontSize="sm" color="gray.600" mb={3}>
+                    <Text fontSize="sm" color="white" mb={3}>
                         Score endpoint returns:
                     </Text>
                     <Code display="block" p={4} borderRadius="md" whiteSpace="pre" fontSize="sm">
@@ -229,7 +229,7 @@ console.log(result.topReasons);  // Explanation`}
                     <Heading size="md" mb={4}>
                         Security Notes
                     </Heading>
-                    <Text fontSize="sm" color="gray.600" mb={3}>
+                    <Text fontSize="sm" color="white" mb={3}>
                         This is a Phase-1 prototype. Before production deployment:
                     </Text>
                     <List spacing={2} fontSize="sm">
@@ -240,7 +240,7 @@ console.log(result.topReasons);  // Explanation`}
                         <ListItem>• Review and harden rate limits</ListItem>
                         <ListItem>• Conduct security audit</ListItem>
                     </List>
-                    <Text fontSize="sm" color="gray.600" mt={3}>
+                    <Text fontSize="sm" color="white" mt={3}>
                         See <Code>SECURITY.md</Code> for detailed security practices.
                     </Text>
                 </CardBody>

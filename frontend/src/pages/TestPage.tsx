@@ -138,7 +138,7 @@ export default function TestPage() {
     return (
         <VStack spacing={6} maxW="2xl" mx="auto">
             <Heading size="lg" color="navy.500">Edge/Offline SDK Mode</Heading>
-            <Text color="gray.600" textAlign="center">
+            <Text color="white" textAlign="center">
                 Browser SDK scores locally before sending summary to server — privacy-first & efficient
             </Text>
 
@@ -148,7 +148,7 @@ export default function TestPage() {
                     <HStack justify="space-between">
                         <VStack align="start" spacing={1}>
                             <Text fontWeight="bold" color="navy.500">Local Mode (Offline Scoring)</Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="white">
                                 Compute trust score client-side using JS function
                             </Text>
                         </VStack>
@@ -185,7 +185,7 @@ export default function TestPage() {
                     <CardBody>
                         <VStack spacing={4}>
                             <Text fontWeight="medium">Authentication Test</Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="white">
                                 Type the following text naturally:
                             </Text>
                             <Text fontSize="lg" fontWeight="medium" textAlign="center" p={4} bg="gray.50" borderRadius="md">
@@ -241,14 +241,14 @@ export default function TestPage() {
                             <Divider />
 
                             <Box>
-                                <Text fontSize="sm" color="gray.600" mb={2}>
+                                <Text fontSize="sm" color="white" mb={2}>
                                     Trust Score
                                 </Text>
                                 <HStack>
                                     <Heading size="2xl" color={scoreResult.trustScore > 70 ? 'green.500' : 'red.500'}>
                                         {scoreResult.trustScore}
                                     </Heading>
-                                    <Text fontSize="xl" color="gray.500">
+                                    <Text fontSize="xl" color="white">
                                         / 100
                                     </Text>
                                 </HStack>
@@ -265,7 +265,7 @@ export default function TestPage() {
                                             </Text>
                                             <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
                                         </HStack>
-                                        <Text fontSize="sm" color="gray.700">
+                                        <Text fontSize="sm" color="white">
                                             {scoreResult.aiAnalysis}
                                         </Text>
                                     </Box>
@@ -279,7 +279,7 @@ export default function TestPage() {
                                         <Text fontSize="sm" fontWeight="bold" color="blue.700" mb={2}>
                                             💡 What This Means For You
                                         </Text>
-                                        <Text fontSize="sm" color="gray.700">
+                                        <Text fontSize="sm" color="white">
                                             {scoreResult.aiExplanation}
                                         </Text>
                                     </Box>
@@ -288,7 +288,7 @@ export default function TestPage() {
                             )}
 
                             <Box>
-                                <Text fontSize="sm" color="gray.600" mb={3}>
+                                <Text fontSize="sm" color="white" mb={3}>
                                     Technical Details
                                 </Text>
                                 <VStack spacing={2} align="stretch">
@@ -303,7 +303,7 @@ export default function TestPage() {
                                                         {reason.zscore > 0 ? '+' : ''}{reason.zscore}σ
                                                     </Badge>
                                                 </HStack>
-                                                <Text fontSize="xs" color="gray.600">
+                                                <Text fontSize="xs" color="white">
                                                     {reason.message}
                                                 </Text>
                                             </CardBody>

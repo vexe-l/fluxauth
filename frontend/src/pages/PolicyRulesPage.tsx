@@ -117,7 +117,7 @@ export default function PolicyRulesPage() {
                     <Heading size="lg" color="navy.500">Custom Policy Engine</Heading>
                     <Badge colorScheme="purple" fontSize="sm">UI Demo</Badge>
                 </HStack>
-                <Text color="gray.600" mt={2}>
+                <Text color="white" mt={2}>
                     Admin UI for writing policies as logic: IF trustScore&lt;40 THEN REQUIRE_OTP
                 </Text>
                 <Text fontSize="sm" color="purple.600" mt={1}>
@@ -154,7 +154,7 @@ export default function PolicyRulesPage() {
                                 fontFamily="mono"
                                 fontSize="sm"
                             />
-                            <Text fontSize="xs" color="gray.600" mt={1}>
+                            <Text fontSize="xs" color="white" mt={1}>
                                 Available variables: trustScore, isAnomaly, userId, sessionId
                             </Text>
                         </FormControl>
@@ -229,13 +229,13 @@ export default function PolicyRulesPage() {
 
                                     <VStack align="stretch" spacing={2}>
                                         <Box>
-                                            <Text fontSize="xs" color="gray.600" mb={1}>CONDITION:</Text>
+                                            <Text fontSize="xs" color="white" mb={1}>CONDITION:</Text>
                                             <Code colorScheme="blue" p={2} borderRadius="md" w="full" display="block">
                                                 {rule.condition}
                                             </Code>
                                         </Box>
                                         <Box>
-                                            <Text fontSize="xs" color="gray.600" mb={1}>ACTION:</Text>
+                                            <Text fontSize="xs" color="white" mb={1}>ACTION:</Text>
                                             <Badge colorScheme="accent" fontSize="sm" p={2}>
                                                 {rule.action}
                                             </Badge>

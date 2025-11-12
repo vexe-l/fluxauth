@@ -141,7 +141,7 @@ export default function LiveMonitorPage() {
                         <Badge colorScheme="green" fontSize="sm">Live Data</Badge>
                     )}
                 </HStack>
-                <Text color="gray.600" mt={2}>
+                <Text color="white" mt={2}>
                     Live tracking of typing/mouse rhythm with trust meter updates
                 </Text>
                 {useDemoData && (

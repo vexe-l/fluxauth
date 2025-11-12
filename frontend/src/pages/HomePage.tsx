@@ -12,7 +12,7 @@ export default function HomePage() {
                 <Text fontSize="2xl" color="white" maxW="3xl" mx="auto" mb={4} fontWeight="600">
                     Continuous Behavioral Authentication
                 </Text>
-                <Text fontSize="lg" color="gray.300" maxW="2xl" mx="auto">
+                <Text fontSize="lg" color="white" maxW="2xl" mx="auto">
                     Verify users throughout their session based on typing patterns—not just passwords
                 </Text>
             </Box>
@@ -22,7 +22,7 @@ export default function HomePage() {
                 <CardBody>
                     <VStack spacing={4}>
                         <Heading size="md" color="brand.400">Quick Start</Heading>
-                        <Text fontSize="sm" color="gray.300" textAlign="center">
+                        <Text fontSize="sm" color="white" textAlign="center">
                             Test the system in under 2 minutes
                         </Text>
                         <VStack spacing={3} align="stretch" w="full">
@@ -55,7 +55,7 @@ export default function HomePage() {
                                     <Box w="3px" h="20px" bg="brand.400" />
                                     <Heading size="sm" color="brand.400">Live Monitor</Heading>
                                 </HStack>
-                                <Text color="gray.300" fontSize="sm">
+                                <Text color="white" fontSize="sm">
                                     Real-time session tracking with continuous trust scoring
                                 </Text>
                             </CardBody>
@@ -67,7 +67,7 @@ export default function HomePage() {
                                     <Box w="3px" h="20px" bg="red.400" />
                                     <Heading size="sm" color="red.400">Bot Detection</Heading>
                                 </HStack>
-                                <Text color="gray.300" fontSize="sm">
+                                <Text color="white" fontSize="sm">
                                     Identifies automated attacks and non-human patterns
                                 </Text>
                             </CardBody>
@@ -79,7 +79,7 @@ export default function HomePage() {
                                     <Box w="3px" h="20px" bg="purple.400" />
                                     <Heading size="sm" color="purple.400">Fairness</Heading>
                                 </HStack>
-                                <Text color="gray.300" fontSize="sm">
+                                <Text color="white" fontSize="sm">
                                     Unbiased detection across all device types
                                 </Text>
                             </CardBody>
@@ -93,7 +93,7 @@ export default function HomePage() {
                                     <Box w="3px" h="20px" bg="accent.500" />
                                     <Heading size="sm" color="accent.500">Policy Engine</Heading>
                                 </HStack>
-                                <Text color="gray.300" fontSize="sm">
+                                <Text color="white" fontSize="sm">
                                     Custom security rules with conditional logic
                                 </Text>
                             </CardBody>
@@ -105,7 +105,7 @@ export default function HomePage() {
                                     <Box w="3px" h="20px" bg="green.400" />
                                     <Heading size="sm" color="green.400">Edge SDK</Heading>
                                 </HStack>
-                                <Text color="gray.300" fontSize="sm">
+                                <Text color="white" fontSize="sm">
                                     Client-side scoring for maximum privacy
                                 </Text>
                             </CardBody>

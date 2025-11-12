@@ -63,7 +63,7 @@ export default function InnovationLogPage() {
         <VStack spacing={6} maxW="4xl" mx="auto">
             <Box textAlign="center">
                 <Heading size="lg" mb={2}>Innovation Log</Heading>
-                <Text color="gray.600">
+                <Text color="white">
                     Open-source contributions and improvement roadmap (SDG 9: Innovation)
                 </Text>
             </Box>
@@ -76,21 +76,21 @@ export default function InnovationLogPage() {
                         <Box>
                             <HStack justify="space-between" mb={2}>
                                 <Text fontWeight="medium">Phase 1: Foundation</Text>
-                                <Text fontSize="sm" color="gray.600">{roadmapProgress.phase1}%</Text>
+                                <Text fontSize="sm" color="white">{roadmapProgress.phase1}%</Text>
                             </HStack>
                             <Progress value={roadmapProgress.phase1} colorScheme="green" />
                         </Box>
                         <Box>
                             <HStack justify="space-between" mb={2}>
                                 <Text fontWeight="medium">Phase 2: Advanced Features</Text>
-                                <Text fontSize="sm" color="gray.600">{roadmapProgress.phase2}%</Text>
+                                <Text fontSize="sm" color="white">{roadmapProgress.phase2}%</Text>
                             </HStack>
                             <Progress value={roadmapProgress.phase2} colorScheme="blue" />
                         </Box>
                         <Box>
                             <HStack justify="space-between" mb={2}>
                                 <Text fontWeight="medium">Phase 3: Production Hardening</Text>
-                                <Text fontSize="sm" color="gray.600">{roadmapProgress.phase3}%</Text>
+                                <Text fontSize="sm" color="white">{roadmapProgress.phase3}%</Text>
                             </HStack>
                             <Progress value={roadmapProgress.phase3} colorScheme="purple" />
                         </Box>
@@ -130,8 +130,8 @@ export default function InnovationLogPage() {
                                                 </Badge>
                                             </HStack>
                                         </HStack>
-                                        <Text fontSize="sm" color="gray.600">{item.description}</Text>
-                                        <Text fontSize="xs" color="gray.500" mt={1}>{item.date}</Text>
+                                        <Text fontSize="sm" color="white">{item.description}</Text>
+                                        <Text fontSize="xs" color="white" mt={1}>{item.date}</Text>
                                     </Box>
                                 </HStack>
                             </ListItem>

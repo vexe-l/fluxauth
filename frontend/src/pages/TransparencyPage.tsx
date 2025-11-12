@@ -84,7 +84,7 @@ export default function TransparencyPage() {
                     <Heading size="lg">Transparency Dashboard</Heading>
                     <Badge colorScheme="yellow" fontSize="sm">Mock Data</Badge>
                 </HStack>
-                <Text color="gray.600">
+                <Text color="white">
                     Real-time system metrics and performance data (SDG 16: Accountability)
                 </Text>
                 <Text fontSize="sm" color="orange.600" mt={1}>
@@ -159,25 +159,25 @@ export default function TransparencyPage() {
                         <Heading size="md" mb={4}>Model Performance Metrics</Heading>
                         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
                             <Box>
-                                <Text fontSize="sm" color="gray.600">True Positive Rate (TPR)</Text>
+                                <Text fontSize="sm" color="white">True Positive Rate (TPR)</Text>
                                 <Text fontSize="2xl" fontWeight="bold">
                                     {(modelMetrics.tpr * 100).toFixed(1)}%
                                 </Text>
-                                <Text fontSize="xs" color="gray.500">Sensitivity / Recall</Text>
+                                <Text fontSize="xs" color="white">Sensitivity / Recall</Text>
                             </Box>
                             <Box>
-                                <Text fontSize="sm" color="gray.600">False Positive Rate (FPR)</Text>
+                                <Text fontSize="sm" color="white">False Positive Rate (FPR)</Text>
                                 <Text fontSize="2xl" fontWeight="bold">
                                     {(modelMetrics.fpr * 100).toFixed(1)}%
                                 </Text>
-                                <Text fontSize="xs" color="gray.500">Type I Error</Text>
+                                <Text fontSize="xs" color="white">Type I Error</Text>
                             </Box>
                             <Box>
-                                <Text fontSize="sm" color="gray.600">Precision</Text>
+                                <Text fontSize="sm" color="white">Precision</Text>
                                 <Text fontSize="2xl" fontWeight="bold">
                                     {(modelMetrics.precision * 100).toFixed(1)}%
                                 </Text>
-                                <Text fontSize="xs" color="gray.500">Positive Predictive Value</Text>
+                                <Text fontSize="xs" color="white">Positive Predictive Value</Text>
                             </Box>
                         </Grid>
                     </CardBody>
@@ -188,7 +188,7 @@ export default function TransparencyPage() {
             <Card w="full">
                 <CardBody>
                     <Heading size="md" mb={4}>Recent API Activity</Heading>
-                    <Text fontSize="sm" color="gray.600" mb={4}>
+                    <Text fontSize="sm" color="white" mb={4}>
                         Last 10 API calls (user IDs anonymized for privacy)
                     </Text>
                     <Table variant="simple" size="sm">
@@ -220,7 +220,7 @@ export default function TransparencyPage() {
                                         </Badge>
                                     </Td>
                                     <Td>{call.duration}ms</Td>
-                                    <Td fontSize="xs" color="gray.600">{call.userId || '-'}</Td>
+                                    <Td fontSize="xs" color="white">{call.userId || '-'}</Td>
                                 </Tr>
                             ))}
                         </Tbody>
@@ -232,7 +232,7 @@ export default function TransparencyPage() {
             <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
                 <CardBody>
                     <Heading size="md" mb={4} color="navy.500">Fairness Metrics by Device Type</Heading>
-                    <Text fontSize="sm" color="gray.600" mb={4}>
+                    <Text fontSize="sm" color="white" mb={4}>
                         Detection performance across different user cohorts to ensure equitable treatment
                     </Text>
                     <Table variant="simple" size="sm">
@@ -281,7 +281,7 @@ export default function TransparencyPage() {
                             </Tr>
                         </Tbody>
                     </Table>
-                    <Text fontSize="xs" color="gray.600" mt={4}>
+                    <Text fontSize="xs" color="white" mt={4}>
                         <strong>Note:</strong> Fairness scores indicate minimal bias across device types.
                         All cohorts maintain similar false positive rates (within 0.3% variance).
                     </Text>
@@ -309,7 +309,7 @@ export default function TransparencyPage() {
                             <Text fontWeight="medium">Disparate Impact Ratio:</Text>
                             <Badge colorScheme="green">PASS (0.89)</Badge>
                         </HStack>
-                        <Text fontSize="sm" color="gray.600" pt={2}>
+                        <Text fontSize="sm" color="white" pt={2}>
                             All fairness metrics meet industry standards (threshold: 0.80).
                             No significant bias detected across protected attributes.
                         </Text>
@@ -318,7 +318,7 @@ export default function TransparencyPage() {
             </Card>
 
             {/* SDG Footer */}
-            <HStack spacing={4} pt={4} fontSize="sm" color="gray.600">
+            <HStack spacing={4} pt={4} fontSize="sm" color="white">
                 <Tooltip label="SDG 9: Industry, Innovation and Infrastructure - Open, resilient systems">
                     <HStack cursor="pointer">
                         <Text>🏗️ SDG 9</Text>

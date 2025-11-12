@@ -164,7 +164,7 @@ export default function DashboardPage() {
     return (
         <VStack spacing={6} maxW="6xl" mx="auto">
             <Heading size="lg" color="navy.500">Bot/Fraud Detection Dashboard</Heading>
-            <Text color="gray.600" textAlign="center">
+            <Text color="white" textAlign="center">
                 Detects non-human or repetitive behavior using pattern heuristics and anomaly thresholds
             </Text>
 
@@ -211,7 +211,7 @@ export default function DashboardPage() {
                                             {session.isAnomaly ? 'Anomaly' : 'Verified'}
                                         </Badge>
                                     </Td>
-                                    <Td fontSize="sm" color="gray.600">
+                                    <Td fontSize="sm" color="white">
                                         {new Date(session.timestamp).toLocaleString()}
                                     </Td>
                                 </Tr>
@@ -230,7 +230,7 @@ export default function DashboardPage() {
                         <Box h="400px">
                             <Bar data={chartData} options={chartOptions} />
                         </Box>
-                        <Text fontSize="sm" color="gray.600" mt={4}>
+                        <Text fontSize="sm" color="white" mt={4}>
                             Features beyond ±2.5σ (red line) are flagged as anomalous. This session shows{' '}
                             {selectedSession.isAnomaly ? 'multiple anomalous features' : 'normal behavioral patterns'}.
                         </Text>
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                             Generate Report
                         </Button>
                     </HStack>
-                    <Text fontSize="sm" color="gray.700">
+                    <Text fontSize="sm" color="white">
                         Click "Generate Report" to get an AI-powered security analysis of recent authentication patterns.
                         The AI will identify threats, unusual patterns, and provide actionable recommendations.
                     </Text>
