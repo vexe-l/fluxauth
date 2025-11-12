@@ -4,6 +4,7 @@ import {
     Heading,
     Text,
     VStack,
+    HStack,
     Card,
     CardBody,
     Table,
@@ -14,7 +15,8 @@ import {
     Td,
     Badge,
     Alert,
-    AlertIcon
+    AlertIcon,
+    Button
 } from '@chakra-ui/react';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -168,7 +170,7 @@ export default function DashboardPage() {
                 Detects non-human or repetitive behavior using pattern heuristics and anomaly thresholds
             </Text>
 
-            <Alert status="info" borderRadius="md">
+            <Alert status="info" borderRadius="md" color="blue.900">
                 <AlertIcon />
                 This is a demo dashboard with sample data. In production, this would show real session history.
             </Alert>
@@ -243,7 +245,7 @@ export default function DashboardPage() {
                 <CardBody>
                     <HStack justify="space-between" mb={4}>
                         <VStack align="start">
-                            <Heading size="md" color="white">🤖 AI Threat Analysis</Heading>
+                            <Heading size="md" color="purple.900">🤖 AI Threat Analysis</Heading>
                             <Badge colorScheme="purple">Powered by Gemini</Badge>
                         </VStack>
                         <Button
@@ -264,7 +266,7 @@ export default function DashboardPage() {
                             Generate Report
                         </Button>
                     </HStack>
-                    <Text fontSize="sm" color="white">
+                    <Text fontSize="sm" color="gray.800">
                         Click "Generate Report" to get an AI-powered security analysis of recent authentication patterns.
                         The AI will identify threats, unusual patterns, and provide actionable recommendations.
                     </Text>

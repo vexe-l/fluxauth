@@ -128,14 +128,14 @@ export default function PolicyRulesPage() {
             {/* Add New Rule */}
             <Card w="full" bg="brand.50" borderTop="4px" borderColor="brand.400">
                 <CardBody>
-                    <Heading size="md" mb={4} color="white">
+                    <Heading size="md" mb={4} color="brand.900">
                         <AddIcon mr={2} boxSize={4} />
                         Create New Policy Rule
                     </Heading>
 
                     <VStack spacing={4} align="stretch">
                         <FormControl>
-                            <FormLabel color="white">Rule Name</FormLabel>
+                            <FormLabel color="gray.800">Rule Name</FormLabel>
                             <Input
                                 placeholder="e.g., Block Suspicious Login"
                                 value={newRule.name}
@@ -145,7 +145,7 @@ export default function PolicyRulesPage() {
                         </FormControl>
 
                         <FormControl>
-                            <FormLabel color="white">Condition (Logic)</FormLabel>
+                            <FormLabel color="gray.800">Condition (Logic)</FormLabel>
                             <Textarea
                                 placeholder="IF trustScore < 40 AND isAnomaly = true THEN"
                                 value={newRule.condition}
@@ -154,13 +154,13 @@ export default function PolicyRulesPage() {
                                 fontFamily="mono"
                                 fontSize="sm"
                             />
-                            <Text fontSize="xs" color="white" mt={1}>
+                            <Text fontSize="xs" color="gray.700" mt={1}>
                                 Available variables: trustScore, isAnomaly, userId, sessionId
                             </Text>
                         </FormControl>
 
                         <FormControl>
-                            <FormLabel color="white">Action</FormLabel>
+                            <FormLabel color="gray.800">Action</FormLabel>
                             <Select
                                 value={newRule.action}
                                 onChange={(e) => setNewRule({ ...newRule, action: e.target.value })}
@@ -251,7 +251,7 @@ export default function PolicyRulesPage() {
             {/* Example Syntax */}
             <Card w="full" bg="purple.50">
                 <CardBody>
-                    <Heading size="sm" mb={3} color="white">Policy Syntax Examples</Heading>
+                    <Heading size="sm" mb={3} color="purple.900">Policy Syntax Examples</Heading>
                     <VStack align="stretch" spacing={2} fontSize="sm" fontFamily="mono">
                         <Code p={2}>IF trustScore &lt; 40 THEN REQUIRE_OTP</Code>
                         <Code p={2}>IF isAnomaly = true THEN NOTIFY_ADMIN</Code>

@@ -1,10 +1,19 @@
 # FluxAuth - AI-Driven Behavioral Authentication
 
-**Solves the password crisis with continuous behavioral authentication powered by AI.**
+**Continuous behavioral biometric authentication that verifies users by how they type, not just what they know.**
 
 ## What It Does
 
-FluxAuth verifies users throughout their entire session based on how they type and move their mouse - not just passwords. If someone steals your password, FluxAuth will still catch them because they don't type like you.
+FluxAuth is a **Behavioral Biometrics as a Service (BaaS)** platform that provides continuous authentication throughout a user's session. Instead of relying solely on passwords, it analyzes typing patterns, mouse movements, and behavioral rhythms to create a unique "typing fingerprint" for each user.
+
+**The Problem It Solves:**
+- 81% of data breaches involve stolen credentials
+- Passwords can be phished, leaked, or guessed
+- Traditional MFA only protects the login moment
+- Account takeover attacks cost businesses $6B annually
+
+**The Solution:**
+Even if attackers steal your password, they can't replicate your typing patterns. FluxAuth continuously monitors and scores user behavior, detecting imposters in real-time.
 
 ## 🤖 AI Features
 
@@ -141,13 +150,351 @@ rm -rf backend/data/*.db
 # Restart backend - it will recreate
 ```
 
-## 📚 API Endpoints
+## 🔌 Integration Guide
 
-- `POST /api/session/start` - Start capturing
-- `POST /api/session/score` - Get trust score
-- `POST /api/enroll` - Enroll user
-- `GET /api/sessions/recent` - Get session history
-- `GET /api/ai/threat-report` - AI analysis
+### How It Works
+
+1. **Enrollment Phase**: User types naturally 4+ times to create their behavioral baseline
+2. **Authentication Phase**: System compares current typing against baseline
+3. **Continuous Monitoring**: Trust score updates in real-time during session
+4. **Action Triggers**: Automated responses based on trust score thresholds
+
+### Implementation Options
+
+#### Option 1: JavaScript SDK (Easiest)
+
+```javascript
+// 1. Install the SDK
+import { BehaviorSDK } from './sdk/browser';
+
+// 2. Initialize
+const fluxAuth = new BehaviorSDK({
+  apiUrl: 'https://your-fluxauth-api.com/api',
+  apiKey: 'your-api-key',
+  batchInterval: 5000  // Send data every 5s
+});
+
+// 3. Enroll new users (one-time)
+async function enrollUser(userId) {
+  const sessions = [];
+  
+  // Collect 4 typing samples
+  for (let i = 0; i < 4; i++) {
+    await fluxAuth.startSession(`enroll-${i}`, userId);
+    // User types naturally...
+    fluxAuth.endSession();
+    sessions.push({
+      sessionId: `enroll-${i}`,
+      events: fluxAuth.getEvents()
+    });
+    fluxAuth.clearEvents();
+  }
+  
+  await fluxAuth.enroll(userId, sessions);
+}
+
+// 4. Authenticate during login
+async function authenticateUser(userId) {
+  const sessionId = `auth-${Date.now()}`;
+  
+  await fluxAuth.startSession(sessionId, userId);
+  // User types password/form...
+  fluxAuth.endSession();
+  
+  const result = await fluxAuth.score(
+    userId, 
+    sessionId, 
+    fluxAuth.getEvents()
+  );
+  
+  if (result.trustScore < 40) {
+    // Trigger MFA or block access
+    console.log('Suspicious behavior detected!');
+    return false;
+  }
+  
+  return true;
+}
+
+// 5. Continuous monitoring (optional)
+setInterval(async () => {
+  const result = await fluxAuth.score(
+    userId, 
+    sessionId, 
+    fluxAuth.getEvents()
+  );
+  
+  if (result.isAnomaly) {
+    // Log out user or require re-authentication
+    handleSuspiciousActivity(result);
+  }
+}, 30000); // Check every 30 seconds
+```
+
+#### Option 2: Direct REST API
+
+```bash
+# 1. Enroll a user
+curl -X POST https://your-api.com/api/enroll \
+  -H "x-api-key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "user123",
+    "sessions": [
+      {
+        "sessionId": "enroll-1",
+        "events": [
+          {"type": "keydown", "timestamp": 1234567890, "keyClass": "letter"},
+          {"type": "keyup", "timestamp": 1234567950, "keyClass": "letter"}
+        ]
+      }
+    ]
+  }'
+
+# 2. Score an authentication attempt
+curl -X POST https://your-api.com/api/session/score \
+  -H "x-api-key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "user123",
+    "sessionId": "auth-456",
+    "events": [...]
+  }'
+
+# Response:
+{
+  "trustScore": 88,
+  "isAnomaly": false,
+  "topReasons": [
+    {
+      "code": "MEAN_FLIGHT_HIGH",
+      "message": "Flight time is 1.2σ above normal",
+      "feature": "meanFlight",
+      "zscore": 1.2
+    }
+  ],
+  "aiAnalysis": "User typing patterns match baseline with 88% confidence..."
+}
+```
+
+#### Option 3: Webhook Integration
+
+```javascript
+// Configure webhooks in your FluxAuth dashboard
+{
+  "webhookUrl": "https://your-app.com/webhooks/fluxauth",
+  "events": ["anomaly_detected", "trust_score_low"]
+}
+
+// Handle webhook in your backend
+app.post('/webhooks/fluxauth', (req, res) => {
+  const { event, userId, trustScore, sessionId } = req.body;
+  
+  if (event === 'anomaly_detected') {
+    // Force logout
+    logoutUser(userId);
+    
+    // Send alert
+    sendSecurityAlert(userId, 'Suspicious activity detected');
+  }
+  
+  res.sendStatus(200);
+});
+```
+
+### Real-World Use Cases
+
+#### 1. Banking App - Account Takeover Prevention
+```javascript
+// After user logs in with password
+const authResult = await fluxAuth.score(userId, sessionId, events);
+
+if (authResult.trustScore < 50) {
+  // Require additional verification
+  requireOTP(userId);
+} else if (authResult.trustScore < 70) {
+  // Allow but monitor closely
+  enableStrictMonitoring(userId);
+}
+
+// Before high-value transaction
+if (authResult.trustScore < 60) {
+  blockTransaction('Behavioral verification failed');
+}
+```
+
+#### 2. Enterprise SaaS - Insider Threat Detection
+```javascript
+// Continuous monitoring during work session
+setInterval(async () => {
+  const score = await fluxAuth.score(employeeId, sessionId, events);
+  
+  if (score.isAnomaly) {
+    // Log security event
+    auditLog.write({
+      event: 'ANOMALOUS_BEHAVIOR',
+      employee: employeeId,
+      trustScore: score.trustScore,
+      timestamp: Date.now()
+    });
+    
+    // Alert security team
+    notifySecurityTeam(employeeId, score);
+  }
+}, 60000); // Every minute
+```
+
+#### 3. E-commerce - Bot Detection
+```javascript
+// During checkout
+const result = await fluxAuth.score(userId, sessionId, events);
+
+if (result.topReasons.some(r => r.code.includes('BOT'))) {
+  // Likely a bot/script
+  requireCaptcha();
+  flagForReview(userId);
+}
+```
+
+### Deployment Options
+
+#### Self-Hosted (Docker)
+```bash
+# Clone and deploy on your infrastructure
+git clone https://github.com/yourusername/fluxauth.git
+cd fluxauth
+
+# Configure environment
+cp backend/.env.example backend/.env
+# Edit backend/.env with your settings
+
+# Deploy with Docker
+docker-compose up -d
+
+# Your API is now at http://your-server:3001
+```
+
+#### Cloud Deployment
+
+**Backend (Railway/Render/Heroku):**
+```bash
+# Deploy backend API
+cd backend
+railway up  # or: render deploy, heroku deploy
+```
+
+**Frontend (Vercel/Netlify):**
+```bash
+# Deploy dashboard
+cd frontend
+vercel deploy  # or: netlify deploy
+```
+
+### Configuration
+
+```env
+# backend/.env
+PORT=3001
+API_KEY=your-secure-api-key-here
+GEMINI_API_KEY=your-gemini-key  # For AI analysis
+DATABASE_PATH=./data/biaas.db
+NODE_ENV=production
+
+# Security settings
+RATE_LIMIT_WINDOW_MS=900000  # 15 minutes
+RATE_LIMIT_MAX_REQUESTS=100
+CORS_ORIGIN=https://your-app.com
+```
+
+### Security Best Practices
+
+1. **Use HTTPS**: Always encrypt API communication
+2. **Rotate API Keys**: Change keys regularly
+3. **Rate Limiting**: Prevent abuse (built-in)
+4. **Webhook Signatures**: Verify webhook authenticity
+5. **Data Retention**: Auto-delete old behavioral data
+6. **Privacy Compliance**: No PII stored, only timing patterns
+
+### Pricing Model (If Offering as SaaS)
+
+- **Free Tier**: 1,000 authentications/month
+- **Startup**: $49/mo - 10,000 authentications
+- **Business**: $199/mo - 100,000 authentications
+- **Enterprise**: Custom pricing - Unlimited + SLA
+
+## 📚 API Reference
+
+### Endpoints
+
+#### `POST /api/enroll`
+Enroll a new user with behavioral baseline.
+
+**Request:**
+```json
+{
+  "userId": "string",
+  "sessions": [
+    {
+      "sessionId": "string",
+      "events": [
+        {
+          "type": "keydown" | "keyup" | "mousemove",
+          "timestamp": "number",
+          "keyClass": "letter" | "number" | "special"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "userId": "string",
+  "message": "User enrolled successfully"
+}
+```
+
+#### `POST /api/session/score`
+Score a behavioral session against user baseline.
+
+**Request:**
+```json
+{
+  "userId": "string",
+  "sessionId": "string",
+  "events": [...]
+}
+```
+
+**Response:**
+```json
+{
+  "trustScore": 88,
+  "isAnomaly": false,
+  "topReasons": [
+    {
+      "code": "MEAN_FLIGHT_HIGH",
+      "message": "Flight time is 1.2σ above normal",
+      "feature": "meanFlight",
+      "zscore": 1.2
+    }
+  ],
+  "aiAnalysis": "User typing patterns match baseline...",
+  "aiExplanation": "Your typing speed is slightly faster than usual..."
+}
+```
+
+#### `POST /api/session/start`
+Start a new behavioral tracking session.
+
+#### `GET /api/sessions/recent`
+Get recent session history.
+
+#### `GET /api/ai/threat-report`
+Generate AI-powered security analysis.
 
 ## 🎯 Next Steps
 

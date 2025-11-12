@@ -89,7 +89,7 @@ export default function EnrollPage() {
     if (success) {
         return (
             <VStack spacing={6} maxW="2xl" mx="auto">
-                <Alert status="success" borderRadius="md">
+                <Alert status="success" borderRadius="md" color="green.900">
                     <AlertIcon />
                     Enrollment complete! You can now test authentication.
                 </Alert>
@@ -108,7 +108,7 @@ export default function EnrollPage() {
             </Text>
 
             {error && (
-                <Alert status="error" borderRadius="md">
+                <Alert status="error" borderRadius="md" color="red.900">
                     <AlertIcon />
                     {error}
                 </Alert>
