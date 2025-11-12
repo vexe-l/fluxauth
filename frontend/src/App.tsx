@@ -28,20 +28,20 @@ function App() {
                                     <Button as={Link} to="/" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
                                         Home
                                     </Button>
+                                    <Button as={Link} to="/enroll" colorScheme="accent" size="sm">
+                                        Try It
+                                    </Button>
                                     <Button as={Link} to="/live-monitor" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
                                         Live Monitor
                                     </Button>
                                     <Button as={Link} to="/dashboard" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
-                                        Dashboard
+                                        Bot Detection
                                     </Button>
                                     <Button as={Link} to="/transparency" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
-                                        Transparency
+                                        Fairness
                                     </Button>
                                     <Button as={Link} to="/policy" variant="ghost" size="sm" color="white" _hover={{ bg: 'brand.400', color: 'navy.500' }}>
-                                        Policy Rules
-                                    </Button>
-                                    <Button as={Link} to="/test" colorScheme="accent" size="sm">
-                                        Test SDK
+                                        Policy
                                     </Button>
                                 </HStack>
                             </Flex>

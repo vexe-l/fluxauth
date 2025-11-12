@@ -20,15 +20,42 @@ export default function HomePage() {
                 </HStack>
             </Box>
 
-            <HStack spacing={4} justify="center">
-                <Button as={Link} to="/live-monitor" colorScheme="brand" size="lg">
-                    Live Demo
+            <Card maxW="xl" mx="auto" bg="accent.50" borderTop="4px" borderColor="accent.500">
+                <CardBody>
+                    <VStack spacing={4}>
+                        <Heading size="md" color="navy.500">👋 New Here? Start Here!</Heading>
+                        <Text fontSize="sm" color="gray.600" textAlign="center">
+                            Try the system in 2 minutes:
+                        </Text>
+                        <VStack spacing={2} align="stretch" w="full">
+                            <HStack>
+                                <Badge colorScheme="brand">Step 1</Badge>
+                                <Text fontSize="sm">Enroll your typing pattern (4 prompts)</Text>
+                            </HStack>
+                            <HStack>
+                                <Badge colorScheme="brand">Step 2</Badge>
+                                <Text fontSize="sm">Test authentication & see your trust score</Text>
+                            </HStack>
+                        </VStack>
+                        <Button as={Link} to="/enroll" colorScheme="accent" size="lg" w="full">
+                            🚀 Try It Now (2 min)
+                        </Button>
+                    </VStack>
+                </CardBody>
+            </Card>
+
+            <HStack spacing={4} justify="center" flexWrap="wrap">
+                <Button as={Link} to="/live-monitor" colorScheme="brand" size="md">
+                    📊 Live Monitor
                 </Button>
-                <Button as={Link} to="/test" colorScheme="accent" size="lg">
-                    Test SDK
+                <Button as={Link} to="/dashboard" colorScheme="red" size="md">
+                    🤖 Bot Detection
                 </Button>
-                <Button as={Link} to="/transparency" variant="outline" size="lg" borderColor="navy.500" color="navy.500">
-                    View Metrics
+                <Button as={Link} to="/transparency" colorScheme="purple" size="md">
+                    ⚖️ Fairness Dashboard
+                </Button>
+                <Button as={Link} to="/policy" variant="outline" size="md" borderColor="navy.500" color="navy.500">
+                    📋 Policy Rules
                 </Button>
             </HStack>
 
