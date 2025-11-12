@@ -82,7 +82,7 @@ const theme = extendTheme({
         },
         Text: {
             baseStyle: {
-                color: '#cbd5e1'
+                color: '#e2e8f0'
             }
         },
         Button: {
