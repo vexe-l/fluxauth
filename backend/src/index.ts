@@ -43,12 +43,22 @@ app.use('/api', metricsMiddleware);
 // Initialize database
 initDatabase();
 
+// Insert fake data for demo (only in development)
+if (process.env.NODE_ENV !== 'production' && process.env.SKIP_FAKE_DATA !== 'true') {
+    try {
+        const { insertFakeData } = require('./scripts/insertFakeData');
+        insertFakeData();
+    } catch (error) {
+        console.warn('⚠️  Could not insert fake data:', error);
+    }
+}
+
 // Public routes
 app.use('/api/health', healthRoutes);
 
 // Protected routes (require API key)
 app.use('/api/session', apiKeyAuth, sessionRoutes);
-app.use('/api/sessions', apiKeyAuth, sessionRoutes); // Also mount on /sessions for GET routes
+app.use('/api/sessions', apiKeyAuth, sessionRoutes); // Also mount on /sessions for GET routes (includes /metadata)
 app.use('/api/enroll', apiKeyAuth, enrollRoutes);
 
 // Public metrics routes (transparency)

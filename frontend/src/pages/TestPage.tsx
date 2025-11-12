@@ -138,6 +138,18 @@ export default function TestPage() {
             const result = await sdk.score(userId, sessionId, events);
             setScoreResult(result);
             
+            // Save session to localStorage for monitor page
+            const sessionData = {
+                sessionId,
+                userId,
+                trustScore: result.trustScore,
+                isAnomaly: result.isAnomaly,
+                timestamp: Date.now(),
+                keystrokes: events.filter(e => e.type === 'keydown' || e.type === 'keyup').length,
+                mouseEvents: events.filter(e => e.type === 'mousemove').length
+            };
+            localStorage.setItem(`fluxauth_session_${sessionId}`, JSON.stringify(sessionData));
+            
             // Check for policy actions that require UI response
             if (result.policyAction) {
                 if (result.policyAction.type === 'BLOCK_SESSION') {

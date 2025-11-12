@@ -89,6 +89,7 @@ export default function LiveMonitorPage() {
         // Try to fetch real data (but don't block on it)
         const fetchSessions = async () => {
             try {
+                // First try backend
                 const response = await fetch(`${API_CONFIG.API_URL}/sessions/recent`, {
                     headers: {
                         'x-api-key': API_CONFIG.API_KEY
@@ -123,7 +124,46 @@ export default function LiveMonitorPage() {
                             anomaliesDetected,
                             totalEvents
                         });
+                        return;
                     }
+                }
+                
+                // Fallback: Check localStorage for local sessions
+                const localSessions: LiveSession[] = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('fluxauth_session_')) {
+                        try {
+                            const sessionData = JSON.parse(localStorage.getItem(key) || '{}');
+                            if (sessionData.sessionId && sessionData.trustScore !== undefined) {
+                                localSessions.push({
+                                    sessionId: sessionData.sessionId,
+                                    userId: sessionData.userId || 'local-user',
+                                    trustScore: sessionData.trustScore,
+                                    status: sessionData.isAnomaly ? 'suspicious' as const : 'verified' as const,
+                                    startTime: new Date(sessionData.timestamp || Date.now()),
+                                    keystrokes: sessionData.keystrokes || 0,
+                                    mouseEvents: sessionData.mouseEvents || 0
+                                });
+                            }
+                        } catch (e) {
+                            // Skip invalid entries
+                        }
+                    }
+                }
+                
+                if (localSessions.length > 0) {
+                    setSessions(localSessions);
+                    setUseDemoData(false);
+                    const totalEvents = localSessions.reduce((sum, s) => sum + s.keystrokes + s.mouseEvents, 0);
+                    const avgTrustScore = localSessions.reduce((sum, s) => sum + s.trustScore, 0) / localSessions.length;
+                    const anomaliesDetected = localSessions.filter(s => s.status === 'suspicious').length;
+                    setStats({
+                        activeSessions: localSessions.length,
+                        avgTrustScore: Math.round(avgTrustScore),
+                        anomaliesDetected,
+                        totalEvents
+                    });
                 }
             } catch (error) {
                 // Silently fail - demo data is already loaded

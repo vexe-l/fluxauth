@@ -79,7 +79,7 @@ export default function TransparencyPage() {
 
     const fetchMetrics = async () => {
         try {
-            const [callsRes, metricsRes, uptimeRes, sessionsRes] = await Promise.all([
+            const [callsRes, metricsRes, uptimeRes, sessionsRes, metadataRes] = await Promise.all([
                 fetch('/api/metrics/calls'),
                 fetch('/api/metrics/model'),
                 fetch('/api/metrics/uptime'),
@@ -87,32 +87,59 @@ export default function TransparencyPage() {
                     headers: {
                         'x-api-key': 'dev_key_12345_CHANGE_IN_PRODUCTION'
                     }
-                })
+                }).catch(() => ({ json: () => ({ sessions: [] }) })),
+                fetch('/api/sessions/metadata', {
+                    headers: {
+                        'x-api-key': 'dev_key_12345_CHANGE_IN_PRODUCTION'
+                    }
+                }).catch(() => ({ json: () => ({ metadata: [] }) }))
             ]);
 
             const callsData = await callsRes.json();
             const metricsData = await metricsRes.json();
             const uptimeData = await uptimeRes.json();
             const sessionsData = await sessionsRes.json().catch(() => ({ sessions: [] }));
+            const metadataData = await metadataRes.json().catch(() => ({ metadata: [] }));
 
             setApiCalls(callsData.calls || []);
             setModelMetrics(metricsData);
             setUptimeFormatted(uptimeData.uptimeFormatted);
 
-            // Calculate demographic fairness stats
-            if (sessionsData.sessions && sessionsData.sessions.length > 0) {
+            // Calculate demographic fairness stats from metadata
+            if (metadataData.metadata && metadataData.metadata.length > 0) {
+                const deviceStats: { [key: string]: { count: number; totalScore: number; anomalies: number } } = {};
+                
+                metadataData.metadata.forEach((m: any) => {
+                    const deviceType = m.device_type || 'unknown';
+                    if (!deviceStats[deviceType]) {
+                        deviceStats[deviceType] = { count: 0, totalScore: 0, anomalies: 0 };
+                    }
+                    deviceStats[deviceType].count += m.count;
+                    deviceStats[deviceType].totalScore += (m.avg_trust_score || 0) * m.count;
+                    deviceStats[deviceType].anomalies += m.anomaly_count || 0;
+                });
+
+                const processedStats: DemographicStats = {
+                    deviceType: {},
+                    userAgent: {}
+                };
+
+                Object.keys(deviceStats).forEach(device => {
+                    const stats = deviceStats[device];
+                    processedStats.deviceType[device] = {
+                        count: stats.count,
+                        avgScore: stats.totalScore / stats.count,
+                        anomalyRate: (stats.anomalies / stats.count) * 100
+                    };
+                });
+
+                setDemographicStats(processedStats);
+            } else if (sessionsData.sessions && sessionsData.sessions.length > 0) {
+                // Fallback: calculate from sessions if metadata not available
                 const deviceStats: { [key: string]: { count: number; totalScore: number; anomalies: number } } = {};
                 
                 sessionsData.sessions.forEach((s: any) => {
-                    // Infer device type from user agent (simplified)
-                    const ua = navigator.userAgent || 'unknown';
-                    let deviceType = 'Desktop';
-                    if (ua.match(/Mobile|Android|iPhone/i)) {
-                        deviceType = 'Mobile';
-                    } else if (ua.match(/Tablet|iPad/i)) {
-                        deviceType = 'Tablet';
-                    }
-
+                    const deviceType = s.device_type || 'Desktop';
                     if (!deviceStats[deviceType]) {
                         deviceStats[deviceType] = { count: 0, totalScore: 0, anomalies: 0 };
                     }

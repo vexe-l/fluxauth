@@ -62,14 +62,60 @@ router.get('/recent', (req, res, next) => {
         const limit = parseInt(req.query.limit as string) || 10;
 
         const sessions = db.prepare(`
-            SELECT session_id, user_id, trust_score, is_anomaly, events, created_at, scored_at
-            FROM sessions
-            WHERE scored_at IS NOT NULL
-            ORDER BY scored_at DESC
+            SELECT 
+                s.session_id, 
+                s.user_id, 
+                s.trust_score, 
+                s.is_anomaly, 
+                s.events, 
+                s.created_at, 
+                s.scored_at,
+                m.device_type,
+                m.region,
+                m.age_group,
+                m.gender
+            FROM sessions s
+            LEFT JOIN session_metadata m ON s.session_id = m.session_id
+            WHERE s.scored_at IS NOT NULL
+            ORDER BY s.scored_at DESC
             LIMIT ?
         `).all(limit);
 
         res.json({ sessions });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// GET /api/sessions/metadata - Get session metadata for fairness metrics
+router.get('/metadata', (req, res, next) => {
+    try {
+        // Check if metadata table exists
+        const tableExists = db.prepare(`
+            SELECT name FROM sqlite_master 
+            WHERE type='table' AND name='session_metadata'
+        `).get();
+        
+        if (!tableExists) {
+            return res.json({ metadata: [] });
+        }
+        
+        const metadata = db.prepare(`
+            SELECT 
+                m.device_type,
+                m.region,
+                m.age_group,
+                m.gender,
+                COUNT(*) as count,
+                AVG(s.trust_score) as avg_trust_score,
+                SUM(CASE WHEN s.is_anomaly = 1 THEN 1 ELSE 0 END) as anomaly_count
+            FROM session_metadata m
+            JOIN sessions s ON m.session_id = s.session_id
+            WHERE s.scored_at IS NOT NULL
+            GROUP BY m.device_type, m.region, m.age_group, m.gender
+        `).all();
+
+        res.json({ metadata });
     } catch (error) {
         next(error);
     }
