@@ -25,6 +25,27 @@ Even if attackers steal your password, they can't replicate your typing patterns
 
 ## 🚀 Quick Start
 
+### For Demo/Presentation (Recommended - Works Offline)
+
+```bash
+cd frontend
+npm install  # Only needed first time
+npm run dev
+```
+
+**Open:** http://localhost:5173
+
+✅ **No backend needed!** Everything works in offline mode.
+
+**Or use the quick start script:**
+
+- **Mac/Linux:** `./START_DEMO.sh`
+- **Windows:** `START_DEMO.bat`
+
+📖 **See [DEMO_GUIDE.md](./DEMO_GUIDE.md) for complete demo script and talking points**
+
+### Full Stack (Backend + Frontend)
+
 ```bash
 # Install
 npm install

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Text, VStack } from '@chakra-ui/react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -48,21 +48,28 @@ export default function TypingVisualization({ events, isActive }: TypingVisualiz
             return;
         }
 
-        // Extract typing rhythm (inter-key intervals)
+        // Extract typing rhythm (flight time - time between key releases)
         const keyEvents = events.filter(e => e.type === 'keydown' || e.type === 'keyup');
         const intervals: number[] = [];
         const timestamps: string[] = [];
 
-        let lastKeyTime = 0;
+        let lastKeyUpTime = 0;
+        let keyDownCount = 0;
+        
         for (let i = 0; i < keyEvents.length; i++) {
             const event = keyEvents[i];
             if (event.type === 'keydown') {
-                if (lastKeyTime > 0) {
-                    const interval = event.timestamp - lastKeyTime;
-                    intervals.push(interval);
-                    timestamps.push(`${i}`);
+                keyDownCount++;
+                if (lastKeyUpTime > 0) {
+                    // Flight time: time from last keyup to this keydown
+                    const interval = event.timestamp - lastKeyUpTime;
+                    if (interval >= 0 && interval < 5000) { // Sanity check
+                        intervals.push(interval);
+                        timestamps.push(`${keyDownCount}`);
+                    }
                 }
-                lastKeyTime = event.timestamp;
+            } else if (event.type === 'keyup') {
+                lastKeyUpTime = event.timestamp;
             }
         }
 

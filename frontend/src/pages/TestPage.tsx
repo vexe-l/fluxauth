@@ -28,11 +28,11 @@ export default function TestPage() {
     const [hasConsent, setHasConsent] = useState(false);
     const [userId, setUserId] = useState('');
     const [isCapturing, setIsCapturing] = useState(false);
-    const [offlineMode, setOfflineMode] = useState(false);
+    const [offlineMode, setOfflineMode] = useState(true); // Default to offline mode
     const [sdk, setSdk] = useState(() => new BehaviorSDK({
         apiUrl: API_CONFIG.API_URL,
         apiKey: API_CONFIG.API_KEY,
-        offlineMode: false
+        offlineMode: true // Default to offline mode
     }));
     
     // Update SDK when offline mode changes
@@ -112,8 +112,14 @@ export default function TestPage() {
         try {
             await sdk.startSession(sessionId, userId);
         } catch (error) {
-            setErrorMessage('Failed to start session. Please check your connection.');
-            setIsCapturing(false);
+            // In offline mode, continue anyway
+            if (offlineMode) {
+                console.warn('Session start warning (continuing in offline mode):', error);
+                // Continue capturing in offline mode
+            } else {
+                setErrorMessage('Failed to start session. Please check your connection or enable offline mode.');
+                setIsCapturing(false);
+            }
         }
     };
 
