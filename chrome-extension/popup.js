@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('userId').value = settings.userId || '';
     document.getElementById('apiKey').value = settings.apiKey || '';
     document.getElementById('apiUrl').value = settings.apiUrl || 'http://localhost:3001/api';
-    document.getElementById('enableToggle').checked = settings.enabled || false;
+    // Default to enabled if not set
+    document.getElementById('enableToggle').checked = settings.enabled !== undefined ? settings.enabled : true;
 
     updateStatus(settings.enabled);
 

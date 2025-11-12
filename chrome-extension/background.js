@@ -39,6 +39,43 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case 'GET_SESSION_DATA':
             sendResponse(currentSession);
             break;
+
+        case 'PING':
+            sendResponse({
+                isActive: currentSession.sessionId !== null,
+                sessionId: currentSession.sessionId,
+                trustScore: currentSession.trustScore,
+                isAnomaly: currentSession.isAnomaly,
+                lastUpdate: currentSession.lastUpdate
+            });
+            break;
+
+        case 'PERFORM_LOGOUT':
+            console.log('Performing logout:', message.reason);
+            // Clear session
+            currentSession = {
+                sessionId: null,
+                userId: null,
+                trustScore: 100,
+                isAnomaly: false,
+                lastUpdate: null
+            };
+            // Update badge
+            chrome.action.setBadgeText({ text: '' });
+            // Notify all tabs
+            chrome.tabs.query({}, (tabs) => {
+                tabs.forEach(tab => {
+                    if (tab.id) {
+                        chrome.tabs.sendMessage(tab.id, {
+                            type: 'LOGOUT_REQUIRED',
+                            reason: message.reason
+                        }).catch(() => {
+                            // Ignore errors for tabs that don't have content script
+                        });
+                    }
+                });
+            });
+            break;
     }
 
     return true;

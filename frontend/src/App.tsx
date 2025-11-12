@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Box, Container, Flex, Heading, Button, HStack, Badge } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import HomePage from './pages/HomePage';
 import LiveMonitorPage from './pages/LiveMonitorPage';
 import EnrollPage from './pages/EnrollPage';
@@ -11,8 +12,85 @@ import PolicyRulesPage from './pages/PolicyRulesPage';
 import ContextualRiskPage from './pages/ContextualRiskPage';
 import PrivacyPage from './pages/PrivacyPage';
 import GlassmorphismBackground from './components/GlassmorphismBackground';
+import ExtensionBlockingPage from './components/ExtensionBlockingPage';
+import { checkExtensionInstalled, listenForExtensionUpdates, ExtensionStatus } from './utils/extensionDetector';
 
 function App() {
+    const [extensionStatus, setExtensionStatus] = useState<ExtensionStatus | null>(null);
+    const [isChecking, setIsChecking] = useState(true);
+    const [showBlockingPage, setShowBlockingPage] = useState(false);
+    const [blockingReason, setBlockingReason] = useState<'missing' | 'suspicious' | 'inactive'>('missing');
+
+    useEffect(() => {
+        // Initial check
+        const checkExtension = async () => {
+            setIsChecking(true);
+            const status = await checkExtensionInstalled();
+            setExtensionStatus(status);
+            
+            // Block if extension is not installed or not active
+            if (!status.isInstalled || !status.isActive) {
+                setShowBlockingPage(true);
+                setBlockingReason(status.isInstalled ? 'inactive' : 'missing');
+            } else if (status.isAnomaly && status.trustScore !== undefined && status.trustScore < 30) {
+                // Block for critical suspicious activity
+                setShowBlockingPage(true);
+                setBlockingReason('suspicious');
+            } else {
+                setShowBlockingPage(false);
+            }
+            setIsChecking(false);
+        };
+
+        checkExtension();
+
+        // Listen for updates
+        const unsubscribe = listenForExtensionUpdates((status) => {
+            setExtensionStatus(status);
+            
+            // Update blocking state based on status
+            if (!status.isInstalled || !status.isActive) {
+                setShowBlockingPage(true);
+                setBlockingReason(status.isInstalled ? 'inactive' : 'missing');
+            } else if (status.isAnomaly && status.trustScore !== undefined && status.trustScore < 30) {
+                setShowBlockingPage(true);
+                setBlockingReason('suspicious');
+            } else {
+                setShowBlockingPage(false);
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
+    // Show blocking page if extension is required but not available
+    if (isChecking) {
+        return (
+            <Box minH="100vh" bg="gray.900" display="flex" alignItems="center" justifyContent="center">
+                <ExtensionBlockingPage reason="missing" />
+            </Box>
+        );
+    }
+
+    if (showBlockingPage) {
+        return (
+            <ExtensionBlockingPage
+                reason={blockingReason}
+                trustScore={extensionStatus?.trustScore}
+                details={blockingReason === 'suspicious' ? 'Critical security alert: Your behavior pattern has been flagged as highly suspicious.' : undefined}
+                onRetry={async () => {
+                    const status = await checkExtensionInstalled();
+                    setExtensionStatus(status);
+                    if (status.isInstalled && status.isActive) {
+                        setShowBlockingPage(false);
+                    }
+                }}
+            />
+        );
+    }
+
     return (
         <BrowserRouter>
             <Box minH="100vh" position="relative">
