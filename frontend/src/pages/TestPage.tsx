@@ -65,7 +65,7 @@ export default function TestPage() {
 
     const handleAttack = asnc() => {
         sdk.SimulateAttack();
-        
+
     }
 
     const handleScore = async () => {
@@ -260,9 +260,40 @@ export default function TestPage() {
 
                             <Divider />
 
+                            {scoreResult.aiAnalysis && (
+                                <>
+                                    <Box bg="purple.50" p={4} borderRadius="md" borderLeft="4px" borderColor="purple.500">
+                                        <HStack mb={2}>
+                                            <Text fontSize="sm" fontWeight="bold" color="purple.700">
+                                                🤖 AI Security Analysis
+                                            </Text>
+                                            <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
+                                        </HStack>
+                                        <Text fontSize="sm" color="gray.700">
+                                            {scoreResult.aiAnalysis}
+                                        </Text>
+                                    </Box>
+                                    <Divider />
+                                </>
+                            )}
+
+                            {scoreResult.aiExplanation && (
+                                <>
+                                    <Box bg="blue.50" p={4} borderRadius="md" borderLeft="4px" borderColor="blue.500">
+                                        <Text fontSize="sm" fontWeight="bold" color="blue.700" mb={2}>
+                                            💡 What This Means For You
+                                        </Text>
+                                        <Text fontSize="sm" color="gray.700">
+                                            {scoreResult.aiExplanation}
+                                        </Text>
+                                    </Box>
+                                    <Divider />
+                                </>
+                            )}
+
                             <Box>
                                 <Text fontSize="sm" color="gray.600" mb={3}>
-                                    Top Reasons
+                                    Technical Details
                                 </Text>
                                 <VStack spacing={2} align="stretch">
                                     {scoreResult.topReasons.map((reason, idx) => (

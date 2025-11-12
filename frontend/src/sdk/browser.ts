@@ -29,6 +29,8 @@ export interface ScoreResult {
         feature: string;
         zscore: number;
     }>;
+    aiAnalysis?: string;
+    aiExplanation?: string;
 }
 
 export class BehaviorSDK {

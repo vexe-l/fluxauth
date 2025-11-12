@@ -4,6 +4,7 @@ import { db } from '../db';
 import { extractFeatures } from '../features/extractor';
 import { scoreVector } from '../features/scorer';
 import { BehaviorEvent, FeatureVector } from '../features/types';
+import { analyzeSessionWithAI, explainAnomalyToUser } from '../services/geminiService';
 import crypto from 'crypto';
 
 const router = Router();
@@ -107,6 +108,30 @@ router.post('/score', (req, res, next) => {
         // Score the test vector
         const result = scoreVector(testVector, centroid, stdDevs);
 
+        // AI-powered analysis (if Gemini API key is configured)
+        let aiAnalysis = null;
+        let aiExplanation = null;
+
+        if (process.env.GEMINI_API_KEY) {
+            try {
+                // Get AI security analysis
+                aiAnalysis = await analyzeSessionWithAI({
+                    userId,
+                    trustScore: result.trustScore,
+                    isAnomaly: result.isAnomaly,
+                    features: testVector,
+                    topReasons: result.topReasons
+                });
+
+                // Get user-friendly explanation if anomaly detected
+                if (result.isAnomaly) {
+                    aiExplanation = await explainAnomalyToUser(result.topReasons);
+                }
+            } catch (error) {
+                console.error('AI analysis failed:', error);
+            }
+        }
+
         // Store session result
         const now = Date.now();
         db.prepare(`
@@ -121,7 +146,11 @@ router.post('/score', (req, res, next) => {
             sessionId
         );
 
-        res.json(result);
+        res.json({
+            ...result,
+            aiAnalysis,
+            aiExplanation
+        });
     } catch (error) {
         next(error);
     }

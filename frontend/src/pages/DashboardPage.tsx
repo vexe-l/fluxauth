@@ -237,6 +237,39 @@ export default function DashboardPage() {
                     </CardBody>
                 </Card>
             )}
+
+            {/* AI Threat Report */}
+            <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
+                <CardBody>
+                    <HStack justify="space-between" mb={4}>
+                        <HStack>
+                            <Heading size="md" color="navy.500">🤖 AI Threat Analysis</Heading>
+                            <Badge colorScheme="purple">Powered by Gemini</Badge>
+                        </HStack>
+                        <Button
+                            size="sm"
+                            colorScheme="purple"
+                            onClick={async () => {
+                                try {
+                                    const response = await fetch('/api/ai/threat-report', {
+                                        headers: { 'x-api-key': 'dev_key_12345' }
+                                    });
+                                    const data = await response.json();
+                                    alert(data.report || 'No data available yet');
+                                } catch (error) {
+                                    alert('AI analysis unavailable');
+                                }
+                            }}
+                        >
+                            Generate Report
+                        </Button>
+                    </HStack>
+                    <Text fontSize="sm" color="gray.700">
+                        Click "Generate Report" to get an AI-powered security analysis of recent authentication patterns.
+                        The AI will identify threats, unusual patterns, and provide actionable recommendations.
+                    </Text>
+                </CardBody>
+            </Card>
         </VStack>
     );
 }

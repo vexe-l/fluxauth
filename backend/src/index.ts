@@ -10,6 +10,7 @@ import sessionRoutes from './routes/session';
 import enrollRoutes from './routes/enroll';
 import healthRoutes from './routes/health';
 import metricsRoutes from './routes/metrics';
+import aiRoutes from './routes/ai';
 
 dotenv.config();
 
@@ -51,6 +52,9 @@ app.use('/api/enroll', apiKeyAuth, enrollRoutes);
 
 // Public metrics routes (transparency)
 app.use('/api/metrics', metricsRoutes);
+
+// AI-powered analysis routes
+app.use('/api/ai', apiKeyAuth, aiRoutes);
 
 // Error handling
 app.use(errorHandler);
