@@ -6,16 +6,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm install
 
 # Copy source
 COPY . .
 
 # Build TypeScript
 RUN npm run build
-
-# Create data directory
-RUN mkdir -p /app/data
 
 # Expose port
 EXPOSE 3001
