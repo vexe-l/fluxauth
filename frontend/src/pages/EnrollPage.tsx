@@ -118,7 +118,7 @@ export default function EnrollPage() {
                 <CardBody>
                     <VStack spacing={4}>
                         <FormControl>
-                            <FormLabel>User ID</FormLabel>
+                            <FormLabel color="white">User ID</FormLabel>
                             <Input
                                 value={userId}
                                 onChange={(e) => setUserId(e.target.value)}
@@ -129,7 +129,7 @@ export default function EnrollPage() {
 
                         <Box w="full">
                             <HStack justify="space-between" mb={2}>
-                                <Text fontSize="sm" fontWeight="medium">
+                                <Text fontSize="sm" fontWeight="medium" color="white">
                                     Progress: {currentPrompt + 1} / {PROMPTS.length}
                                 </Text>
                                 <Badge colorScheme="brand">{Math.round(progress)}%</Badge>
@@ -138,10 +138,10 @@ export default function EnrollPage() {
                         </Box>
 
                         <Box w="full" p={4} bg="gray.50" borderRadius="md">
-                            <Text fontSize="sm" color="white" mb={2}>
+                            <Text fontSize="sm" color="gray.800" mb={2}>
                                 Prompt {currentPrompt + 1}:
                             </Text>
-                            <Text fontSize="lg" fontWeight="medium" color="white">
+                            <Text fontSize="lg" fontWeight="medium" color="gray.800">
                                 {PROMPTS[currentPrompt]}
                             </Text>
                         </Box>
