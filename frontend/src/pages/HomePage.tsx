@@ -1,4 +1,4 @@
-import { Box, Heading, Text, VStack, Button, HStack, Card, CardBody } from '@chakra-ui/react';
+import { Box, Heading, Text, VStack, Button, HStack, Card, CardBody, Badge } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 export default function HomePage() {
