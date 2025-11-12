@@ -42,3 +42,8 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Python virtual environment
+venv/
+env/
+ENV/

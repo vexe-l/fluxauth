@@ -2,6 +2,14 @@
 
 **Continuous behavioral biometric authentication that verifies users by how they type, not just what they know.**
 
+## 🎯 For Judges - Quick Overview
+
+FluxAuth is a **Behavioral Biometrics as a Service (BaaS)** platform that provides continuous authentication by analyzing unique typing patterns. Even if attackers steal passwords, they cannot replicate how users type.
+
+**Key Innovation:** Real-time behavioral analysis with AI-powered threat detection and explainable security decisions.
+
+**Demo Time:** 5 minutes | **Setup Time:** 30 seconds | **Works Offline:** Yes
+
 ## What It Does
 
 FluxAuth is a **Behavioral Biometrics as a Service (BaaS)** platform that provides continuous authentication throughout a user's session. Instead of relying solely on passwords, it analyzes typing patterns, mouse movements, and behavioral rhythms to create a unique "typing fingerprint" for each user.
@@ -23,9 +31,9 @@ Even if attackers steal your password, they can't replicate your typing patterns
 3. **Adaptive Scoring** - Learns each user's patterns and adapts over time
 4. **Z-Score Analysis** - Statistical AI for explainable decisions
 
-## 🚀 Quick Start
+## 🚀 Quick Start for Judges
 
-### For Demo/Presentation (Recommended - Works Offline)
+### Fastest Way to Run Demo (30 seconds)
 
 ```bash
 cd frontend
@@ -43,6 +51,14 @@ npm run dev
 - **Windows:** `START_DEMO.bat`
 
 📖 **See [DEMO_GUIDE.md](./DEMO_GUIDE.md) for complete demo script and talking points**
+
+### What to Show Judges (5 minutes)
+
+1. **Enrollment** - Type 4 prompts to create behavioral profile
+2. **Authentication** - Test typing → High trust score
+3. **Attack Simulation** - Click "Simulate Attack" → Low trust score  
+4. **Live Monitor** - Real-time dashboard with trust scores
+5. **AI Analysis** - Gemini AI explains security decisions
 
 ### Full Stack (Backend + Frontend)
 
