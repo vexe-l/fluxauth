@@ -102,7 +102,7 @@ export default function ContextualRiskPage() {
             <Grid templateColumns="repeat(2, 1fr)" gap={6} w="full">
                 {/* Input Panel */}
                 <GridItem>
-                    <Card>
+                    <Card bg="rgba(0, 0, 0, 0.2)">
                         <CardBody>
                             <Heading size="md" mb={4} color="white">Configure Context</Heading>
 
@@ -132,6 +132,7 @@ export default function ContextualRiskPage() {
                                         value={action}
                                         onChange={(e) => setAction(e.target.value)}
                                         bg="white"
+                                        color="gray.800"
                                     >
                                         <option value="login">Login</option>
                                         <option value="view_profile">View Profile</option>
@@ -149,6 +150,7 @@ export default function ContextualRiskPage() {
                                         onChange={(e) => setUserId(e.target.value)}
                                         placeholder="e.g., demo-user"
                                         bg="white"
+                                        color="gray.800"
                                     />
                                     <Text fontSize="xs" color="white" mt={1}>
                                         Used to fetch user's historical behavior
@@ -162,6 +164,7 @@ export default function ContextualRiskPage() {
                                         onChange={(e) => setLocation(e.target.value)}
                                         placeholder="e.g., London, UK"
                                         bg="white"
+                                        color="gray.800"
                                     />
                                 </FormControl>
 
@@ -188,6 +191,7 @@ export default function ContextualRiskPage() {
                                             onChange={(e) => setAmountInvolved(e.target.value)}
                                             placeholder="e.g., 5000"
                                             bg="white"
+                                            color="gray.800"
                                         />
                                         <Text fontSize="xs" color="white" mt={1}>
                                             Transaction amount in USD
@@ -214,7 +218,7 @@ export default function ContextualRiskPage() {
                     {result ? (
                         <VStack spacing={4} align="stretch">
                             {/* Risk Score Card */}
-                            <Card borderWidth={2} borderColor={`${getRiskColor(result.riskLevel)}.400`}>
+                            <Card borderWidth={2} borderColor={`${getRiskColor(result.riskLevel)}.400`} bg="rgba(0, 0, 0, 0.2)">
                                 <CardBody>
                                     <VStack spacing={4}>
                                         <HStack justify="space-between" w="full">
@@ -229,7 +233,7 @@ export default function ContextualRiskPage() {
                                                 <StatNumber color={`${getRiskColor(result.riskLevel)}.400`}>
                                                     {result.adjustedRiskScore}
                                                 </StatNumber>
-                                                <StatHelpText>
+                                                <StatHelpText color="white">
                                                     <Badge colorScheme={getRiskColor(result.riskLevel)} fontSize="sm">
                                                         {result.riskLevel}
                                                     </Badge>
@@ -241,7 +245,7 @@ export default function ContextualRiskPage() {
                             </Card>
 
                             {/* Recommended Action */}
-                            <Card bg={`${getActionColor(result.recommendedAction)}.50`}>
+                            <Card bg={`${getActionColor(result.recommendedAction)}.900`} borderWidth="1px" borderColor={`${getActionColor(result.recommendedAction)}.400`}>
                                 <CardBody>
                                     <VStack align="stretch" spacing={2}>
                                         <HStack justify="space-between">
@@ -258,7 +262,7 @@ export default function ContextualRiskPage() {
                             </Card>
 
                             {/* Risk Factors */}
-                            <Card>
+                            <Card bg="rgba(0, 0, 0, 0.2)">
                                 <CardBody>
                                     <Heading size="sm" mb={3} color="white">Risk Factors</Heading>
                                     <VStack align="stretch" spacing={2}>
@@ -273,7 +277,7 @@ export default function ContextualRiskPage() {
                             </Card>
 
                             {/* Context Details */}
-                            <Card>
+                            <Card bg="rgba(0, 0, 0, 0.2)">
                                 <CardBody>
                                     <Heading size="sm" mb={3} color="white">Context Analyzed</Heading>
                                     <VStack align="stretch" spacing={2} fontSize="sm">
@@ -308,7 +312,7 @@ export default function ContextualRiskPage() {
                             </Card>
                         </VStack>
                     ) : (
-                        <Card h="full">
+                        <Card h="full" bg="rgba(0, 0, 0, 0.2)">
                             <CardBody>
                                 <VStack justify="center" h="full" spacing={4}>
                                     <Text fontSize="4xl">🤖</Text>
@@ -323,11 +327,11 @@ export default function ContextualRiskPage() {
             </Grid>
 
             {/* Info Alert */}
-            <Alert status="info" borderRadius="md">
+            <Alert status="info" borderRadius="md" bg="blue.900" color="white">
                 <AlertIcon />
                 <Box>
-                    <Text fontWeight="bold">How It Works</Text>
-                    <Text fontSize="sm">
+                    <Text fontWeight="bold" color="white">How It Works</Text>
+                    <Text fontSize="sm" color="white">
                         AI analyzes the base trust score along with contextual factors (action sensitivity, time, location, device)
                         to calculate an adjusted risk score and recommend the appropriate security action.
                     </Text>

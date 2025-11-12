@@ -17,6 +17,12 @@ export interface FeatureVector {
     bigramMean: number;
     totalKeys: number;
     mouseAvgSpeed: number;
+    // Navigation patterns (optional for backward compatibility)
+    scrollFrequency?: number;
+    clickFrequency?: number;
+    avgScrollSpeed?: number;
+    focusChanges?: number;
+    avgTimeBetweenActions?: number;
 }
 
 export interface EnrollmentProfile {

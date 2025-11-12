@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Box,
     Heading,
@@ -23,6 +23,7 @@ import {
     AlertIcon
 } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { API_CONFIG } from '../config';
 
 interface PolicyRule {
     id: string;
@@ -35,32 +36,69 @@ interface PolicyRule {
 
 export default function PolicyRulesPage() {
     const toast = useToast();
-    const [rules, setRules] = useState<PolicyRule[]>([
-        {
-            id: 'rule-1',
-            name: 'Block Low Trust Score',
-            condition: 'IF trustScore < 40 THEN',
-            action: 'REQUIRE_OTP',
-            enabled: true,
-            priority: 1
-        },
-        {
-            id: 'rule-2',
-            name: 'Flag Anomalous Behavior',
-            condition: 'IF isAnomaly = true THEN',
-            action: 'NOTIFY_ADMIN',
-            enabled: true,
-            priority: 2
-        },
-        {
-            id: 'rule-3',
-            name: 'High Risk Session',
-            condition: 'IF trustScore < 30 AND isAnomaly = true THEN',
-            action: 'BLOCK_SESSION',
-            enabled: false,
-            priority: 3
-        }
-    ]);
+    const [rules, setRules] = useState<PolicyRule[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Fetch rules from backend
+    useEffect(() => {
+        const fetchRules = async () => {
+            try {
+                const response = await fetch('/api/policy/rules', {
+                    headers: {
+                        'x-api-key': API_CONFIG.API_KEY
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setRules(data.rules || []);
+                } else {
+                    // If no rules exist, use default rules
+                    setRules([
+                        {
+                            id: 'rule-1',
+                            name: 'Block Low Trust Score',
+                            condition: 'IF trustScore < 40 THEN',
+                            action: 'REQUIRE_OTP',
+                            enabled: true,
+                            priority: 1
+                        },
+                        {
+                            id: 'rule-2',
+                            name: 'Flag Anomalous Behavior',
+                            condition: 'IF isAnomaly = true THEN',
+                            action: 'NOTIFY_ADMIN',
+                            enabled: true,
+                            priority: 2
+                        },
+                        {
+                            id: 'rule-3',
+                            name: 'High Risk Session',
+                            condition: 'IF trustScore < 30 AND isAnomaly = true THEN',
+                            action: 'BLOCK_SESSION',
+                            enabled: false,
+                            priority: 3
+                        }
+                    ]);
+                }
+            } catch (error) {
+                console.error('Failed to fetch rules:', error);
+                // Use default rules on error
+                setRules([
+                    {
+                        id: 'rule-1',
+                        name: 'Block Low Trust Score',
+                        condition: 'IF trustScore < 40 THEN',
+                        action: 'REQUIRE_OTP',
+                        enabled: true,
+                        priority: 1
+                    }
+                ]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchRules();
+    }, []);
 
     const [newRule, setNewRule] = useState({
         name: '',
@@ -68,7 +106,7 @@ export default function PolicyRulesPage() {
         action: 'REQUIRE_OTP'
     });
 
-    const handleAddRule = () => {
+    const handleAddRule = async () => {
         if (!newRule.name || !newRule.condition) {
             toast({
                 title: 'Missing fields',
@@ -79,37 +117,104 @@ export default function PolicyRulesPage() {
             return;
         }
 
-        const rule: PolicyRule = {
-            id: `rule-${Date.now()}`,
-            name: newRule.name,
-            condition: newRule.condition,
-            action: newRule.action,
-            enabled: true,
-            priority: rules.length + 1
-        };
+        try {
+            const response = await fetch('/api/policy/rules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': API_CONFIG.API_KEY
+                },
+                body: JSON.stringify({
+                    name: newRule.name,
+                    condition: newRule.condition,
+                    action: newRule.action,
+                    enabled: true,
+                    priority: rules.length + 1
+                })
+            });
 
-        setRules([...rules, rule]);
-        setNewRule({ name: '', condition: '', action: 'REQUIRE_OTP' });
+            if (response.ok) {
+                const data = await response.json();
+                setRules([...rules, { id: data.id, ...data.rule }]);
+                setNewRule({ name: '', condition: '', action: 'REQUIRE_OTP' });
 
-        toast({
-            title: 'Rule added',
-            description: 'Policy rule has been created successfully',
-            status: 'success',
-            duration: 3000
-        });
+                toast({
+                    title: 'Rule added',
+                    description: 'Policy rule has been created and will be enforced',
+                    status: 'success',
+                    duration: 3000
+                });
+            } else {
+                throw new Error('Failed to create rule');
+            }
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'Failed to create policy rule',
+                status: 'error',
+                duration: 3000
+            });
+        }
     };
 
-    const toggleRule = (id: string) => {
-        setRules(rules.map(r => r.id === id ? { ...r, enabled: !r.enabled } : r));
+    const toggleRule = async (id: string) => {
+        const rule = rules.find(r => r.id === id);
+        if (!rule) return;
+
+        const newEnabled = !rule.enabled;
+        try {
+            const response = await fetch(`/api/policy/rules/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': API_CONFIG.API_KEY
+                },
+                body: JSON.stringify({ enabled: newEnabled })
+            });
+
+            if (response.ok) {
+                setRules(rules.map(r => r.id === id ? { ...r, enabled: newEnabled } : r));
+                toast({
+                    title: newEnabled ? 'Rule enabled' : 'Rule disabled',
+                    status: 'success',
+                    duration: 2000
+                });
+            }
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'Failed to update rule',
+                status: 'error',
+                duration: 3000
+            });
+        }
     };
 
-    const deleteRule = (id: string) => {
-        setRules(rules.filter(r => r.id !== id));
-        toast({
-            title: 'Rule deleted',
-            status: 'info',
-            duration: 2000
-        });
+    const deleteRule = async (id: string) => {
+        try {
+            const response = await fetch(`/api/policy/rules/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'x-api-key': API_CONFIG.API_KEY
+                }
+            });
+
+            if (response.ok) {
+                setRules(rules.filter(r => r.id !== id));
+                toast({
+                    title: 'Rule deleted',
+                    status: 'info',
+                    duration: 2000
+                });
+            }
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'Failed to delete rule',
+                status: 'error',
+                duration: 3000
+            });
+        }
     };
 
     return (
@@ -117,18 +222,17 @@ export default function PolicyRulesPage() {
             <Box textAlign="center">
                 <HStack justify="center" mb={2}>
                     <Heading size="lg" color="white">Custom Policy Engine</Heading>
-                    <Badge colorScheme="orange" fontSize="sm">UI Only - Not Executed</Badge>
+                    <Badge colorScheme="green" fontSize="sm">✅ Backend Enforced</Badge>
                 </HStack>
                 <Text color="white" mt={2}>
                     Admin UI for writing policies as logic: IF trustScore&lt;40 THEN REQUIRE_OTP
                 </Text>
-                <Alert status="warning" borderRadius="md" mt={2}>
+                <Alert status="success" borderRadius="md" mt={2} bg="green.900" color="white">
                     <AlertIcon />
                     <Box>
-                        <Text fontWeight="bold">Policy Execution Not Implemented</Text>
-                        <Text fontSize="sm">
-                            Rules can be created and managed in the UI, but they are not automatically executed by the backend.
-                            This requires a policy engine service that evaluates rules against session scores in real-time.
+                        <Text fontWeight="bold" color="white">✅ Policy Engine Active</Text>
+                        <Text fontSize="sm" color="white">
+                            Rules are now automatically executed by the backend. Policy actions are evaluated on every session score.
                         </Text>
                     </Box>
                 </Alert>
@@ -198,18 +302,18 @@ export default function PolicyRulesPage() {
             </Card>
 
             {/* Existing Rules */}
-            <Card w="full">
+            <Card w="full" bg="rgba(0, 0, 0, 0.2)">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">Active Policy Rules</Heading>
 
                     <VStack spacing={4} align="stretch">
                         {rules.map((rule) => (
-                            <Card key={rule.id} variant="outline" bg={rule.enabled ? 'white' : 'gray.50'}>
+                            <Card key={rule.id} variant="outline" bg={rule.enabled ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.2)'}>
                                 <CardBody>
                                     <HStack justify="space-between" mb={3}>
                                         <HStack>
                                             <Badge colorScheme="purple">Priority {rule.priority}</Badge>
-                                            <Heading size="sm" color="white">{rule.name}</Heading>
+                                            <Heading size="sm" color={rule.enabled ? 'white' : 'gray.400'}>{rule.name}</Heading>
                                             <Badge colorScheme={rule.enabled ? 'green' : 'gray'}>
                                                 {rule.enabled ? 'Enabled' : 'Disabled'}
                                             </Badge>
@@ -241,13 +345,13 @@ export default function PolicyRulesPage() {
 
                                     <VStack align="stretch" spacing={2}>
                                         <Box>
-                                            <Text fontSize="xs" color="white" mb={1}>CONDITION:</Text>
-                                            <Code colorScheme="blue" p={2} borderRadius="md" w="full" display="block">
+                                            <Text fontSize="xs" color={rule.enabled ? 'white' : 'gray.400'} mb={1} fontWeight="bold">CONDITION:</Text>
+                                            <Code colorScheme="blue" p={2} borderRadius="md" w="full" display="block" bg="blue.900" color="white">
                                                 {rule.condition}
                                             </Code>
                                         </Box>
                                         <Box>
-                                            <Text fontSize="xs" color="white" mb={1}>ACTION:</Text>
+                                            <Text fontSize="xs" color={rule.enabled ? 'white' : 'gray.400'} mb={1} fontWeight="bold">ACTION:</Text>
                                             <Badge colorScheme="accent" fontSize="sm" p={2}>
                                                 {rule.action}
                                             </Badge>
@@ -265,10 +369,10 @@ export default function PolicyRulesPage() {
                 <CardBody>
                     <Heading size="sm" mb={3} color="white">Policy Syntax Examples</Heading>
                     <VStack align="stretch" spacing={2} fontSize="sm" fontFamily="mono">
-                        <Code p={2}>IF trustScore &lt; 40 THEN REQUIRE_OTP</Code>
-                        <Code p={2}>IF isAnomaly = true THEN NOTIFY_ADMIN</Code>
-                        <Code p={2}>IF trustScore &lt; 30 AND isAnomaly = true THEN BLOCK_SESSION</Code>
-                        <Code p={2}>IF userId = "admin" THEN LOG_EVENT</Code>
+                        <Code p={2} bg="gray.800" color="green.300" display="block">IF trustScore &lt; 40 THEN REQUIRE_OTP</Code>
+                        <Code p={2} bg="gray.800" color="green.300" display="block">IF isAnomaly = true THEN NOTIFY_ADMIN</Code>
+                        <Code p={2} bg="gray.800" color="green.300" display="block">IF trustScore &lt; 30 AND isAnomaly = true THEN BLOCK_SESSION</Code>
+                        <Code p={2} bg="gray.800" color="green.300" display="block">IF userId = "admin" THEN LOG_EVENT</Code>
                     </VStack>
                 </CardBody>
             </Card>

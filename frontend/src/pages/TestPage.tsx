@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { BehaviorSDK, ScoreResult } from '../sdk/browser';
 import ConsentBanner from '../components/ConsentBanner';
+import SessionLockModal from '../components/SessionLockModal';
 import { API_CONFIG } from '../config';
 
 const TEST_PROMPT = 'The quick brown fox jumps over the lazy dog.';
@@ -48,6 +49,12 @@ export default function TestPage() {
     const [continuousAuth, setContinuousAuth] = useState(false);
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
     const [scoreHistory, setScoreHistory] = useState<Array<{ timestamp: number; score: number }>>([]);
+    const [showLockModal, setShowLockModal] = useState(false);
+    const [lockPolicyAction, setLockPolicyAction] = useState<{
+        type: string;
+        message: string;
+        severity: 'low' | 'medium' | 'high' | 'critical';
+    } | null>(null);
 
     useEffect(() => {
         return () => {
@@ -73,6 +80,13 @@ export default function TestPage() {
                         timestamp: Date.now(),
                         score: result.trustScore
                     }].slice(-20)); // Keep last 20 scores
+                    
+                    // Check for policy actions during continuous auth
+                    if (result.policyAction && result.policyAction.type === 'BLOCK_SESSION') {
+                        setLockPolicyAction(result.policyAction);
+                        setShowLockModal(true);
+                        setIsCapturing(false); // Stop capturing when blocked
+                    }
                 }
             } catch (error) {
                 console.error('Continuous auth scoring failed:', error);
@@ -117,6 +131,17 @@ export default function TestPage() {
         try {
             const result = await sdk.score(userId, sessionId, events);
             setScoreResult(result);
+            
+            // Check for policy actions that require UI response
+            if (result.policyAction) {
+                if (result.policyAction.type === 'BLOCK_SESSION') {
+                    setLockPolicyAction(result.policyAction);
+                    setShowLockModal(true);
+                } else if (result.policyAction.severity === 'high' || result.policyAction.severity === 'critical') {
+                    setLockPolicyAction(result.policyAction);
+                    setShowLockModal(true);
+                }
+            }
         } catch (error) {
             setErrorMessage(error instanceof Error ? error.message : 'Scoring failed');
         } finally {
@@ -397,6 +422,22 @@ export default function TestPage() {
                     </Card>
                 )
             }
-        </VStack >
+
+            {/* Session Lock Modal */}
+            {lockPolicyAction && (
+                <SessionLockModal
+                    isOpen={showLockModal}
+                    onClose={() => {
+                        setShowLockModal(false);
+                        if (lockPolicyAction?.type !== 'BLOCK_SESSION') {
+                            setLockPolicyAction(null);
+                        }
+                    }}
+                    policyAction={lockPolicyAction}
+                    trustScore={scoreResult?.trustScore}
+                    reasons={scoreResult?.topReasons}
+                />
+            )}
+        </VStack>
     );
 }

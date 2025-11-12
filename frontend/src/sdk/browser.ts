@@ -6,11 +6,14 @@
 export type KeyClass = 'letter' | 'digit' | 'backspace' | 'other';
 
 export interface BehaviorEvent {
-    type: 'keydown' | 'keyup' | 'mousemove';
+    type: 'keydown' | 'keyup' | 'mousemove' | 'click' | 'scroll' | 'focus';
     timestamp: number;
     keyClass?: KeyClass;
     deltaX?: number;
     deltaY?: number;
+    scrollDelta?: number;
+    clickButton?: 'left' | 'right' | 'middle';
+    timeOnPage?: number;
 }
 
 export interface SDKConfig {
@@ -18,6 +21,8 @@ export interface SDKConfig {
     apiKey: string;
     batchInterval?: number;
     enableMouse?: boolean;
+    enableNavigation?: boolean; // Enable navigation pattern tracking
+    enableDeviceFingerprint?: boolean; // Enable device fingerprinting (requires testing)
     offlineMode?: boolean; // Enable offline scoring
 }
 
@@ -30,6 +35,12 @@ export interface FeatureVector {
     bigramMean: number;
     totalKeys: number;
     mouseAvgSpeed: number;
+    // Navigation patterns
+    scrollFrequency?: number;
+    clickFrequency?: number;
+    avgScrollSpeed?: number;
+    focusChanges?: number;
+    avgTimeBetweenActions?: number;
 }
 
 interface EnrollmentProfile {
@@ -49,6 +60,11 @@ export interface ScoreResult {
     }>;
     aiAnalysis?: string;
     aiExplanation?: string;
+    policyAction?: {
+        type: string;
+        message: string;
+        severity: 'low' | 'medium' | 'high' | 'critical';
+    } | null;
 }
 
 export class BehaviorSDK {
@@ -58,12 +74,19 @@ export class BehaviorSDK {
     private isCapturing = false;
     private batchTimer: number | null = null;
     private lastMousePos = { x: 0, y: 0 };
+    private lastScrollY = 0;
+    private sessionStartTime = 0;
+    private lastActionTime = 0;
+    private clickCount = 0;
+    private scrollCount = 0;
+    private focusCount = 0;
 
     constructor(config: SDKConfig) {
         this.config = {
             ...config,
             batchInterval: config.batchInterval || 5000,
             enableMouse: config.enableMouse ?? true,
+            enableNavigation: config.enableNavigation ?? true,
             offlineMode: config.offlineMode ?? false
         };
     }
@@ -80,6 +103,12 @@ export class BehaviorSDK {
         this.sessionId = sessionId;
         this.events = [];
         this.isCapturing = true;
+        this.sessionStartTime = Date.now();
+        this.lastActionTime = Date.now();
+        this.clickCount = 0;
+        this.scrollCount = 0;
+        this.focusCount = 0;
+        this.lastScrollY = window.scrollY || 0;
 
         // Register session with backend (skip in offline mode)
         if (!this.config.offlineMode) {
@@ -108,6 +137,13 @@ export class BehaviorSDK {
 
         if (this.config.enableMouse) {
             document.addEventListener('mousemove', this.handleMouseMove);
+            document.addEventListener('click', this.handleClick);
+        }
+
+        if (this.config.enableNavigation) {
+            window.addEventListener('scroll', this.handleScroll, { passive: true });
+            window.addEventListener('focus', this.handleFocus);
+            window.addEventListener('blur', this.handleBlur);
         }
 
         // Start batch timer
@@ -130,6 +166,10 @@ export class BehaviorSDK {
         document.removeEventListener('keydown', this.handleKeyDown);
         document.removeEventListener('keyup', this.handleKeyUp);
         document.removeEventListener('mousemove', this.handleMouseMove);
+        document.removeEventListener('click', this.handleClick);
+        window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('focus', this.handleFocus);
+        window.removeEventListener('blur', this.handleBlur);
 
         // Clear batch timer
         if (this.batchTimer !== null) {
@@ -321,6 +361,58 @@ export class BehaviorSDK {
             deltaX,
             deltaY
         });
+        this.lastActionTime = Date.now();
+    };
+
+    private handleClick = (e: MouseEvent): void => {
+        if (!this.isCapturing) return;
+
+        const button = e.button === 0 ? 'left' : e.button === 2 ? 'right' : 'middle';
+        this.clickCount++;
+
+        this.events.push({
+            type: 'click',
+            timestamp: Date.now(),
+            clickButton: button,
+            timeOnPage: Date.now() - this.sessionStartTime
+        });
+        this.lastActionTime = Date.now();
+    };
+
+    private handleScroll = (): void => {
+        if (!this.isCapturing) return;
+
+        const currentScrollY = window.scrollY || 0;
+        const scrollDelta = Math.abs(currentScrollY - this.lastScrollY);
+        this.lastScrollY = currentScrollY;
+
+        if (scrollDelta > 5) { // Only capture significant scrolls
+            this.scrollCount++;
+            this.events.push({
+                type: 'scroll',
+                timestamp: Date.now(),
+                scrollDelta,
+                timeOnPage: Date.now() - this.sessionStartTime
+            });
+            this.lastActionTime = Date.now();
+        }
+    };
+
+    private handleFocus = (): void => {
+        if (!this.isCapturing) return;
+        this.focusCount++;
+        this.events.push({
+            type: 'focus',
+            timestamp: Date.now(),
+            timeOnPage: Date.now() - this.sessionStartTime
+        });
+        this.lastActionTime = Date.now();
+    };
+
+    private handleBlur = (): void => {
+        if (!this.isCapturing) return;
+        // Track when user loses focus (switches tabs/windows)
+        this.lastActionTime = Date.now();
     };
 
     /**
@@ -430,6 +522,27 @@ export class BehaviorSDK {
             }
         }
         
+        // Extract navigation patterns
+        const scrollEvents = events.filter(e => e.type === 'scroll');
+        const clickEvents = events.filter(e => e.type === 'click');
+        const focusEvents = events.filter(e => e.type === 'focus');
+        
+        const sessionDuration = events.length > 0 
+            ? events[events.length - 1].timestamp - events[0].timestamp 
+            : 1;
+        
+        const scrollDeltas = scrollEvents
+            .map(e => e.scrollDelta || 0)
+            .filter(d => d > 0);
+        
+        const actionIntervals: number[] = [];
+        for (let i = 1; i < events.length; i++) {
+            const interval = events[i].timestamp - events[i - 1].timestamp;
+            if (interval > 0 && interval < 10000) { // Sanity check: < 10 seconds
+                actionIntervals.push(interval);
+            }
+        }
+
         return {
             meanFlight: this.mean(flights),
             stdFlight: this.std(flights),
@@ -438,7 +551,13 @@ export class BehaviorSDK {
             backspaceRate: keyEvents.length > 0 ? backspaceCount / keyEvents.length : 0,
             bigramMean: this.mean(bigrams),
             totalKeys: keyEvents.length,
-            mouseAvgSpeed: totalMouseTime > 0 ? totalMouseDistance / totalMouseTime : 0
+            mouseAvgSpeed: totalMouseTime > 0 ? totalMouseDistance / totalMouseTime : 0,
+            // Navigation patterns
+            scrollFrequency: sessionDuration > 0 ? (scrollEvents.length / sessionDuration) * 1000 : 0,
+            clickFrequency: sessionDuration > 0 ? (clickEvents.length / sessionDuration) * 1000 : 0,
+            avgScrollSpeed: scrollDeltas.length > 0 ? this.mean(scrollDeltas) : 0,
+            focusChanges: focusEvents.length,
+            avgTimeBetweenActions: actionIntervals.length > 0 ? this.mean(actionIntervals) : 0
         };
     }
     
@@ -461,7 +580,9 @@ export class BehaviorSDK {
         
         const centroid: FeatureVector = {
             meanFlight: 0, stdFlight: 0, meanHold: 0, stdHold: 0,
-            backspaceRate: 0, bigramMean: 0, totalKeys: 0, mouseAvgSpeed: 0
+            backspaceRate: 0, bigramMean: 0, totalKeys: 0, mouseAvgSpeed: 0,
+            scrollFrequency: 0, clickFrequency: 0, avgScrollSpeed: 0,
+            focusChanges: 0, avgTimeBetweenActions: 0
         };
         
         for (const vector of vectors) {
@@ -473,6 +594,11 @@ export class BehaviorSDK {
             centroid.bigramMean += vector.bigramMean;
             centroid.totalKeys += vector.totalKeys;
             centroid.mouseAvgSpeed += vector.mouseAvgSpeed;
+            centroid.scrollFrequency = (centroid.scrollFrequency || 0) + (vector.scrollFrequency || 0);
+            centroid.clickFrequency = (centroid.clickFrequency || 0) + (vector.clickFrequency || 0);
+            centroid.avgScrollSpeed = (centroid.avgScrollSpeed || 0) + (vector.avgScrollSpeed || 0);
+            centroid.focusChanges = (centroid.focusChanges || 0) + (vector.focusChanges || 0);
+            centroid.avgTimeBetweenActions = (centroid.avgTimeBetweenActions || 0) + (vector.avgTimeBetweenActions || 0);
         }
         
         const n = vectors.length;
@@ -484,7 +610,12 @@ export class BehaviorSDK {
             backspaceRate: centroid.backspaceRate / n,
             bigramMean: centroid.bigramMean / n,
             totalKeys: centroid.totalKeys / n,
-            mouseAvgSpeed: centroid.mouseAvgSpeed / n
+            mouseAvgSpeed: centroid.mouseAvgSpeed / n,
+            scrollFrequency: (centroid.scrollFrequency || 0) / n,
+            clickFrequency: (centroid.clickFrequency || 0) / n,
+            avgScrollSpeed: (centroid.avgScrollSpeed || 0) / n,
+            focusChanges: (centroid.focusChanges || 0) / n,
+            avgTimeBetweenActions: (centroid.avgTimeBetweenActions || 0) / n
         };
     }
     
@@ -495,7 +626,9 @@ export class BehaviorSDK {
         
         const variances: FeatureVector = {
             meanFlight: 0, stdFlight: 0, meanHold: 0, stdHold: 0,
-            backspaceRate: 0, bigramMean: 0, totalKeys: 0, mouseAvgSpeed: 0
+            backspaceRate: 0, bigramMean: 0, totalKeys: 0, mouseAvgSpeed: 0,
+            scrollFrequency: 0, clickFrequency: 0, avgScrollSpeed: 0,
+            focusChanges: 0, avgTimeBetweenActions: 0
         };
         
         for (const vector of vectors) {
@@ -507,6 +640,16 @@ export class BehaviorSDK {
             variances.bigramMean += Math.pow(vector.bigramMean - centroid.bigramMean, 2);
             variances.totalKeys += Math.pow(vector.totalKeys - centroid.totalKeys, 2);
             variances.mouseAvgSpeed += Math.pow(vector.mouseAvgSpeed - centroid.mouseAvgSpeed, 2);
+            const scrollFreq = vector.scrollFrequency || 0;
+            const clickFreq = vector.clickFrequency || 0;
+            const scrollSpeed = vector.avgScrollSpeed || 0;
+            const focus = vector.focusChanges || 0;
+            const actionTime = vector.avgTimeBetweenActions || 0;
+            variances.scrollFrequency = (variances.scrollFrequency || 0) + Math.pow(scrollFreq - (centroid.scrollFrequency || 0), 2);
+            variances.clickFrequency = (variances.clickFrequency || 0) + Math.pow(clickFreq - (centroid.clickFrequency || 0), 2);
+            variances.avgScrollSpeed = (variances.avgScrollSpeed || 0) + Math.pow(scrollSpeed - (centroid.avgScrollSpeed || 0), 2);
+            variances.focusChanges = (variances.focusChanges || 0) + Math.pow(focus - (centroid.focusChanges || 0), 2);
+            variances.avgTimeBetweenActions = (variances.avgTimeBetweenActions || 0) + Math.pow(actionTime - (centroid.avgTimeBetweenActions || 0), 2);
         }
         
         const n = vectors.length;
@@ -518,7 +661,12 @@ export class BehaviorSDK {
             backspaceRate: Math.sqrt(variances.backspaceRate / n),
             bigramMean: Math.sqrt(variances.bigramMean / n),
             totalKeys: Math.sqrt(variances.totalKeys / n),
-            mouseAvgSpeed: Math.sqrt(variances.mouseAvgSpeed / n)
+            mouseAvgSpeed: Math.sqrt(variances.mouseAvgSpeed / n),
+            scrollFrequency: Math.sqrt((variances.scrollFrequency || 0) / n),
+            clickFrequency: Math.sqrt((variances.clickFrequency || 0) / n),
+            avgScrollSpeed: Math.sqrt((variances.avgScrollSpeed || 0) / n),
+            focusChanges: Math.sqrt((variances.focusChanges || 0) / n),
+            avgTimeBetweenActions: Math.sqrt((variances.avgTimeBetweenActions || 0) / n)
         };
     }
     

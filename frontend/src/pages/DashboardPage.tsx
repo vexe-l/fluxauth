@@ -137,28 +137,42 @@ export default function DashboardPage() {
 
     const chartOptions = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: false
             },
             title: {
                 display: true,
-                text: 'Feature Z-Scores (Standard Deviations from Baseline)'
+                text: 'Feature Z-Scores (Standard Deviations from Baseline)',
+                color: 'white'
             }
         },
         scales: {
+            x: {
+                ticks: {
+                    color: 'white'
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                }
+            },
             y: {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Z-Score (σ)'
+                    text: 'Z-Score (σ)',
+                    color: 'white'
+                },
+                ticks: {
+                    color: 'white'
                 },
                 grid: {
                     color: (context: any) => {
                         if (context.tick.value === 2.5 || context.tick.value === -2.5) {
                             return 'rgba(239, 68, 68, 0.3)';
                         }
-                        return 'rgba(0, 0, 0, 0.1)';
+                        return 'rgba(255, 255, 255, 0.1)';
                     }
                 }
             }
@@ -173,24 +187,26 @@ export default function DashboardPage() {
             </Text>
             <Badge colorScheme="green" fontSize="sm">✅ Real Bot Detection Active</Badge>
 
-            <Alert status="info" borderRadius="md" color="blue.900">
+            <Alert status="info" borderRadius="md" bg="blue.900" color="white">
                 <AlertIcon />
-                This is a demo dashboard with sample data. In production, this would show real session history.
+                <Text color="white">
+                    This is a demo dashboard with sample data. In production, this would show real session history.
+                </Text>
             </Alert>
 
-            <Card w="full">
+            <Card w="full" bg="rgba(0, 0, 0, 0.2)">
                 <CardBody>
                     <Heading size="md" mb={4} color="white">
                         Recent Sessions
                     </Heading>
-                    <Table variant="simple" size="sm">
+                    <Table variant="simple" size="sm" colorScheme="whiteAlpha">
                         <Thead>
                             <Tr>
-                                <Th>Session ID</Th>
-                                <Th>User ID</Th>
-                                <Th>Trust Score</Th>
-                                <Th>Status</Th>
-                                <Th>Timestamp</Th>
+                                <Th color="white">Session ID</Th>
+                                <Th color="white">User ID</Th>
+                                <Th color="white">Trust Score</Th>
+                                <Th color="white">Status</Th>
+                                <Th color="white">Timestamp</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -199,13 +215,13 @@ export default function DashboardPage() {
                                     key={session.sessionId}
                                     onClick={() => setSelectedSession(session)}
                                     cursor="pointer"
-                                    _hover={{ bg: 'gray.50' }}
-                                    bg={selectedSession?.sessionId === session.sessionId ? 'blue.50' : undefined}
+                                    _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+                                    bg={selectedSession?.sessionId === session.sessionId ? 'rgba(59, 130, 246, 0.2)' : undefined}
                                 >
-                                    <Td fontFamily="mono" fontSize="sm">
+                                    <Td fontFamily="mono" fontSize="sm" color="white">
                                         {session.sessionId}
                                     </Td>
-                                    <Td>{session.userId}</Td>
+                                    <Td color="white">{session.userId}</Td>
                                     <Td>
                                         <Badge colorScheme={session.trustScore > 70 ? 'green' : 'red'}>
                                             {session.trustScore}
@@ -232,9 +248,9 @@ export default function DashboardPage() {
             </Card>
 
             {selectedSession && (
-                <Card w="full">
+                <Card w="full" bg="rgba(0, 0, 0, 0.2)">
                     <CardBody>
-                        <Heading size="md" mb={4}>
+                        <Heading size="md" mb={4} color="white">
                             Session Analysis: {selectedSession.sessionId}
                         </Heading>
                         <Box h="400px">
@@ -249,7 +265,7 @@ export default function DashboardPage() {
             )}
 
             {/* Trust Score History */}
-            <Card w="full">
+            <Card w="full" bg="rgba(0, 0, 0, 0.2)">
                 <CardBody>
                     <TrustScoreHistory />
                 </CardBody>

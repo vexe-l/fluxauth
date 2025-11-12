@@ -90,6 +90,27 @@ export function extractFeatures(events: BehaviorEvent[]): FeatureVector {
         }
     }
 
+    // Extract navigation patterns
+    const scrollEvents = events.filter(e => e.type === 'scroll');
+    const clickEvents = events.filter(e => e.type === 'click');
+    const focusEvents = events.filter(e => e.type === 'focus');
+    
+    const sessionDuration = events.length > 0 
+        ? events[events.length - 1].timestamp - events[0].timestamp 
+        : 1;
+    
+    const scrollDeltas = scrollEvents
+        .map((e: any) => e.scrollDelta || 0)
+        .filter((d: number) => d > 0);
+    
+    const actionIntervals: number[] = [];
+    for (let i = 1; i < events.length; i++) {
+        const interval = events[i].timestamp - events[i - 1].timestamp;
+        if (interval > 0 && interval < 10000) { // Sanity check: < 10 seconds
+            actionIntervals.push(interval);
+        }
+    }
+
     return {
         meanFlight: mean(flights),
         stdFlight: std(flights),
@@ -98,7 +119,13 @@ export function extractFeatures(events: BehaviorEvent[]): FeatureVector {
         backspaceRate: keyEvents.length > 0 ? backspaceCount / keyEvents.length : 0,
         bigramMean: mean(bigrams),
         totalKeys: keyEvents.length,
-        mouseAvgSpeed: totalMouseTime > 0 ? totalMouseDistance / totalMouseTime : 0
+        mouseAvgSpeed: totalMouseTime > 0 ? totalMouseDistance / totalMouseTime : 0,
+        // Navigation patterns
+        scrollFrequency: sessionDuration > 0 ? (scrollEvents.length / sessionDuration) * 1000 : 0,
+        clickFrequency: sessionDuration > 0 ? (clickEvents.length / sessionDuration) * 1000 : 0,
+        avgScrollSpeed: scrollDeltas.length > 0 ? mean(scrollDeltas) : 0,
+        focusChanges: focusEvents.length,
+        avgTimeBetweenActions: actionIntervals.length > 0 ? mean(actionIntervals) : 0
     };
 }
 
@@ -136,7 +163,12 @@ export function computeCentroid(vectors: FeatureVector[]): FeatureVector {
         backspaceRate: 0,
         bigramMean: 0,
         totalKeys: 0,
-        mouseAvgSpeed: 0
+        mouseAvgSpeed: 0,
+        scrollFrequency: 0,
+        clickFrequency: 0,
+        avgScrollSpeed: 0,
+        focusChanges: 0,
+        avgTimeBetweenActions: 0
     };
 
     for (const vector of vectors) {
@@ -148,6 +180,11 @@ export function computeCentroid(vectors: FeatureVector[]): FeatureVector {
         centroid.bigramMean += vector.bigramMean;
         centroid.totalKeys += vector.totalKeys;
         centroid.mouseAvgSpeed += vector.mouseAvgSpeed;
+        centroid.scrollFrequency = (centroid.scrollFrequency || 0) + (vector.scrollFrequency || 0);
+        centroid.clickFrequency = (centroid.clickFrequency || 0) + (vector.clickFrequency || 0);
+        centroid.avgScrollSpeed = (centroid.avgScrollSpeed || 0) + (vector.avgScrollSpeed || 0);
+        centroid.focusChanges = (centroid.focusChanges || 0) + (vector.focusChanges || 0);
+        centroid.avgTimeBetweenActions = (centroid.avgTimeBetweenActions || 0) + (vector.avgTimeBetweenActions || 0);
     }
 
     const n = vectors.length;
@@ -159,6 +196,11 @@ export function computeCentroid(vectors: FeatureVector[]): FeatureVector {
     centroid.bigramMean /= n;
     centroid.totalKeys /= n;
     centroid.mouseAvgSpeed /= n;
+    centroid.scrollFrequency = (centroid.scrollFrequency || 0) / n;
+    centroid.clickFrequency = (centroid.clickFrequency || 0) / n;
+    centroid.avgScrollSpeed = (centroid.avgScrollSpeed || 0) / n;
+    centroid.focusChanges = (centroid.focusChanges || 0) / n;
+    centroid.avgTimeBetweenActions = (centroid.avgTimeBetweenActions || 0) / n;
 
     return centroid;
 }
@@ -179,7 +221,12 @@ export function computeStdDevs(vectors: FeatureVector[], centroid: FeatureVector
         backspaceRate: 0,
         bigramMean: 0,
         totalKeys: 0,
-        mouseAvgSpeed: 0
+        mouseAvgSpeed: 0,
+        scrollFrequency: 0,
+        clickFrequency: 0,
+        avgScrollSpeed: 0,
+        focusChanges: 0,
+        avgTimeBetweenActions: 0
     };
 
     for (const vector of vectors) {
@@ -191,6 +238,16 @@ export function computeStdDevs(vectors: FeatureVector[], centroid: FeatureVector
         variances.bigramMean += Math.pow(vector.bigramMean - centroid.bigramMean, 2);
         variances.totalKeys += Math.pow(vector.totalKeys - centroid.totalKeys, 2);
         variances.mouseAvgSpeed += Math.pow(vector.mouseAvgSpeed - centroid.mouseAvgSpeed, 2);
+        const scrollFreq = vector.scrollFrequency || 0;
+        const clickFreq = vector.clickFrequency || 0;
+        const scrollSpeed = vector.avgScrollSpeed || 0;
+        const focus = vector.focusChanges || 0;
+        const actionTime = vector.avgTimeBetweenActions || 0;
+        variances.scrollFrequency = (variances.scrollFrequency || 0) + Math.pow(scrollFreq - (centroid.scrollFrequency || 0), 2);
+        variances.clickFrequency = (variances.clickFrequency || 0) + Math.pow(clickFreq - (centroid.clickFrequency || 0), 2);
+        variances.avgScrollSpeed = (variances.avgScrollSpeed || 0) + Math.pow(scrollSpeed - (centroid.avgScrollSpeed || 0), 2);
+        variances.focusChanges = (variances.focusChanges || 0) + Math.pow(focus - (centroid.focusChanges || 0), 2);
+        variances.avgTimeBetweenActions = (variances.avgTimeBetweenActions || 0) + Math.pow(actionTime - (centroid.avgTimeBetweenActions || 0), 2);
     }
 
     const n = vectors.length;
@@ -202,6 +259,11 @@ export function computeStdDevs(vectors: FeatureVector[], centroid: FeatureVector
         backspaceRate: Math.sqrt(variances.backspaceRate / n),
         bigramMean: Math.sqrt(variances.bigramMean / n),
         totalKeys: Math.sqrt(variances.totalKeys / n),
-        mouseAvgSpeed: Math.sqrt(variances.mouseAvgSpeed / n)
+        mouseAvgSpeed: Math.sqrt(variances.mouseAvgSpeed / n),
+        scrollFrequency: Math.sqrt((variances.scrollFrequency || 0) / n),
+        clickFrequency: Math.sqrt((variances.clickFrequency || 0) / n),
+        avgScrollSpeed: Math.sqrt((variances.avgScrollSpeed || 0) / n),
+        focusChanges: Math.sqrt((variances.focusChanges || 0) / n),
+        avgTimeBetweenActions: Math.sqrt((variances.avgTimeBetweenActions || 0) / n)
     };
 }
