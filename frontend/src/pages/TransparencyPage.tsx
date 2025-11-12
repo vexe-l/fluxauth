@@ -80,9 +80,15 @@ export default function TransparencyPage() {
     return (
         <VStack spacing={6} maxW="6xl" mx="auto">
             <Box textAlign="center">
-                <Heading size="lg" mb={2}>Transparency Dashboard</Heading>
+                <HStack justify="center" mb={2}>
+                    <Heading size="lg">Transparency Dashboard</Heading>
+                    <Badge colorScheme="yellow" fontSize="sm">Mock Data</Badge>
+                </HStack>
                 <Text color="gray.600">
                     Real-time system metrics and performance data (SDG 16: Accountability)
+                </Text>
+                <Text fontSize="sm" color="orange.600" mt={1}>
+                    ⚠️ Showing mock metrics - production would connect to real backend
                 </Text>
             </Box>
 

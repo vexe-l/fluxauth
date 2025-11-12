@@ -113,9 +113,15 @@ export default function PolicyRulesPage() {
     return (
         <VStack spacing={6} maxW="6xl" mx="auto">
             <Box textAlign="center">
-                <Heading size="lg" color="navy.500">Custom Policy Engine</Heading>
+                <HStack justify="center" mb={2}>
+                    <Heading size="lg" color="navy.500">Custom Policy Engine</Heading>
+                    <Badge colorScheme="purple" fontSize="sm">UI Demo</Badge>
+                </HStack>
                 <Text color="gray.600" mt={2}>
                     Admin UI for writing policies as logic: IF trustScore&lt;40 THEN REQUIRE_OTP
+                </Text>
+                <Text fontSize="sm" color="purple.600" mt={1}>
+                    ℹ️ UI fully functional - backend policy execution would be next phase
                 </Text>
             </Box>
 

@@ -89,9 +89,15 @@ export default function LiveMonitorPage() {
     return (
         <VStack spacing={6} maxW="7xl" mx="auto">
             <Box textAlign="center">
-                <Heading size="lg" color="navy.500">Real-Time Behavioral Monitor</Heading>
+                <HStack justify="center" mb={2}>
+                    <Heading size="lg" color="navy.500">Real-Time Behavioral Monitor</Heading>
+                    <Badge colorScheme="yellow" fontSize="sm">Demo Mode</Badge>
+                </HStack>
                 <Text color="gray.600" mt={2}>
                     Live tracking of typing/mouse rhythm with trust meter updates
+                </Text>
+                <Text fontSize="sm" color="orange.600" mt={1}>
+                    ⚠️ Showing simulated data for demonstration
                 </Text>
             </Box>
 
