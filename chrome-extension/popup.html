@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluxAuth Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 350px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .trust-score {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .settings-form {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 13px;
+        }
+
+        input:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 26px;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #28a745;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #28a745;
+        }
+
+        .status-inactive {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            opacity: 0.8;
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        #message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        #message.success {
+            background: rgba(40, 167, 69, 0.3);
+        }
+
+        #message.error {
+            background: rgba(220, 53, 69, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🔒 FluxAuth Security</h1>
+        <p>Behavioral Biometric Protection</p>
+    </div>
+
+    <div class="content">
+        <!-- Status Section -->
+        <div class="status-card">
+            <div class="toggle-container">
+                <span style="font-weight: 600;">Protection Status</span>
+                <label class="toggle">
+                    <input type="checkbox" id="enableToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Status:</span>
+                <span class="info-value"><span class="status-badge status-inactive"
+                        id="statusBadge">Inactive</span></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Session ID:</span>
+                <span class="info-value" id="sessionId">-</span>
+            </div>
+        </div>
+
+        <!-- Trust Score -->
+        <div class="trust-score" id="trustScoreSection" style="display: none;">
+            <div class="score-circle" id="scoreCircle">--</div>
+            <div class="score-label">Trust Score</div>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="settings-form">
+            <div class="form-group">
+                <label>User ID</label>
+                <input type="text" id="userId" placeholder="Enter your user ID">
+            </div>
+            <div class="form-group">
+                <label>API Key</label>
+                <input type="password" id="apiKey" placeholder="Your FluxAuth API key">
+            </div>
+            <div class="form-group">
+                <label>API URL</label>
+                <input type="text" id="apiUrl" value="http://localhost:3001/api"
+                    placeholder="http://localhost:3001/api">
+            </div>
+            <button id="saveBtn">Save Settings</button>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

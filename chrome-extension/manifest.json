@@ -5,7 +5,8 @@
     "description": "Behavioral biometric authentication for enhanced account security",
     "permissions": [
         "storage",
-        "activeTab"
+        "activeTab",
+        "notifications"
     ],
     "host_permissions": [
         "http://localhost:3001/*",
