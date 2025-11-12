@@ -91,3 +91,87 @@ Use simple language, no jargon. Be reassuring but clear.`;
         return null;
     }
 }
+
+export async function calculateContextualRisk(context: {
+    baseTrustScore: number;
+    action: string;
+    location?: string;
+    timeOfDay: number;
+    isNewDevice: boolean;
+    amountInvolved?: number;
+    userHistory?: {
+        avgTrustScore: number;
+        typicalLoginTimes: number[];
+        typicalLocations: string[];
+    };
+}) {
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+        const prompt = `You are a cybersecurity risk assessment AI. Calculate contextual risk for this authentication attempt.
+
+Base Trust Score: ${context.baseTrustScore}/100
+Action Type: ${context.action}
+${context.location ? `Location: ${context.location}` : ''}
+Time of Day: ${context.timeOfDay}:00 (24-hour format)
+New Device: ${context.isNewDevice ? 'YES' : 'NO'}
+${context.amountInvolved ? `Transaction Amount: $${context.amountInvolved}` : ''}
+
+${context.userHistory ? `User's Normal Behavior:
+- Average Trust Score: ${context.userHistory.avgTrustScore}/100
+- Typical Login Times: ${context.userHistory.typicalLoginTimes.join(', ')}:00
+- Typical Locations: ${context.userHistory.typicalLocations.join(', ')}` : ''}
+
+Analyze and provide:
+1. Adjusted Risk Score (0-100, where 100 is highest risk)
+2. Risk Level (LOW/MEDIUM/HIGH/CRITICAL)
+3. Key Risk Factors (list 2-3 specific concerns)
+4. Recommended Action (ALLOW/REQUIRE_MFA/BLOCK)
+5. Brief Reasoning (1-2 sentences)
+
+Consider:
+- Action sensitivity (login < view < transfer < delete)
+- Unusual timing or location
+- New device risk
+- Transaction value
+- Deviation from user's normal patterns
+
+Respond in JSON format:
+{
+  "adjustedRiskScore": <number>,
+  "riskLevel": "<string>",
+  "riskFactors": ["<factor1>", "<factor2>"],
+  "recommendedAction": "<string>",
+  "reasoning": "<string>"
+}`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Extract JSON from response
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            return JSON.parse(jsonMatch[0]);
+        }
+
+        // Fallback if JSON parsing fails
+        return {
+            adjustedRiskScore: context.baseTrustScore,
+            riskLevel: context.baseTrustScore > 70 ? 'LOW' : context.baseTrustScore > 50 ? 'MEDIUM' : 'HIGH',
+            riskFactors: ['Unable to perform detailed analysis'],
+            recommendedAction: context.baseTrustScore > 70 ? 'ALLOW' : 'REQUIRE_MFA',
+            reasoning: 'AI analysis unavailable, using base trust score'
+        };
+    } catch (error) {
+        console.error('Contextual risk calculation failed:', error);
+        // Fallback to simple logic
+        return {
+            adjustedRiskScore: context.baseTrustScore,
+            riskLevel: context.baseTrustScore > 70 ? 'LOW' : context.baseTrustScore > 50 ? 'MEDIUM' : 'HIGH',
+            riskFactors: ['AI service unavailable'],
+            recommendedAction: context.baseTrustScore > 70 ? 'ALLOW' : 'REQUIRE_MFA',
+            reasoning: 'Using base trust score due to AI service unavailability'
+        };
+    }
+}

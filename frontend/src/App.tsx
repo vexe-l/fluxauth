@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import DocsPage from './pages/DocsPage';
 import TransparencyPage from './pages/TransparencyPage';
 import PolicyRulesPage from './pages/PolicyRulesPage';
+import ContextualRiskPage from './pages/ContextualRiskPage';
 import GlassmorphismBackground from './components/GlassmorphismBackground';
 
 function App() {
@@ -62,6 +63,12 @@ function App() {
                                     <Button as={Link} to="/policy" variant="ghost" size="sm">
                                         Policy
                                     </Button>
+                                    <Button as={Link} to="/contextual-risk" variant="ghost" size="sm">
+                                        AI Risk
+                                    </Button>
+                                    <Button as={Link} to="/docs" variant="ghost" size="sm">
+                                        Docs
+                                    </Button>
                                 </HStack>
                             </Flex>
                         </Container>
@@ -77,6 +84,7 @@ function App() {
                             <Route path="/dashboard" element={<DashboardPage />} />
                             <Route path="/transparency" element={<TransparencyPage />} />
                             <Route path="/policy" element={<PolicyRulesPage />} />
+                            <Route path="/contextual-risk" element={<ContextualRiskPage />} />
                             <Route path="/docs" element={<DocsPage />} />
                         </Routes>
                     </Container>

@@ -110,6 +110,18 @@ export default function HomePage() {
                                 </Text>
                             </CardBody>
                         </Card>
+
+                        <Card flex={1}>
+                            <CardBody>
+                                <HStack mb={3}>
+                                    <Box w="3px" h="20px" bg="purple.400" />
+                                    <Heading size="sm" color="purple.400">AI Risk Scoring</Heading>
+                                </HStack>
+                                <Text color="white" fontSize="sm">
+                                    Context-aware risk adjustment with Gemini AI
+                                </Text>
+                            </CardBody>
+                        </Card>
                     </HStack>
                 </VStack>
             </Box>
@@ -121,6 +133,9 @@ export default function HomePage() {
                 </Button>
                 <Button as={Link} to="/dashboard" variant="outline" size="md">
                     Bot Detection
+                </Button>
+                <Button as={Link} to="/contextual-risk" variant="outline" size="md">
+                    AI Risk Scoring
                 </Button>
                 <Button as={Link} to="/transparency" variant="outline" size="md">
                     Fairness
