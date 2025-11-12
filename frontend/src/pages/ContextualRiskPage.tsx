@@ -27,6 +27,7 @@ import {
     Grid,
     GridItem
 } from '@chakra-ui/react';
+import { API_CONFIG } from '../config';
 
 export default function ContextualRiskPage() {
     const [baseTrustScore, setBaseTrustScore] = useState(75);
@@ -46,7 +47,7 @@ export default function ContextualRiskPage() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-api-key': 'dev_key_12345'
+                    'x-api-key': API_CONFIG.API_KEY
                 },
                 body: JSON.stringify({
                     baseTrustScore,
@@ -244,12 +245,12 @@ export default function ContextualRiskPage() {
                                 <CardBody>
                                     <VStack align="stretch" spacing={2}>
                                         <HStack justify="space-between">
-                                            <Text fontWeight="bold" color="gray.800">Recommended Action</Text>
+                                            <Text fontWeight="bold" color="white">Recommended Action</Text>
                                             <Badge colorScheme={getActionColor(result.recommendedAction)} fontSize="md" px={3} py={1}>
                                                 {result.recommendedAction}
                                             </Badge>
                                         </HStack>
-                                        <Text fontSize="sm" color="gray.700">
+                                        <Text fontSize="sm" color="white">
                                             {result.reasoning}
                                         </Text>
                                     </VStack>

@@ -231,8 +231,8 @@ export default function TransparencyPage() {
             {/* Fairness Metrics by Cohort */}
             <Card w="full" bg="purple.50" borderTop="4px" borderColor="purple.500">
                 <CardBody>
-                    <Heading size="md" mb={4} color="gray.800">Fairness Metrics by Device Type</Heading>
-                    <Text fontSize="sm" color="gray.700" mb={4}>
+                    <Heading size="md" mb={4} color="white">Fairness Metrics by Device Type</Heading>
+                    <Text fontSize="sm" color="white" mb={4}>
                         Detection performance across different user cohorts to ensure equitable treatment
                     </Text>
                     <Table variant="simple" size="sm">
@@ -281,7 +281,7 @@ export default function TransparencyPage() {
                             </Tr>
                         </Tbody>
                     </Table>
-                    <Text fontSize="xs" color="gray.700" mt={4}>
+                    <Text fontSize="xs" color="white" mt={4}>
                         <strong>Note:</strong> Fairness scores indicate minimal bias across device types.
                         All cohorts maintain similar false positive rates (within 0.3% variance).
                     </Text>
@@ -291,25 +291,25 @@ export default function TransparencyPage() {
             {/* Mock Bias Report */}
             <Card w="full" bg="blue.50" borderTop="4px" borderColor="blue.500">
                 <CardBody>
-                    <Heading size="md" mb={4} color="gray.800">Bias Audit Report</Heading>
+                    <Heading size="md" mb={4} color="white">Bias Audit Report</Heading>
                     <VStack align="stretch" spacing={3}>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium" color="gray.700">Last Audit Date:</Text>
-                            <Text color="gray.700">November 10, 2025</Text>
+                            <Text fontWeight="medium" color="white">Last Audit Date:</Text>
+                            <Text color="white">November 10, 2025</Text>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium" color="gray.700">Demographic Parity:</Text>
+                            <Text fontWeight="medium" color="white">Demographic Parity:</Text>
                             <Badge colorScheme="green">PASS (0.97)</Badge>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium" color="gray.700">Equal Opportunity:</Text>
+                            <Text fontWeight="medium" color="white">Equal Opportunity:</Text>
                             <Badge colorScheme="green">PASS (0.95)</Badge>
                         </HStack>
                         <HStack justify="space-between">
-                            <Text fontWeight="medium" color="gray.700">Disparate Impact Ratio:</Text>
+                            <Text fontWeight="medium" color="white">Disparate Impact Ratio:</Text>
                             <Badge colorScheme="green">PASS (0.89)</Badge>
                         </HStack>
-                        <Text fontSize="sm" color="gray.700" pt={2}>
+                        <Text fontSize="sm" color="white" pt={2}>
                             All fairness metrics meet industry standards (threshold: 0.80).
                             No significant bias detected across protected attributes.
                         </Text>

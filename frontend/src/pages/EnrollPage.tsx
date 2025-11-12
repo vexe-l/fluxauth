@@ -18,6 +18,7 @@ import {
     HStack
 } from '@chakra-ui/react';
 import { BehaviorSDK } from '../sdk/browser';
+import { API_CONFIG } from '../config';
 
 const PROMPTS = [
     'The quick brown fox jumps over the lazy dog.',
@@ -32,8 +33,8 @@ export default function EnrollPage() {
     const [isCapturing, setIsCapturing] = useState(false);
     const [sessions, setSessions] = useState<any[]>([]);
     const [sdk] = useState(() => new BehaviorSDK({
-        apiUrl: '/api',
-        apiKey: 'dev_key_12345'
+        apiUrl: API_CONFIG.API_URL,
+        apiKey: API_CONFIG.API_KEY
     }));
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);

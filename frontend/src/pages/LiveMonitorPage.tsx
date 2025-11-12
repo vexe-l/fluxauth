@@ -23,6 +23,7 @@ import {
     Th,
     Td
 } from '@chakra-ui/react';
+import { API_CONFIG } from '../config';
 
 interface LiveSession {
     sessionId: string;
@@ -45,7 +46,7 @@ export default function LiveMonitorPage() {
             try {
                 const response = await fetch('/api/sessions/recent', {
                     headers: {
-                        'x-api-key': 'dev_key_12345'
+                        'x-api-key': API_CONFIG.API_KEY
                     }
                 });
 
@@ -157,9 +158,9 @@ export default function LiveMonitorPage() {
                     <Card bg="brand.50" borderLeft="4px" borderColor="brand.400">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="gray.800">Active Sessions</StatLabel>
-                                <StatNumber color="gray.900">{stats.activeSessions}</StatNumber>
-                                <StatHelpText color="gray.700">
+                                <StatLabel color="white">Active Sessions</StatLabel>
+                                <StatNumber color="white">{stats.activeSessions}</StatNumber>
+                                <StatHelpText color="white">
                                     <StatArrow type="increase" />
                                     12% from last hour
                                 </StatHelpText>
@@ -172,9 +173,9 @@ export default function LiveMonitorPage() {
                     <Card bg="accent.50" borderLeft="4px" borderColor="accent.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="gray.800">Avg Trust Score</StatLabel>
-                                <StatNumber color="gray.900">{stats.avgTrustScore}</StatNumber>
-                                <StatHelpText color="gray.700">
+                                <StatLabel color="white">Avg Trust Score</StatLabel>
+                                <StatNumber color="white">{stats.avgTrustScore}</StatNumber>
+                                <StatHelpText color="white">
                                     <StatArrow type="increase" />
                                     5% improvement
                                 </StatHelpText>
@@ -187,9 +188,9 @@ export default function LiveMonitorPage() {
                     <Card bg="red.50" borderLeft="4px" borderColor="red.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="gray.800">Anomalies</StatLabel>
-                                <StatNumber color="gray.900">{stats.anomaliesDetected}</StatNumber>
-                                <StatHelpText color="gray.700">Last 5 minutes</StatHelpText>
+                                <StatLabel color="white">Anomalies</StatLabel>
+                                <StatNumber color="white">{stats.anomaliesDetected}</StatNumber>
+                                <StatHelpText color="white">Last 5 minutes</StatHelpText>
                             </Stat>
                         </CardBody>
                     </Card>
@@ -199,9 +200,9 @@ export default function LiveMonitorPage() {
                     <Card bg="purple.50" borderLeft="4px" borderColor="purple.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="gray.800">Total Events</StatLabel>
-                                <StatNumber color="gray.900">{stats.totalEvents}</StatNumber>
-                                <StatHelpText color="gray.700">Captured today</StatHelpText>
+                                <StatLabel color="white">Total Events</StatLabel>
+                                <StatNumber color="white">{stats.totalEvents}</StatNumber>
+                                <StatHelpText color="white">Captured today</StatHelpText>
                             </Stat>
                         </CardBody>
                     </Card>
@@ -274,7 +275,7 @@ export default function LiveMonitorPage() {
 
             <Card w="full" bg="blue.50">
                 <CardBody>
-                    <Text fontSize="sm" color="gray.700">
+                    <Text fontSize="sm" color="white">
                         <strong>Demo Mode:</strong> This dashboard shows simulated real-time data.
                         In production, it would connect via WebSocket to display actual user sessions.
                     </Text>

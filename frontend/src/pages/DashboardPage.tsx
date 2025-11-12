@@ -28,6 +28,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import { API_CONFIG } from '../config';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -49,7 +50,7 @@ export default function DashboardPage() {
             try {
                 const response = await fetch('/api/sessions/recent?limit=20', {
                     headers: {
-                        'x-api-key': 'dev_key_12345'
+                        'x-api-key': API_CONFIG.API_KEY
                     }
                 });
 
@@ -254,7 +255,7 @@ export default function DashboardPage() {
                             onClick={async () => {
                                 try {
                                     const response = await fetch('/api/ai/threat-report', {
-                                        headers: { 'x-api-key': 'dev_key_12345' }
+                                        headers: { 'x-api-key': API_CONFIG.API_KEY }
                                     });
                                     const data = await response.json();
                                     alert(data.report || 'No data available yet');
@@ -266,7 +267,7 @@ export default function DashboardPage() {
                             Generate Report
                         </Button>
                     </HStack>
-                    <Text fontSize="sm" color="gray.700">
+                    <Text fontSize="sm" color="white">
                         Click "Generate Report" to get an AI-powered security analysis of recent authentication patterns.
                         The AI will identify threats, unusual patterns, and provide actionable recommendations.
                     </Text>

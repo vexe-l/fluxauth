@@ -3,7 +3,7 @@ export const API_CONFIG = {
     // Use mock data if backend URL not set
     USE_MOCK_DATA: !import.meta.env.VITE_API_URL,
     API_URL: import.meta.env.VITE_API_URL || '/api',
-    API_KEY: import.meta.env.VITE_API_KEY || 'dev_key_12345'
+    API_KEY: import.meta.env.VITE_API_KEY || 'dev_key_12345_CHANGE_IN_PRODUCTION'
 };
 
 // Mock data for demo

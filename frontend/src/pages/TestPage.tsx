@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { BehaviorSDK, ScoreResult } from '../sdk/browser';
 import ConsentBanner from '../components/ConsentBanner';
+import { API_CONFIG } from '../config';
 
 const TEST_PROMPT = 'The quick brown fox jumps over the lazy dog.';
 
@@ -28,8 +29,8 @@ export default function TestPage() {
     const [isCapturing, setIsCapturing] = useState(false);
     const [offlineMode, setOfflineMode] = useState(false);
     const [sdk] = useState(() => new BehaviorSDK({
-        apiUrl: '/api',
-        apiKey: 'dev_key_12345'
+        apiUrl: API_CONFIG.API_URL,
+        apiKey: API_CONFIG.API_KEY
     }));
     const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
     const [isScoring, setIsScoring] = useState(false);
@@ -147,8 +148,8 @@ export default function TestPage() {
                 <CardBody>
                     <HStack justify="space-between">
                         <VStack align="start" spacing={1}>
-                            <Text fontWeight="bold" color="gray.800">Local Mode (Offline Scoring)</Text>
-                            <Text fontSize="sm" color="gray.700">
+                            <Text fontWeight="bold" color="white">Local Mode (Offline Scoring)</Text>
+                            <Text fontSize="sm" color="white">
                                 Compute trust score client-side using JS function
                             </Text>
                         </VStack>
@@ -191,7 +192,7 @@ export default function TestPage() {
                                 <Text fontSize="sm" color="white">
                                     Type the following text naturally:
                                 </Text>
-                                <Text fontSize="lg" fontWeight="medium" color="gray.900" textAlign="center" p={4} bg="gray.50" borderRadius="md">
+                                <Text fontSize="lg" fontWeight="medium" color="gray.800" textAlign="center" p={4} bg="gray.50" borderRadius="md">
                                     {TEST_PROMPT}
                                 </Text>
                                 <Textarea
@@ -270,7 +271,7 @@ export default function TestPage() {
                                                 </Text>
                                                 <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
                                             </HStack>
-                                            <Text fontSize="sm" color="gray.700">
+                                            <Text fontSize="sm" color="white">
                                                 {scoreResult.aiAnalysis}
                                             </Text>
                                         </Box>
@@ -284,7 +285,7 @@ export default function TestPage() {
                                             <Text fontSize="sm" fontWeight="bold" color="blue.900" mb={2}>
                                                 💡 What This Means For You
                                             </Text>
-                                            <Text fontSize="sm" color="gray.700">
+                                            <Text fontSize="sm" color="white">
                                                 {scoreResult.aiExplanation}
                                             </Text>
                                         </Box>
