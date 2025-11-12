@@ -26,7 +26,7 @@ FluxAuth provides continuous authentication by analyzing how users type and inte
 
 ## Community
 
-- GitHub: [github.com/yourusername/fluxauth](https://github.com/yourusername/fluxauth)
+- GitHub: [github.com/anirudhf/fluxauth](https://github.com/anirudhf/fluxauth)
 - Issues: Report bugs and request features
 - Discussions: Ask questions and share ideas
 

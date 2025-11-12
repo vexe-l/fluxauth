@@ -147,8 +147,8 @@ export default function TestPage() {
                 <CardBody>
                     <HStack justify="space-between">
                         <VStack align="start" spacing={1}>
-                            <Text fontWeight="bold" color="accent.900">Local Mode (Offline Scoring)</Text>
-                            <Text fontSize="sm" color="gray.800">
+                            <Text fontWeight="bold" color="gray.800">Local Mode (Offline Scoring)</Text>
+                            <Text fontSize="sm" color="gray.700">
                                 Compute trust score client-side using JS function
                             </Text>
                         </VStack>
@@ -191,7 +191,7 @@ export default function TestPage() {
                                 <Text fontSize="sm" color="white">
                                     Type the following text naturally:
                                 </Text>
-                                <Text fontSize="lg" fontWeight="medium" color="gray.800" textAlign="center" p={4} bg="gray.50" borderRadius="md">
+                                <Text fontSize="lg" fontWeight="medium" color="gray.900" textAlign="center" p={4} bg="gray.50" borderRadius="md">
                                     {TEST_PROMPT}
                                 </Text>
                                 <Textarea
@@ -270,7 +270,7 @@ export default function TestPage() {
                                                 </Text>
                                                 <Badge colorScheme="purple" fontSize="xs">Powered by Gemini</Badge>
                                             </HStack>
-                                            <Text fontSize="sm" color="gray.800">
+                                            <Text fontSize="sm" color="gray.700">
                                                 {scoreResult.aiAnalysis}
                                             </Text>
                                         </Box>
@@ -284,7 +284,7 @@ export default function TestPage() {
                                             <Text fontSize="sm" fontWeight="bold" color="blue.900" mb={2}>
                                                 💡 What This Means For You
                                             </Text>
-                                            <Text fontSize="sm" color="gray.800">
+                                            <Text fontSize="sm" color="gray.700">
                                                 {scoreResult.aiExplanation}
                                             </Text>
                                         </Box>

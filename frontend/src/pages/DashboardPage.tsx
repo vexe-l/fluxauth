@@ -266,7 +266,7 @@ export default function DashboardPage() {
                             Generate Report
                         </Button>
                     </HStack>
-                    <Text fontSize="sm" color="gray.800">
+                    <Text fontSize="sm" color="gray.700">
                         Click "Generate Report" to get an AI-powered security analysis of recent authentication patterns.
                         The AI will identify threats, unusual patterns, and provide actionable recommendations.
                     </Text>

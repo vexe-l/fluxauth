@@ -135,7 +135,7 @@ export default function PolicyRulesPage() {
 
                     <VStack spacing={4} align="stretch">
                         <FormControl>
-                            <FormLabel color="gray.800">Rule Name</FormLabel>
+                            <FormLabel color="gray.700">Rule Name</FormLabel>
                             <Input
                                 placeholder="e.g., Block Suspicious Login"
                                 value={newRule.name}
@@ -145,7 +145,7 @@ export default function PolicyRulesPage() {
                         </FormControl>
 
                         <FormControl>
-                            <FormLabel color="gray.800">Condition (Logic)</FormLabel>
+                            <FormLabel color="gray.700">Condition (Logic)</FormLabel>
                             <Textarea
                                 placeholder="IF trustScore < 40 AND isAnomaly = true THEN"
                                 value={newRule.condition}
@@ -154,13 +154,13 @@ export default function PolicyRulesPage() {
                                 fontFamily="mono"
                                 fontSize="sm"
                             />
-                            <Text fontSize="xs" color="gray.700" mt={1}>
+                            <Text fontSize="xs" color="gray.600" mt={1}>
                                 Available variables: trustScore, isAnomaly, userId, sessionId
                             </Text>
                         </FormControl>
 
                         <FormControl>
-                            <FormLabel color="gray.800">Action</FormLabel>
+                            <FormLabel color="gray.700">Action</FormLabel>
                             <Select
                                 value={newRule.action}
                                 onChange={(e) => setNewRule({ ...newRule, action: e.target.value })}
@@ -251,7 +251,7 @@ export default function PolicyRulesPage() {
             {/* Example Syntax */}
             <Card w="full" bg="purple.50">
                 <CardBody>
-                    <Heading size="sm" mb={3} color="purple.900">Policy Syntax Examples</Heading>
+                    <Heading size="sm" mb={3} color="gray.800">Policy Syntax Examples</Heading>
                     <VStack align="stretch" spacing={2} fontSize="sm" fontFamily="mono">
                         <Code p={2}>IF trustScore &lt; 40 THEN REQUIRE_OTP</Code>
                         <Code p={2}>IF isAnomaly = true THEN NOTIFY_ADMIN</Code>

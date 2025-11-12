@@ -157,8 +157,8 @@ export default function LiveMonitorPage() {
                     <Card bg="brand.50" borderLeft="4px" borderColor="brand.400">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="brand.900">Active Sessions</StatLabel>
-                                <StatNumber color="brand.700">{stats.activeSessions}</StatNumber>
+                                <StatLabel color="gray.800">Active Sessions</StatLabel>
+                                <StatNumber color="gray.900">{stats.activeSessions}</StatNumber>
                                 <StatHelpText color="gray.700">
                                     <StatArrow type="increase" />
                                     12% from last hour
@@ -172,8 +172,8 @@ export default function LiveMonitorPage() {
                     <Card bg="accent.50" borderLeft="4px" borderColor="accent.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="accent.900">Avg Trust Score</StatLabel>
-                                <StatNumber color="accent.700">{stats.avgTrustScore}</StatNumber>
+                                <StatLabel color="gray.800">Avg Trust Score</StatLabel>
+                                <StatNumber color="gray.900">{stats.avgTrustScore}</StatNumber>
                                 <StatHelpText color="gray.700">
                                     <StatArrow type="increase" />
                                     5% improvement
@@ -187,8 +187,8 @@ export default function LiveMonitorPage() {
                     <Card bg="red.50" borderLeft="4px" borderColor="red.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="red.900">Anomalies</StatLabel>
-                                <StatNumber color="red.700">{stats.anomaliesDetected}</StatNumber>
+                                <StatLabel color="gray.800">Anomalies</StatLabel>
+                                <StatNumber color="gray.900">{stats.anomaliesDetected}</StatNumber>
                                 <StatHelpText color="gray.700">Last 5 minutes</StatHelpText>
                             </Stat>
                         </CardBody>
@@ -199,8 +199,8 @@ export default function LiveMonitorPage() {
                     <Card bg="purple.50" borderLeft="4px" borderColor="purple.500">
                         <CardBody>
                             <Stat>
-                                <StatLabel color="purple.900">Total Events</StatLabel>
-                                <StatNumber color="purple.700">{stats.totalEvents}</StatNumber>
+                                <StatLabel color="gray.800">Total Events</StatLabel>
+                                <StatNumber color="gray.900">{stats.totalEvents}</StatNumber>
                                 <StatHelpText color="gray.700">Captured today</StatHelpText>
                             </Stat>
                         </CardBody>
@@ -274,7 +274,7 @@ export default function LiveMonitorPage() {
 
             <Card w="full" bg="blue.50">
                 <CardBody>
-                    <Text fontSize="sm" color="gray.800">
+                    <Text fontSize="sm" color="gray.700">
                         <strong>Demo Mode:</strong> This dashboard shows simulated real-time data.
                         In production, it would connect via WebSocket to display actual user sessions.
                     </Text>
