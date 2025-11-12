@@ -1,12 +1,15 @@
 #!/bin/bash
 
-# FluxAuth Deployment Script
+# FluxAuth Deployment Script - Runs on Port 8080 (won't conflict with existing site)
 # Run this locally: bash deploy-to-server.sh
 
 set -e  # Exit on error
 
 echo "🚀 FluxAuth Deployment Script"
 echo "================================"
+echo "This will deploy FluxAuth on port 8080"
+echo "Your existing website will NOT be affected"
+echo ""
 
 # Configuration
 SERVER="91.99.184.74"
@@ -14,7 +17,6 @@ USER="root"
 REMOTE_DIR="/var/www/fluxauth"
 APP_NAME="fluxauth"
 
-echo ""
 echo "📦 Step 1: Building frontend locally..."
 cd frontend
 npm run build
@@ -75,7 +77,7 @@ PORT=3001
 API_KEY=dev_key_12345
 GEMINI_API_KEY=AIzaSyCdRHq7GB5XANsd3FSbYoxRWYpP0xlfM2k
 DATABASE_PATH=./data/fluxauth.db
-CORS_ORIGIN=https://frontend-qlphxvxcd-anirudh-website.vercel.app
+CORS_ORIGIN=*
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 ANOMALY_THRESHOLD=2.5
@@ -86,63 +88,34 @@ EOF
     echo "Creating data directory..."
     mkdir -p data
     
-    echo "Building backend..."
-    npm run build || echo "Build step skipped"
-    
     echo "Starting backend with PM2..."
     pm2 delete fluxauth-backend || true
     pm2 start src/index.ts --name fluxauth-backend --interpreter tsx
     pm2 save
     
-    echo "Installing Nginx if needed..."
-    if ! command -v nginx &> /dev/null; then
-        apt-get update
-        apt-get install -y nginx
-    fi
+    echo "Installing serve for frontend..."
+    npm install -g serve
     
-    echo "Configuring Nginx for frontend..."
-    cat > /etc/nginx/sites-available/fluxauth << 'NGINXCONF'
-server {
-    listen 80;
-    server_name _;
-    
-    # Frontend
-    location / {
-        root /var/www/fluxauth/frontend/dist;
-        try_files $uri $uri/ /index.html;
-    }
-    
-    # Backend API
-    location /api {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-NGINXCONF
-    
-    ln -sf /etc/nginx/sites-available/fluxauth /etc/nginx/sites-enabled/
-    rm -f /etc/nginx/sites-enabled/default
-    
-    echo "Restarting Nginx..."
-    nginx -t && systemctl restart nginx
+    echo "Starting frontend on port 8080..."
+    cd /var/www/fluxauth/frontend/dist
+    pm2 delete fluxauth-frontend || true
+    pm2 start "serve -s . -l 8080" --name fluxauth-frontend
+    pm2 save
     
     echo "✅ Deployment complete!"
     echo ""
     echo "🌐 Your app is now live at:"
-    echo "   http://91.99.184.74"
+    echo "   http://91.99.184.74:8080"
     echo ""
     echo "📊 Backend API:"
-    echo "   http://91.99.184.74/api/health"
+    echo "   http://91.99.184.74:3001/api/health"
     echo ""
-    echo "🔍 Check logs:"
+    echo "🔍 Check status:"
+    echo "   pm2 status"
+    echo ""
+    echo "📝 View logs:"
+    echo "   pm2 logs fluxauth-frontend"
     echo "   pm2 logs fluxauth-backend"
-    echo ""
-    echo "🔄 Restart backend:"
-    echo "   pm2 restart fluxauth-backend"
 ENDSSH
 
 echo ""
@@ -152,10 +125,14 @@ rm fluxauth-deploy.tar.gz
 echo ""
 echo "✅ DEPLOYMENT COMPLETE!"
 echo ""
-echo "🌐 Your app is live at: http://91.99.184.74"
+echo "🌐 Your app is live at: http://91.99.184.74:8080"
 echo ""
 echo "📝 Next steps:"
-echo "1. Test: http://91.99.184.74"
-echo "2. Check backend: http://91.99.184.74/api/health"
-echo "3. View logs: ssh root@91.99.184.74 'pm2 logs fluxauth-backend'"
+echo "1. Test: http://91.99.184.74:8080"
+echo "2. Check backend: http://91.99.184.74:3001/api/health"
+echo "3. View logs: ssh root@91.99.184.74 'pm2 logs'"
+echo ""
+echo "⚠️  Note: Your existing website is NOT affected!"
+echo "    FluxAuth runs on port 8080"
+echo "    Your site still runs on port 80"
 echo ""
