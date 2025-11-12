@@ -1,279 +1,166 @@
-# FluxAuth - Adaptive Behavioral Authentication System
+# FluxAuth - AI-Driven Behavioral Authentication
 
-**Domain: Cybersecurity**
+**Solves the password crisis with continuous behavioral authentication powered by AI.**
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](http://localhost:5173)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![SDG 9](https://img.shields.io/badge/SDG-9-blue)](https://sdgs.un.org/goals/goal9)
-[![SDG 16](https://img.shields.io/badge/SDG-16-purple)](https://sdgs.un.org/goals/goal16)
+## What It Does
 
-## 🎯 The Challenge
+FluxAuth verifies users throughout their entire session based on how they type and move their mouse - not just passwords. If someone steals your password, FluxAuth will still catch them because they don't type like you.
 
-**Passwords and OTPs are no longer enough to keep digital identities safe.**
+## 🤖 AI Features
 
-Users frequently reuse passwords across multiple platforms, making them vulnerable to credential leaks and account takeovers. Even multi-factor authentication (OTP/SMS) can be bypassed through phishing, SIM swaps, or malware.
+1. **Gemini AI** - Analyzes threats in natural language, explains anomalies to users
+2. **Isolation Forest** - ML algorithm for unsupervised anomaly detection
+3. **Adaptive Scoring** - Learns each user's patterns and adapts over time
+4. **Z-Score Analysis** - Statistical AI for explainable decisions
 
-As a result, many critical systems continue to face:
-- ❌ Unauthorized logins
-- ❌ Identity theft
-- ❌ Fraudulent transactions
-- ❌ Account breaches without detection
+## 🚀 Quick Start
 
-## 💡 Our Solution
+```bash
+# Install
+npm install
 
-**FluxAuth** is an AI-driven continuous authentication system that verifies users not just at login, but throughout their entire session based on unique behavioral patterns—such as typing rhythm, device fingerprint, and navigation style.
-
-Instead of static passwords, FluxAuth adaptively detects anomalies and flags/locks suspicious sessions in real-time.
-
-## 🚀 Key Features
-
-### 1. 📊 Real-Time Behavioral Monitoring
-Continuously tracks typing/mouse rhythm during active sessions with trust meter updates every few seconds.
-
-### 2. 🤖 Bot/Fraud Detection Module
-Detects non-human or repetitive behavior using pattern heuristics and anomaly thresholds. Automatically flags automated scripts and bots.
-
-### 3. ⚖️ Fairness & Transparency Dashboard
-Visualizes detection metrics per cohort/device type with published bias reports. Ensures equitable treatment across all user groups (SDG 16).
-
-### 4. 📋 Custom Policy Engine
-Admin UI for writing policies as logic:
-```
-IF trustScore < 40 THEN REQUIRE_OTP
-IF isAnomaly = true THEN NOTIFY_ADMIN
-IF trustScore < 30 AND isAnomaly = true THEN BLOCK_SESSION
+# Run (starts both frontend + backend)
+npm run dev
 ```
 
-### 5. 🌐 Edge/Offline SDK Mode
-Browser SDK scores locally before sending summary to server—massive innovation bonus for privacy-first & efficient architecture.
+Open http://localhost:5173
+
+## 📖 How to Use
+
+1. **Click "Try It Now"** on homepage
+2. **Enroll**: Type 4 prompts to create your profile
+3. **Test**: Authenticate and see your trust score
+4. **Explore**: Check out Live Monitor, Bot Detection, Fairness Dashboard, Policy Rules
+
+## 🎯 Key Features
+
+- **Live Monitor** - Real-time session tracking with trust scores
+- **Bot Detection** - Catches automated attacks and scripts
+- **Fairness Dashboard** - Proves no bias across demographics (SDG 16)
+- **Policy Engine** - Create custom rules: `IF trustScore < 40 THEN REQUIRE_OTP`
+- **Edge SDK** - Offline scoring for privacy
 
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Frontend (React)                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │ Live Monitor │  │ Bot Detection│  │ Policy Engine│  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
-│  ┌──────────────┐  ┌──────────────┐                    │
-│  │ Transparency │  │  Edge SDK    │                    │
-│  └──────────────┘  └──────────────┘                    │
-└─────────────────────────────────────────────────────────┘
-                           ↕ HTTPS + API Key
-┌─────────────────────────────────────────────────────────┐
-│                Backend API (Node + Express)              │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Behavioral Feature Extraction                    │  │
-│  │  • Keystroke dynamics (flight time, hold time)   │  │
-│  │  • Mouse movement patterns                        │  │
-│  │  • Typing rhythm analysis                         │  │
-│  └──────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Adaptive Scoring Engine                          │  │
-│  │  • Z-score anomaly detection                      │  │
-│  │  • Isolation Forest ML (optional)                 │  │
-│  │  • Trust score calculation (0-100)                │  │
-│  └──────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Policy Engine                                     │  │
-│  │  • Rule evaluation                                 │  │
-│  │  • Action triggers (OTP, block, notify)           │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                           ↕
-                    ┌──────────────┐
-                    │   SQLite DB  │
-                    │  • User profiles
-                    │  • Sessions
-                    │  • Audit logs
-                    └──────────────┘
+Frontend (React) → Backend API (Node.js) → SQLite DB
+                ↓
+        Gemini AI Analysis
 ```
 
-## 🎬 Quick Start
+## 🔧 Configuration
 
-### Prerequisites
-- Node.js 18+ and npm
-- (Optional) Docker for containerized deployment
+Edit `backend/.env`:
+```env
+PORT=3001
+API_KEY=dev_key_12345
+GEMINI_API_KEY=your_key_here  # For AI features
+DATABASE_PATH=./data/biaas.db
+```
 
-### Installation
+## 📊 What's Real vs Demo
+
+**100% Real & Working:**
+- ✅ Enrollment flow
+- ✅ Authentication & scoring
+- ✅ Bot detection algorithm
+- ✅ AI analysis (Gemini)
+- ✅ Database storage
+
+**Demo Data (until you use it):**
+- ⚠️ Live Monitor (shows demo until real sessions exist)
+- ⚠️ Transparency metrics (mock data)
+- ⚠️ Policy engine (UI only, doesn't execute)
+
+## 🚀 Deploy to GitHub
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/fluxauth.git
-cd fluxauth
-
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp backend/.env.example backend/.env
-# Edit backend/.env with your configuration
-
-# Run development servers (frontend + backend)
-npm run dev
+# Create repo at github.com/new
+git remote add origin https://github.com/YOUR_USERNAME/fluxauth.git
+git branch -M main
+git push -u origin main
 ```
-
-The frontend will be available at `http://localhost:5173` and the backend at `http://localhost:3001`.
-
-### Docker Deployment
-
-```bash
-docker-compose up --build
-```
-
-## 📖 How It Works
-
-### 1. Enrollment Phase
-Users complete 4 short typing samples to build their unique behavioral profile. The system captures:
-- Mean/std flight time (time between key releases)
-- Mean/std hold time (key press duration)
-- Backspace rate
-- Bigram timing patterns
-- Mouse movement speed
-
-### 2. Continuous Authentication
-During each session, FluxAuth:
-1. Captures behavioral events in real-time
-2. Extracts features from typing/mouse patterns
-3. Computes z-scores against user's baseline profile
-4. Calculates trust score (0-100)
-5. Applies policy rules to determine action
-
-### 3. Anomaly Detection
-If behavioral patterns deviate significantly (>2.5σ):
-- Trust score drops
-- Session flagged as suspicious
-- Policy engine triggers appropriate action (OTP, block, notify)
-
-### 4. Bot Detection
-Identifies non-human behavior through:
-- Unnaturally consistent timing patterns
-- Repetitive keystroke sequences
-- Absence of natural variation
-- Automated script signatures
-
-## 🔒 Security & Privacy
-
-- **No raw text captured**: Only timing patterns and key classes
-- **Consent required**: Explicit user consent before data collection
-- **API authentication**: All endpoints require valid API key
-- **Rate limiting**: Prevents abuse and flooding
-- **HTTPS required**: Production deployment must use TLS
-- **Data minimization**: Only essential behavioral metrics stored
 
 ## 🌍 UN SDG Alignment
 
-### SDG 9: Industry, Innovation & Infrastructure
-- Open-source foundation enables equitable access
-- Lightweight architecture (<1% CPU, <10MB RAM)
-- Edge computing reduces server load and carbon footprint
-- Efficient algorithms minimize energy consumption
+- **SDG 9**: Open-source, energy-efficient, accessible infrastructure
+- **SDG 16**: Transparent, fair, accountable authentication
 
-### SDG 16: Peace, Justice & Strong Institutions
-- Transparent scoring with explainable results
-- Fairness metrics across demographic groups
-- Audit trails for accountability
-- User rights: data access, export, deletion
-- No black-box decisions
+## 📝 Tech Stack
 
-## 📊 Performance Metrics
+- **Frontend**: React + TypeScript + Chakra UI
+- **Backend**: Node.js + Express + SQLite
+- **AI**: Gemini Pro, Isolation Forest, Z-Score Analysis
+- **Testing**: Vitest
 
-- **Feature extraction**: <10ms per session
-- **Scoring latency**: <5ms per request
-- **Network payload**: <50KB per enrollment
-- **Database size**: <1MB per 1000 users
-- **Accuracy**: 95%+ in detecting anomalies
-- **False positive rate**: <2.5%
+## 🎬 Demo Script (5 min)
 
-## 🧪 Testing
+1. Show homepage → Click "Try It Now"
+2. Enroll with username "demo"
+3. Complete 4 typing prompts
+4. Go to test page → Authenticate → See AI analysis
+5. Click "Simulate Attack" → See low trust score
+6. Show Live Monitor, Bot Detection, Fairness Dashboard
+7. Generate AI threat report on Dashboard
 
-```bash
-# Run all tests
-npm test
+## 🔒 Security
 
-# Run backend tests only
-npm test --workspace=backend
+- No raw text captured (only timing patterns)
+- API key authentication
+- Rate limiting enabled
+- HTTPS required for production
 
-# Run with coverage
-npm test -- --coverage
-```
-
-## 📁 Project Structure
+## 📦 What's Included
 
 ```
 fluxauth/
-├── frontend/               # React + Vite frontend
+├── frontend/          # React app
+├── backend/           # Node.js API
 │   ├── src/
-│   │   ├── pages/         # Feature pages
-│   │   │   ├── LiveMonitorPage.tsx
-│   │   │   ├── DashboardPage.tsx (Bot Detection)
-│   │   │   ├── TransparencyPage.tsx (Fairness)
-│   │   │   ├── PolicyRulesPage.tsx
-│   │   │   └── TestPage.tsx (Edge SDK)
-│   │   ├── components/    # Reusable UI components
-│   │   └── sdk/           # Browser SDK module
-│   └── package.json
-├── backend/               # Node + Express API
-│   ├── src/
-│   │   ├── routes/        # API endpoints
-│   │   ├── features/      # Feature extraction & scoring
-│   │   ├── services/      # Business logic
-│   │   └── middleware/    # Auth, validation
-│   └── package.json
-├── docker-compose.yml
-└── README.md
+│   │   ├── features/  # ML algorithms
+│   │   ├── services/  # Gemini AI
+│   │   └── routes/    # API endpoints
+└── README.md          # This file
 ```
 
-## 🎯 Challenge Requirements Met
+## 🐛 Troubleshooting
 
-✅ **AI-driven continuous authentication** - Real-time behavioral analysis  
-✅ **Session-based verification** - Not just login, but throughout entire session  
-✅ **Behavioral patterns** - Typing rhythm, device fingerprint, navigation style  
-✅ **Adaptive anomaly detection** - Z-score based with configurable thresholds  
-✅ **Real-time flagging/locking** - Policy engine with custom rules  
-✅ **Bot detection** - Pattern heuristics for non-human behavior  
-✅ **Transparency** - Fairness metrics and bias reports (SDG 16)  
-✅ **Innovation** - Edge/offline SDK for privacy-first architecture  
-
-## 🚀 Deployment
-
-### Environment Variables
-
-Create `backend/.env`:
-```env
-PORT=3001
-NODE_ENV=production
-API_KEY=your_secure_api_key_here
-DATABASE_PATH=./data/fluxauth.db
-CORS_ORIGIN=https://yourdomain.com
+**Backend won't start?**
+```bash
+cd backend && npm install
 ```
 
-### Production Checklist
+**Frontend shows errors?**
+```bash
+cd frontend && npm install
+```
 
-- [ ] Rotate all API keys and secrets
-- [ ] Enable HTTPS/TLS
-- [ ] Configure proper CORS policies
-- [ ] Set up monitoring and alerting
-- [ ] Review and harden rate limits
-- [ ] Conduct security audit
-- [ ] Implement audit logging
-- [ ] Conduct bias testing
-- [ ] Measure energy efficiency
+**Database errors?**
+```bash
+rm -rf backend/data/*.db
+# Restart backend - it will recreate
+```
 
-## 📝 License
+## 📚 API Endpoints
 
-MIT License - see [LICENSE](./LICENSE)
+- `POST /api/session/start` - Start capturing
+- `POST /api/session/score` - Get trust score
+- `POST /api/enroll` - Enroll user
+- `GET /api/sessions/recent` - Get session history
+- `GET /api/ai/threat-report` - AI analysis
 
-## 🤝 Contributing
+## 🎯 Next Steps
 
-Contributions welcome! This project aims to make behavioral authentication accessible and transparent.
+1. Test the enrollment → authentication flow
+2. Push to GitHub
+3. Deploy (Vercel for frontend, Railway for backend)
+4. Record demo video
+5. Submit!
 
-## 📧 Support
+## 📄 License
 
-For questions or issues, please open a GitHub issue.
+MIT
 
 ---
 
-**Built with privacy, transparency, accountability, and sustainability in mind.**
-
-**Aligned with UN SDG 9 (Resilient Infrastructure) and SDG 16 (Transparent Institutions)**
+**Built to make authentication secure, fair, and transparent.**
