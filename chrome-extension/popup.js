@@ -66,6 +66,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             showMessage('Protection disabled', 'error');
         }
     });
+
+    // Simulate Attack button (for demo)
+    document.getElementById('simulateAttackBtn').addEventListener('click', async () => {
+        const settings = await chrome.storage.local.get(['userId', 'apiKey', 'apiUrl']);
+        
+        if (!settings.userId || !settings.apiKey) {
+            showMessage('Please configure User ID and API Key first', 'error');
+            return;
+        }
+
+        showMessage('Simulating attack...', 'success');
+        
+        // Send message to content script to trigger fake anomalous events
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tabs[0] && tabs[0].id) {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                type: 'SIMULATE_ATTACK'
+            }).catch(() => {
+                showMessage('Please refresh the page and try again', 'error');
+            });
+        } else {
+            showMessage('Please open a webpage first', 'error');
+        }
+    });
 });
 
 function updateStatus(enabled) {

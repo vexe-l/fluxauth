@@ -546,6 +546,62 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             monitor.showBlockingOverlay({ trustScore: monitor.trustScore }, 'high');
         }
         sendResponse({ success: true });
+    } else if (message.type === 'SIMULATE_ATTACK') {
+        // Generate fake anomalous typing events
+        // These events simulate bot-like behavior: very fast, too consistent, no backspaces
+        const now = Date.now();
+        const fakeEvents = [];
+        
+        // Simulate typing with bot-like patterns:
+        // - Extremely fast (15-25ms between keys - too fast for humans)
+        // - Perfectly consistent timing (minimal variation)
+        // - No backspaces (too perfect)
+        const text = "this is a simulated bot attack with very fast and consistent typing patterns that should trigger anomaly detection";
+        let timestamp = now;
+        
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            if (char === ' ') {
+                // Even spaces are consistent
+                timestamp += 15;
+                continue;
+            }
+            
+            // Keydown
+            fakeEvents.push({
+                type: 'keydown',
+                timestamp: timestamp,
+                keyClass: /[a-zA-Z]/.test(char) ? 'letter' : 'special',
+                isPassword: false
+            });
+            
+            // Keyup (very fast - 15-20ms hold time, bot-like)
+            timestamp += 15 + Math.random() * 5; // Minimal variation
+            fakeEvents.push({
+                type: 'keyup',
+                timestamp: timestamp,
+                keyClass: /[a-zA-Z]/.test(char) ? 'letter' : 'special',
+                isPassword: false
+            });
+            
+            // Flight time (time between keys) - also very fast and consistent
+            timestamp += 15 + Math.random() * 5; // Minimal variation
+        }
+        
+        // Add these fake events to the monitor's event queue
+        monitor.events.push(...fakeEvents);
+        
+        console.log(`FluxAuth: Simulated ${fakeEvents.length} anomalous events`);
+        
+        // Force immediate batch send
+        monitor.sendBatch().then(() => {
+            sendResponse({ success: true, message: 'Attack simulation sent' });
+        }).catch((error) => {
+            console.error('Error simulating attack:', error);
+            sendResponse({ success: false, error: error.message });
+        });
+        
+        return true; // Keep channel open for async response
     }
     return true;
 });
