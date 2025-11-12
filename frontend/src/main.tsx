@@ -14,60 +14,60 @@ const theme = extendTheme({
     },
     colors: {
         brand: {
-            50: '#E6F9F7',
-            100: '#B3EDE8',
-            200: '#80E1D9',
-            300: '#4DD5CA',
-            400: '#4ECDC4',
-            500: '#3DB5AD',
-            600: '#2C9D96',
-            700: '#1B857F',
-            800: '#0A6D68',
-            900: '#005551'
+            50: '#FDF0EC',
+            100: '#F9D4C9',
+            200: '#F4B8A6',
+            300: '#EF9C83',
+            400: '#EA7F60',
+            500: '#D65A31',
+            600: '#C24A21',
+            700: '#9A3B1A',
+            800: '#722C13',
+            900: '#4A1D0C'
         },
         accent: {
-            50: '#FFF4E6',
-            100: '#FFE0B3',
-            200: '#FFCC80',
-            300: '#FFB84D',
-            400: '#FFA41A',
-            500: '#FF9F4A',
-            600: '#E68A35',
-            700: '#CC7520',
-            800: '#B3600B',
-            900: '#994B00'
+            50: '#FDF0EC',
+            100: '#F9D4C9',
+            200: '#F4B8A6',
+            300: '#EF9C83',
+            400: '#EA7F60',
+            500: '#D65A31',
+            600: '#C24A21',
+            700: '#9A3B1A',
+            800: '#722C13',
+            900: '#4A1D0C'
         },
         navy: {
-            50: '#E8EAED',
-            100: '#C5CAD1',
-            200: '#A2AAB5',
-            300: '#7F8A99',
-            400: '#5C6A7D',
-            500: '#1E293B',
-            600: '#182133',
-            700: '#12192B',
-            800: '#0C1123',
-            900: '#06091B'
+            50: '#F5F5F5',
+            100: '#EEEEEE',
+            200: '#D1D1D1',
+            300: '#B4B4B4',
+            400: '#7A7D82',
+            500: '#393E46',
+            600: '#2F333A',
+            700: '#25282E',
+            800: '#222831',
+            900: '#1A1D23'
         },
         cyber: {
-            bg: '#0a0e27',
-            surface: '#151b3d',
-            border: '#1e2749',
-            text: '#e2e8f0',
-            muted: '#64748b'
+            bg: '#222831',
+            surface: '#393E46',
+            border: '#4A4F57',
+            text: '#EEEEEE',
+            muted: '#7A7D82'
         }
     },
     styles: {
         global: {
             body: {
-                bg: '#0a0e27',
-                color: '#e2e8f0',
-                backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(78, 205, 196, 0.03) 0%, transparent 50%)',
+                bg: '#222831',
+                color: '#EEEEEE',
+                backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(214, 90, 49, 0.05) 0%, transparent 50%)',
                 backgroundAttachment: 'fixed'
             },
             '*::selection': {
-                bg: 'brand.400',
-                color: 'navy.900'
+                bg: 'brand.500',
+                color: 'navy.100'
             }
         }
     },
@@ -93,27 +93,27 @@ const theme = extendTheme({
             },
             variants: {
                 solid: {
-                    bg: 'brand.400',
-                    color: 'navy.900',
+                    bg: 'brand.500',
+                    color: 'navy.100',
                     _hover: {
-                        bg: 'brand.300',
+                        bg: 'brand.400',
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 0 20px rgba(78, 205, 196, 0.4)'
+                        boxShadow: '0 0 20px rgba(214, 90, 49, 0.4)'
                     }
                 },
                 outline: {
-                    borderColor: 'brand.400',
-                    color: 'brand.400',
+                    borderColor: 'brand.500',
+                    color: 'brand.500',
                     _hover: {
-                        bg: 'rgba(78, 205, 196, 0.1)',
+                        bg: 'rgba(214, 90, 49, 0.1)',
                         transform: 'translateY(-2px)'
                     }
                 },
                 ghost: {
-                    color: 'gray.400',
+                    color: 'navy.200',
                     _hover: {
-                        bg: 'rgba(78, 205, 196, 0.1)',
-                        color: 'brand.400'
+                        bg: 'rgba(214, 90, 49, 0.1)',
+                        color: 'brand.500'
                     }
                 }
             }
@@ -121,15 +121,15 @@ const theme = extendTheme({
         Card: {
             baseStyle: {
                 container: {
-                    bg: '#151b3d',
+                    bg: '#393E46',
                     borderRadius: 'xl',
                     border: '1px solid',
-                    borderColor: '#1e2749',
+                    borderColor: '#4A4F57',
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
                     transition: 'all 0.2s',
                     _hover: {
-                        borderColor: 'brand.400',
-                        boxShadow: '0 0 20px rgba(78, 205, 196, 0.2)'
+                        borderColor: 'brand.500',
+                        boxShadow: '0 0 20px rgba(214, 90, 49, 0.2)'
                     }
                 }
             }

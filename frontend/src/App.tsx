@@ -20,10 +20,10 @@ function App() {
                 <Box position="relative" zIndex={1}>
                     {/* Navigation */}
                     <Box
-                        bg="rgba(21, 27, 61, 0.8)"
+                        bg="rgba(57, 62, 70, 0.95)"
                         backdropFilter="blur(10px)"
                         borderBottom="1px"
-                        borderColor="brand.400"
+                        borderColor="brand.500"
                         py={4}
                         position="sticky"
                         top={0}
@@ -35,11 +35,11 @@ function App() {
                                     <Box
                                         w="8px"
                                         h="8px"
-                                        bg="brand.400"
+                                        bg="brand.500"
                                         borderRadius="full"
                                         animation="pulse 2s infinite"
                                     />
-                                    <Heading size="md" color="brand.400" fontWeight="bold" letterSpacing="wider">
+                                    <Heading size="md" color="brand.500" fontWeight="bold" letterSpacing="wider">
                                         FLUXAUTH
                                     </Heading>
                                     <Badge colorScheme="green" fontSize="xs">LIVE</Badge>

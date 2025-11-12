@@ -48,13 +48,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 function updateBadge(trustScore, isAnomaly) {
     if (isAnomaly || trustScore < 50) {
         chrome.action.setBadgeText({ text: '!' });
-        chrome.action.setBadgeBackgroundColor({ color: '#dc3545' });
+        chrome.action.setBadgeBackgroundColor({ color: '#D65A31' });
     } else if (trustScore < 70) {
         chrome.action.setBadgeText({ text: '?' });
-        chrome.action.setBadgeBackgroundColor({ color: '#ffc107' });
+        chrome.action.setBadgeBackgroundColor({ color: '#EA7F60' });
     } else {
         chrome.action.setBadgeText({ text: '' });
-        chrome.action.setBadgeBackgroundColor({ color: '#28a745' });
+        chrome.action.setBadgeBackgroundColor({ color: '#393E46' });
     }
 }
 
