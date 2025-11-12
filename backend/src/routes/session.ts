@@ -73,7 +73,7 @@ router.get('/recent', (req, res, next) => {
 });
 
 // POST /api/session/score
-router.post('/score', (req, res, next) => {
+router.post('/score', async (req, res, next) => {
     try {
         const { userId, sessionId, events } = scoreSessionSchema.parse(req.body);
 
