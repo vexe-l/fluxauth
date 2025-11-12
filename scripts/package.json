@@ -1,0 +1,12 @@
+{
+    "name": "biaas-scripts",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "generate": "tsx generate-sessions.ts"
+    },
+    "devDependencies": {
+        "tsx": "^4.7.0",
+        "@types/node": "^20.10.6"
+    }
+}

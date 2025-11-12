@@ -1,0 +1,203 @@
+import { useState, useEffect } from 'react';
+import {
+    Box,
+    Heading,
+    Text,
+    VStack,
+    Card,
+    CardBody,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
+    Badge,
+    Alert,
+    AlertIcon
+} from '@chakra-ui/react';
+import { Bar } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+interface Session {
+    sessionId: string;
+    userId: string;
+    trustScore: number;
+    isAnomaly: boolean;
+    timestamp: string;
+}
+
+export default function DashboardPage() {
+    const [sessions] = useState<Session[]>([
+        {
+            sessionId: 'demo-1',
+            userId: 'user-123',
+            trustScore: 88,
+            isAnomaly: false,
+            timestamp: new Date().toISOString()
+        },
+        {
+            sessionId: 'demo-2',
+            userId: 'user-123',
+            trustScore: 35,
+            isAnomaly: true,
+            timestamp: new Date(Date.now() - 300000).toISOString()
+        },
+        {
+            sessionId: 'demo-3',
+            userId: 'bot-detected',
+            trustScore: 12,
+            isAnomaly: true,
+            timestamp: new Date(Date.now() - 600000).toISOString()
+        }
+    ]);
+
+    const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+
+    useEffect(() => {
+        if (sessions.length > 0) {
+            setSelectedSession(sessions[0]);
+        }
+    }, [sessions]);
+
+    // Sample z-score data for visualization
+    const chartData = {
+        labels: ['Flight Time', 'Hold Time', 'Backspace Rate', 'Bigram', 'Total Keys', 'Mouse Speed'],
+        datasets: [
+            {
+                label: 'Z-Score',
+                data: selectedSession?.isAnomaly
+                    ? [2.8, 1.5, 3.2, 2.1, 1.8, 2.5]
+                    : [0.3, -0.1, 0.5, 0.2, -0.3, 0.4],
+                backgroundColor: (context: any) => {
+                    const value = context.parsed.y;
+                    return Math.abs(value) > 2.5 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(34, 197, 94, 0.6)';
+                },
+                borderColor: (context: any) => {
+                    const value = context.parsed.y;
+                    return Math.abs(value) > 2.5 ? 'rgb(239, 68, 68)' : 'rgb(34, 197, 94)';
+                },
+                borderWidth: 2
+            }
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: 'Feature Z-Scores (Standard Deviations from Baseline)'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Z-Score (σ)'
+                },
+                grid: {
+                    color: (context: any) => {
+                        if (context.tick.value === 2.5 || context.tick.value === -2.5) {
+                            return 'rgba(239, 68, 68, 0.3)';
+                        }
+                        return 'rgba(0, 0, 0, 0.1)';
+                    }
+                }
+            }
+        }
+    };
+
+    return (
+        <VStack spacing={6} maxW="6xl" mx="auto">
+            <Heading size="lg" color="navy.500">Bot/Fraud Detection Dashboard</Heading>
+            <Text color="gray.600" textAlign="center">
+                Detects non-human or repetitive behavior using pattern heuristics and anomaly thresholds
+            </Text>
+
+            <Alert status="info" borderRadius="md">
+                <AlertIcon />
+                This is a demo dashboard with sample data. In production, this would show real session history.
+            </Alert>
+
+            <Card w="full">
+                <CardBody>
+                    <Heading size="md" mb={4}>
+                        Recent Sessions
+                    </Heading>
+                    <Table variant="simple" size="sm">
+                        <Thead>
+                            <Tr>
+                                <Th>Session ID</Th>
+                                <Th>User ID</Th>
+                                <Th>Trust Score</Th>
+                                <Th>Status</Th>
+                                <Th>Timestamp</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {sessions.map((session) => (
+                                <Tr
+                                    key={session.sessionId}
+                                    onClick={() => setSelectedSession(session)}
+                                    cursor="pointer"
+                                    _hover={{ bg: 'gray.50' }}
+                                    bg={selectedSession?.sessionId === session.sessionId ? 'blue.50' : undefined}
+                                >
+                                    <Td fontFamily="mono" fontSize="sm">
+                                        {session.sessionId}
+                                    </Td>
+                                    <Td>{session.userId}</Td>
+                                    <Td>
+                                        <Badge colorScheme={session.trustScore > 70 ? 'green' : 'red'}>
+                                            {session.trustScore}
+                                        </Badge>
+                                    </Td>
+                                    <Td>
+                                        <Badge colorScheme={session.isAnomaly ? 'red' : 'green'}>
+                                            {session.isAnomaly ? 'Anomaly' : 'Verified'}
+                                        </Badge>
+                                    </Td>
+                                    <Td fontSize="sm" color="gray.600">
+                                        {new Date(session.timestamp).toLocaleString()}
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </CardBody>
+            </Card>
+
+            {selectedSession && (
+                <Card w="full">
+                    <CardBody>
+                        <Heading size="md" mb={4}>
+                            Session Analysis: {selectedSession.sessionId}
+                        </Heading>
+                        <Box h="400px">
+                            <Bar data={chartData} options={chartOptions} />
+                        </Box>
+                        <Text fontSize="sm" color="gray.600" mt={4}>
+                            Features beyond ±2.5σ (red line) are flagged as anomalous. This session shows{' '}
+                            {selectedSession.isAnomaly ? 'multiple anomalous features' : 'normal behavioral patterns'}.
+                        </Text>
+                    </CardBody>
+                </Card>
+            )}
+        </VStack>
+    );
+}
