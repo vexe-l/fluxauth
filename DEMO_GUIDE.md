@@ -189,5 +189,16 @@ npm run build
 
 **"FluxAuth continuously authenticates users by analyzing their unique typing patterns - even if attackers steal passwords, they can't replicate how you type."**
 
+---
+
+## 📝 Development Status Note
+
+**For Judges:** This is an active development project. The demo showcases our core behavioral authentication technology, AI-powered analysis, and privacy-first design. We're continuously improving and adding features. Some advanced features (like policy rule execution and advanced fairness metrics) are planned for future releases.
+
+**Recent Improvements:**
+- Enhanced consent banner with improved readability and dark theme support
+- Better UI/UX with proper text contrast and accessibility
+- Code quality improvements and bug fixes
+
 Good luck! 🚀
 

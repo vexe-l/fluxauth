@@ -10,6 +10,8 @@ FluxAuth is a **Behavioral Biometrics as a Service (BaaS)** platform that provid
 
 **Demo Time:** 5 minutes | **Setup Time:** 30 seconds | **Works Offline:** Yes
 
+> **Note:** This is an active development project. We're continuously adding features and improvements. The demo showcases core functionality, with additional features planned for future releases.
+
 ## What It Does
 
 FluxAuth is a **Behavioral Biometrics as a Service (BaaS)** platform that provides continuous authentication throughout a user's session. Instead of relying solely on passwords, it analyzes typing patterns, mouse movements, and behavioral rhythms to create a unique "typing fingerprint" for each user.
@@ -56,7 +58,7 @@ npm run dev
 
 1. **Enrollment** - Type 4 prompts to create behavioral profile
 2. **Authentication** - Test typing → High trust score
-3. **Attack Simulation** - Click "Simulate Attack" → Low trust score  
+3. **Attack Simulation** - Click "Simulate Attack" → Low trust score
 4. **Live Monitor** - Real-time dashboard with trust scores
 5. **AI Analysis** - Gemini AI explains security decisions
 
@@ -106,6 +108,25 @@ GEMINI_API_KEY=your_key_here  # For AI features
 DATABASE_PATH=./data/biaas.db
 ```
 
+## 🚧 Development Status
+
+**This is an active development project.** We're continuously adding features and improvements. The current version demonstrates core functionality, but many features are still in development.
+
+**Recent Updates:**
+
+- ✅ Improved consent banner with better text readability and dark theme support
+- ✅ Enhanced UI/UX with proper contrast and accessibility
+- ✅ Code quality improvements and error fixes
+
+**Coming Soon:**
+
+- 🔄 Policy rule execution engine
+- 🔄 True offline scoring mode
+- 🔄 Advanced fairness metrics and bias auditing
+- 🔄 Enhanced security features
+- 🔄 Performance optimizations
+- 🔄 Additional AI models and analysis
+
 ## 📊 What's Real vs Demo
 
 **100% Real & Working:**
@@ -118,19 +139,23 @@ DATABASE_PATH=./data/biaas.db
 - ✅ Feature extraction - Real algorithm (flight time, hold time, etc.)
 - ✅ Metrics service - Logs API calls and scoring results
 - ✅ Live Monitor - Uses real data when available, calculates stats from DB
+- ✅ Consent banner - Privacy-first UI with UN SDG 16 compliance messaging
+- ✅ Dark theme UI - Fully functional with proper text contrast
 
-**Partially Implemented:**
+**Partially Implemented (In Progress):**
 
-- ⚠️ Transparency metrics - Real API metrics, but fairness analysis not implemented
-- ⚠️ Policy engine - UI fully functional, but rules are NOT executed by backend
-- ⚠️ Offline mode - Toggle exists but still requires backend API (not implemented)
+- ⚠️ Transparency metrics - Real API metrics, but fairness analysis not fully implemented
+- ⚠️ Policy engine - UI fully functional, but rules are NOT executed by backend yet
+- ⚠️ Offline mode - Toggle exists but still requires backend API (client-side scoring in progress)
 
-**Not Implemented:**
+**Planned Features (Not Yet Implemented):**
 
-- ❌ Fairness metrics by device/demographic - Would require additional data collection
-- ❌ Bias auditing - Requires demographic data and statistical analysis
-- ❌ Policy rule execution - Backend doesn't evaluate or enforce rules
-- ❌ True offline scoring - Client-side scoring algorithm not ported to frontend
+- 🔜 Fairness metrics by device/demographic - Requires additional data collection infrastructure
+- 🔜 Bias auditing - Requires demographic data and statistical analysis framework
+- 🔜 Policy rule execution - Backend rule evaluation engine
+- 🔜 True offline scoring - Client-side scoring algorithm port
+- 🔜 Advanced threat detection - Additional ML models
+- 🔜 Multi-device support - Cross-device behavioral profiles
 
 ## 🚀 Deploy to GitHub
 
@@ -169,6 +194,10 @@ git push -u origin main
 - API key authentication
 - Rate limiting enabled
 - HTTPS required for production
+- Privacy-first consent banner with UN SDG 16 compliance
+- Dark theme UI with proper accessibility and text contrast
+
+**Security Note:** This is an active development project. Production deployments should include additional security hardening, comprehensive security audits, and compliance reviews.
 
 ## 📦 What's Included
 

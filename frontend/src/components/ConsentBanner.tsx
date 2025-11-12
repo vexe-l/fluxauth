@@ -126,8 +126,8 @@ export default function ConsentBanner({ isOpen, onAccept, onDecline }: ConsentBa
                             </Text>
 
                             <Text fontSize="sm" color="gray.400" fontStyle="italic">
-                                This is a Phase-1 prototype. Production deployments require additional
-                                security hardening. See SECURITY.md for details.
+                                This is an active development project. Additional features and security
+                                enhancements are being added continuously. See documentation for current status.
                             </Text>
                         </VStack>
                     </ModalBody>

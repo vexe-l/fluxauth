@@ -52,6 +52,7 @@ npm run dev
 ```
 
 This starts:
+
 - Backend API on `http://localhost:3001`
 - Frontend dashboard on `http://localhost:5173`
 
@@ -63,6 +64,10 @@ This starts:
 4. Complete the 4 enrollment prompts by typing naturally
 5. Go to the **Test** page to authenticate
 6. See your trust score and AI analysis!
+
+## Development Status
+
+**Note:** FluxAuth is an active development project. While core features are functional, some advanced features are still in development. See the main README for current implementation status.
 
 ## Next Steps
 
@@ -83,12 +88,14 @@ curl http://localhost:3001/api/health
 ## Common Issues
 
 **Port already in use?**
+
 ```bash
 # Change PORT in backend/.env
 PORT=3002
 ```
 
 **Database errors?**
+
 ```bash
 # Delete and recreate database
 rm -rf backend/data/*.db
@@ -96,6 +103,7 @@ npm run dev
 ```
 
 **Frontend won't start?**
+
 ```bash
 cd frontend
 rm -rf node_modules package-lock.json
