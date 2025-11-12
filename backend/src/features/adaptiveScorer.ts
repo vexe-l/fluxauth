@@ -98,7 +98,7 @@ export class AdaptiveScorer {
                 reasons.push({
                     code: 'ISOLATION_FOREST_ANOMALY',
                     message: `Isolation Forest detected anomalous pattern (score: ${ifScore.toFixed(2)})`,
-                    feature: 'combined',
+                    feature: 'meanFlight' as keyof FeatureVector,
                     zscore: ifScore * 5 // Scale to z-score range
                 });
             }
