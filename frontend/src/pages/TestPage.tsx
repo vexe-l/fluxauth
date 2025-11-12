@@ -28,13 +28,26 @@ export default function TestPage() {
     const [userId, setUserId] = useState('');
     const [isCapturing, setIsCapturing] = useState(false);
     const [offlineMode, setOfflineMode] = useState(false);
-    const [sdk] = useState(() => new BehaviorSDK({
+    const [sdk, setSdk] = useState(() => new BehaviorSDK({
         apiUrl: API_CONFIG.API_URL,
-        apiKey: API_CONFIG.API_KEY
+        apiKey: API_CONFIG.API_KEY,
+        offlineMode: false
     }));
+    
+    // Update SDK when offline mode changes
+    useEffect(() => {
+        setSdk(new BehaviorSDK({
+            apiUrl: API_CONFIG.API_URL,
+            apiKey: API_CONFIG.API_KEY,
+            offlineMode: offlineMode
+        }));
+    }, [offlineMode]);
     const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
     const [isScoring, setIsScoring] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [continuousAuth, setContinuousAuth] = useState(false);
+    const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+    const [scoreHistory, setScoreHistory] = useState<Array<{ timestamp: number; score: number }>>([]);
 
     useEffect(() => {
         return () => {
@@ -43,6 +56,31 @@ export default function TestPage() {
             }
         };
     }, [sdk, isCapturing]);
+    
+    // Continuous authentication - score updates every 30s
+    useEffect(() => {
+        if (!continuousAuth || !isCapturing || !userId || !currentSessionId) {
+            return;
+        }
+        
+        const interval = setInterval(async () => {
+            try {
+                const events = sdk.getEvents();
+                if (events.length > 10) { // Only score if we have enough events
+                    const result = await sdk.score(userId, currentSessionId, events);
+                    setScoreResult(result);
+                    setScoreHistory(prev => [...prev, {
+                        timestamp: Date.now(),
+                        score: result.trustScore
+                    }].slice(-20)); // Keep last 20 scores
+                }
+            } catch (error) {
+                console.error('Continuous auth scoring failed:', error);
+            }
+        }, 30000); // Every 30 seconds
+        
+        return () => clearInterval(interval);
+    }, [continuousAuth, isCapturing, userId, currentSessionId, sdk]);
 
     const handleStartCapture = async () => {
         if (!userId.trim()) {
@@ -51,9 +89,11 @@ export default function TestPage() {
         }
 
         const sessionId = `test-${userId}-${Date.now()}`;
+        setCurrentSessionId(sessionId);
         setIsCapturing(true);
         setErrorMessage('');
         setScoreResult(null);
+        setScoreHistory([]);
 
         try {
             await sdk.startSession(sessionId, userId);
@@ -146,27 +186,52 @@ export default function TestPage() {
             {/* Offline Mode Toggle */}
             <Card w="full" bg="brand.800" borderTop="4px" borderColor="accent.500">
                 <CardBody>
-                    <HStack justify="space-between">
-                        <VStack align="start" spacing={1}>
-                            <Text fontWeight="bold" color="white">Local Mode (Offline Scoring)</Text>
-                            <Text fontSize="sm" color="white">
-                                Compute trust score client-side using JS function
-                            </Text>
-                            {offlineMode && (
-                                <Alert status="warning" borderRadius="md" mt={2} fontSize="xs">
-                                    <AlertIcon />
-                                    <Text fontSize="xs">Offline mode not yet implemented. Still requires backend API.</Text>
-                                </Alert>
-                            )}
-                        </VStack>
-                        <Button
-                            colorScheme={offlineMode ? 'green' : 'gray'}
-                            onClick={() => setOfflineMode(!offlineMode)}
-                            size="sm"
-                        >
-                            {offlineMode ? 'Enabled ✓' : 'Disabled'}
-                        </Button>
-                    </HStack>
+                    <VStack spacing={4} align="stretch">
+                        <HStack justify="space-between">
+                            <VStack align="start" spacing={1}>
+                                <Text fontWeight="bold" color="white">Local Mode (Offline Scoring)</Text>
+                                <Text fontSize="sm" color="white">
+                                    Compute trust score client-side using JS function
+                                </Text>
+                                {offlineMode && (
+                                    <Alert status="success" borderRadius="md" mt={2} fontSize="xs">
+                                        <AlertIcon />
+                                        <Text fontSize="xs">✓ Offline mode enabled. Scoring happens client-side using localStorage.</Text>
+                                    </Alert>
+                                )}
+                            </VStack>
+                            <Button
+                                colorScheme={offlineMode ? 'green' : 'gray'}
+                                onClick={() => setOfflineMode(!offlineMode)}
+                                size="sm"
+                            >
+                                {offlineMode ? 'Enabled ✓' : 'Disabled'}
+                            </Button>
+                        </HStack>
+                        
+                        <HStack justify="space-between">
+                            <VStack align="start" spacing={1}>
+                                <Text fontWeight="bold" color="white">Continuous Authentication</Text>
+                                <Text fontSize="sm" color="white">
+                                    Automatically score every 30 seconds during active session
+                                </Text>
+                                {continuousAuth && isCapturing && (
+                                    <Alert status="info" borderRadius="md" mt={2} fontSize="xs">
+                                        <AlertIcon />
+                                        <Text fontSize="xs">🔄 Active: Trust score updates every 30s</Text>
+                                    </Alert>
+                                )}
+                            </VStack>
+                            <Button
+                                colorScheme={continuousAuth ? 'blue' : 'gray'}
+                                onClick={() => setContinuousAuth(!continuousAuth)}
+                                size="sm"
+                                isDisabled={!isCapturing}
+                            >
+                                {continuousAuth ? 'Active ✓' : 'Inactive'}
+                            </Button>
+                        </HStack>
+                    </VStack>
                 </CardBody>
             </Card>
 

@@ -29,6 +29,7 @@ import {
     Legend
 } from 'chart.js';
 import { API_CONFIG } from '../config';
+import TrustScoreHistory from '../components/TrustScoreHistory';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -246,6 +247,13 @@ export default function DashboardPage() {
                     </CardBody>
                 </Card>
             )}
+
+            {/* Trust Score History */}
+            <Card w="full">
+                <CardBody>
+                    <TrustScoreHistory />
+                </CardBody>
+            </Card>
 
             {/* AI Threat Report */}
             <Card w="full" bg="brand.800" borderTop="4px" borderColor="purple.500">

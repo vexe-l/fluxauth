@@ -9,6 +9,7 @@ import DocsPage from './pages/DocsPage';
 import TransparencyPage from './pages/TransparencyPage';
 import PolicyRulesPage from './pages/PolicyRulesPage';
 import ContextualRiskPage from './pages/ContextualRiskPage';
+import PrivacyPage from './pages/PrivacyPage';
 import GlassmorphismBackground from './components/GlassmorphismBackground';
 
 function App() {
@@ -60,6 +61,9 @@ function App() {
                                     <Button as={Link} to="/transparency" variant="ghost" size="sm">
                                         Fairness
                                     </Button>
+                                    <Button as={Link} to="/privacy" variant="ghost" size="sm">
+                                        Privacy
+                                    </Button>
                                     <Button as={Link} to="/policy" variant="ghost" size="sm">
                                         Policy
                                     </Button>
@@ -83,6 +87,7 @@ function App() {
                             <Route path="/test" element={<TestPage />} />
                             <Route path="/dashboard" element={<DashboardPage />} />
                             <Route path="/transparency" element={<TransparencyPage />} />
+                            <Route path="/privacy" element={<PrivacyPage />} />
                             <Route path="/policy" element={<PolicyRulesPage />} />
                             <Route path="/contextual-risk" element={<ContextualRiskPage />} />
                             <Route path="/docs" element={<DocsPage />} />

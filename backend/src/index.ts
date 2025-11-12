@@ -11,6 +11,7 @@ import enrollRoutes from './routes/enroll';
 import healthRoutes from './routes/health';
 import metricsRoutes from './routes/metrics';
 import aiRoutes from './routes/ai';
+import policyRoutes from './routes/policy';
 
 dotenv.config();
 
@@ -55,6 +56,9 @@ app.use('/api/metrics', metricsRoutes);
 
 // AI-powered analysis routes
 app.use('/api/ai', apiKeyAuth, aiRoutes);
+
+// Policy engine routes
+app.use('/api/policy', apiKeyAuth, policyRoutes);
 
 // Error handling
 app.use(errorHandler);

@@ -6,6 +6,8 @@ import { scoreVector } from '../features/scorer';
 import { BehaviorEvent, FeatureVector } from '../features/types';
 import { analyzeSessionWithAI, explainAnomalyToUser } from '../services/geminiService';
 import { metricsService } from '../services/metricsService';
+import { evaluatePolicies } from '../services/policyEngine';
+import { triggerWebhook } from '../services/webhookService';
 import crypto from 'crypto';
 
 const router = Router();
@@ -150,10 +152,53 @@ router.post('/score', async (req, res, next) => {
         // Log scoring result for metrics
         metricsService.logScore(result.isAnomaly);
 
+        // Evaluate policy rules
+        const policyAction = evaluatePolicies({
+            trustScore: result.trustScore,
+            isAnomaly: result.isAnomaly,
+            isBot: result.isBot,
+            userId,
+            sessionId
+        });
+
+        // Trigger webhooks
+        if (result.isAnomaly) {
+            await triggerWebhook('anomaly_detected', {
+                userId,
+                sessionId,
+                trustScore: result.trustScore,
+                isAnomaly: true,
+                policyAction
+            });
+        }
+
+        if (result.trustScore < 40) {
+            await triggerWebhook('trust_score_low', {
+                userId,
+                sessionId,
+                trustScore: result.trustScore,
+                isAnomaly: result.isAnomaly,
+                policyAction
+            });
+        }
+
+        await triggerWebhook('session_scored', {
+            userId,
+            sessionId,
+            trustScore: result.trustScore,
+            isAnomaly: result.isAnomaly,
+            policyAction
+        });
+
         res.json({
             ...result,
             aiAnalysis,
-            aiExplanation
+            aiExplanation,
+            policyAction: policyAction ? {
+                type: policyAction.type,
+                message: policyAction.message,
+                severity: policyAction.severity
+            } : null
         });
     } catch (error) {
         next(error);

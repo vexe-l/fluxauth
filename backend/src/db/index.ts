@@ -47,6 +47,19 @@ export function initDatabase() {
 
     CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
     CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);
+
+    CREATE TABLE IF NOT EXISTS policy_rules (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      condition TEXT NOT NULL,
+      action TEXT NOT NULL,
+      enabled INTEGER NOT NULL DEFAULT 1,
+      priority INTEGER NOT NULL DEFAULT 0,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_policy_rules_enabled ON policy_rules(enabled, priority);
   `);
 
     console.log('✅ Database initialized');

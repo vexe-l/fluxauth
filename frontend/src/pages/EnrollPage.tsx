@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Box,
     Heading,
@@ -17,8 +17,9 @@ import {
     Badge,
     HStack
 } from '@chakra-ui/react';
-import { BehaviorSDK } from '../sdk/browser';
+import { BehaviorSDK, BehaviorEvent } from '../sdk/browser';
 import { API_CONFIG } from '../config';
+import TypingVisualization from '../components/TypingVisualization';
 
 const PROMPTS = [
     'The quick brown fox jumps over the lazy dog.',
@@ -38,6 +39,37 @@ export default function EnrollPage() {
     }));
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [isEnrolling, setIsEnrolling] = useState(false);
+    const [liveEvents, setLiveEvents] = useState<BehaviorEvent[]>([]);
+    
+    // Load saved progress from localStorage
+    useEffect(() => {
+        if (userId) {
+            const saved = localStorage.getItem(`enroll_progress_${userId}`);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.userId === userId) {
+                        setSessions(data.sessions || []);
+                        setCurrentPrompt(data.currentPrompt || 0);
+                    }
+                } catch (e) {
+                    // Ignore parse errors
+                }
+            }
+        }
+    }, [userId]);
+    
+    // Save progress to localStorage
+    const saveProgress = () => {
+        if (userId) {
+            localStorage.setItem(`enroll_progress_${userId}`, JSON.stringify({
+                sessions,
+                currentPrompt,
+                userId
+            }));
+        }
+    };
 
     const handleStartCapture = async () => {
         if (!userId.trim()) {
@@ -46,11 +78,12 @@ export default function EnrollPage() {
         }
 
         const sessionId = `enroll-${userId}-${currentPrompt}-${Date.now()}`;
-        setIsCapturing(true);
         setError('');
 
         try {
             await sdk.startSession(sessionId, userId);
+            setIsCapturing(true);
+            setLiveEvents([]); // Reset visualization
         } catch (err) {
             setError('Failed to start session');
             setIsCapturing(false);
@@ -58,30 +91,76 @@ export default function EnrollPage() {
     };
 
     const handleCompletePrompt = () => {
-        sdk.endSession();
-        const events = sdk.getEvents();
+        try {
+            sdk.endSession();
+            const events = sdk.getEvents();
+            
+            if (events.length === 0) {
+                setError('No typing data captured. Please try again.');
+                setIsCapturing(false);
+                return;
+            }
 
-        setSessions([...sessions, {
-            sessionId: `enroll-${userId}-${currentPrompt}`,
-            events
-        }]);
+            const newSessions = [...sessions, {
+                sessionId: `enroll-${userId}-${currentPrompt}`,
+                events
+            }];
+            setSessions(newSessions);
+            saveProgress();
 
-        sdk.clearEvents();
-        setIsCapturing(false);
+            sdk.clearEvents();
+            setIsCapturing(false);
+            setLiveEvents([]); // Clear visualization
 
-        if (currentPrompt < PROMPTS.length - 1) {
-            setCurrentPrompt(currentPrompt + 1);
-        } else {
-            handleEnroll();
+            if (currentPrompt < PROMPTS.length - 1) {
+                setCurrentPrompt(currentPrompt + 1);
+            } else {
+                handleEnroll();
+            }
+        } catch (err) {
+            setError('Failed to complete prompt. Your progress has been saved.');
+            setIsCapturing(false);
         }
     };
 
     const handleEnroll = async () => {
+        if (sessions.length < 4) {
+            setError('Please complete all 4 prompts before enrolling.');
+            return;
+        }
+        
+        setIsEnrolling(true);
+        setError('');
+        
         try {
             await sdk.enroll(userId, sessions);
+            // Clear saved progress on success
+            localStorage.removeItem(`enroll_progress_${userId}`);
             setSuccess(true);
         } catch (err) {
-            setError('Enrollment failed. Please try again.');
+            const errorMessage = err instanceof Error ? err.message : 'Enrollment failed. Your progress has been saved.';
+            setError(`${errorMessage} You can retry from where you left off.`);
+            // Progress is already saved, user can continue
+        } finally {
+            setIsEnrolling(false);
+        }
+    };
+    
+    const handleRetry = () => {
+        setError('');
+        // Sessions are already saved, user can continue from current prompt
+    };
+    
+    const handleReset = () => {
+        if (confirm('Reset enrollment? All progress will be lost.')) {
+            setSessions([]);
+            setCurrentPrompt(0);
+            setError('');
+            setIsCapturing(false);
+            sdk.clearEvents();
+            if (userId) {
+                localStorage.removeItem(`enroll_progress_${userId}`);
+            }
         }
     };
 
@@ -111,7 +190,17 @@ export default function EnrollPage() {
             {error && (
                 <Alert status="error" borderRadius="md" color="red.900">
                     <AlertIcon />
-                    {error}
+                    <Box>
+                        <Text>{error}</Text>
+                        <HStack mt={2}>
+                            <Button size="sm" onClick={handleRetry}>
+                                Continue
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={handleReset}>
+                                Reset
+                            </Button>
+                        </HStack>
+                    </Box>
                 </Alert>
             )}
 
@@ -151,7 +240,19 @@ export default function EnrollPage() {
                             placeholder="Type the prompt here..."
                             rows={3}
                             isDisabled={!isCapturing}
+                            onKeyDown={() => {
+                                // Update live events for visualization
+                                if (isCapturing) {
+                                    const currentEvents = sdk.getEvents();
+                                    setLiveEvents([...currentEvents]);
+                                }
+                            }}
                         />
+                        
+                        {/* Real-time Typing Visualization */}
+                        {isCapturing && (
+                            <TypingVisualization events={liveEvents} isActive={isCapturing} />
+                        )}
 
                         {!isCapturing ? (
                             <Button
@@ -167,8 +268,20 @@ export default function EnrollPage() {
                                 colorScheme="green"
                                 onClick={handleCompletePrompt}
                                 w="full"
+                                isLoading={isEnrolling}
                             >
                                 Complete Prompt
+                            </Button>
+                        )}
+                        
+                        {sessions.length > 0 && (
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={handleReset}
+                                colorScheme="red"
+                            >
+                                Reset Enrollment
                             </Button>
                         )}
 
