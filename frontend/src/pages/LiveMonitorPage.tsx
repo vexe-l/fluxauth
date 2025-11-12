@@ -35,35 +35,79 @@ interface LiveSession {
 }
 
 export default function LiveMonitorPage() {
-    const [sessions, setSessions] = useState<LiveSession[]>([
-        {
-            sessionId: 'sess-001',
-            userId: 'user-alice',
-            trustScore: 92,
-            status: 'verified',
-            startTime: new Date(Date.now() - 120000),
-            keystrokes: 234,
-            mouseEvents: 89
-        },
-        {
-            sessionId: 'sess-002',
-            userId: 'user-bob',
-            trustScore: 45,
-            status: 'suspicious',
-            startTime: new Date(Date.now() - 45000),
-            keystrokes: 89,
-            mouseEvents: 12
-        },
-        {
-            sessionId: 'sess-003',
-            userId: 'user-charlie',
-            trustScore: 88,
-            status: 'active',
-            startTime: new Date(Date.now() - 30000),
-            keystrokes: 156,
-            mouseEvents: 67
-        }
-    ]);
+    const [sessions, setSessions] = useState<LiveSession[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [useDemoData, setUseDemoData] = useState(false);
+
+    // Fetch real sessions from backend
+    useEffect(() => {
+        const fetchSessions = async () => {
+            try {
+                const response = await fetch('/api/sessions/recent', {
+                    headers: {
+                        'x-api-key': 'dev_key_12345'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.sessions && data.sessions.length > 0) {
+                        setSessions(data.sessions.map((s: any) => ({
+                            sessionId: s.session_id,
+                            userId: s.user_id || 'anonymous',
+                            trustScore: s.trust_score || 0,
+                            status: s.is_anomaly ? 'suspicious' : 'verified',
+                            startTime: new Date(s.created_at),
+                            keystrokes: s.events ? JSON.parse(s.events).filter((e: any) => e.type.includes('key')).length : 0,
+                            mouseEvents: s.events ? JSON.parse(s.events).filter((e: any) => e.type === 'mousemove').length : 0
+                        })));
+                        setUseDemoData(false);
+                    } else {
+                        // No real data, use demo
+                        setUseDemoData(true);
+                        loadDemoData();
+                    }
+                } else {
+                    // Backend error, use demo
+                    setUseDemoData(true);
+                    loadDemoData();
+                }
+            } catch (error) {
+                // Network error, use demo
+                setUseDemoData(true);
+                loadDemoData();
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        const loadDemoData = () => {
+            setSessions([
+                {
+                    sessionId: 'demo-001',
+                    userId: 'demo-alice',
+                    trustScore: 92,
+                    status: 'verified',
+                    startTime: new Date(Date.now() - 120000),
+                    keystrokes: 234,
+                    mouseEvents: 89
+                },
+                {
+                    sessionId: 'demo-002',
+                    userId: 'demo-bob',
+                    trustScore: 45,
+                    status: 'suspicious',
+                    startTime: new Date(Date.now() - 45000),
+                    keystrokes: 89,
+                    mouseEvents: 12
+                }
+            ]);
+        };
+
+        fetchSessions();
+        const interval = setInterval(fetchSessions, 5000); // Refresh every 5s
+        return () => clearInterval(interval);
+    }, []);
 
     const [stats, setStats] = useState({
         activeSessions: 3,
@@ -91,14 +135,20 @@ export default function LiveMonitorPage() {
             <Box textAlign="center">
                 <HStack justify="center" mb={2}>
                     <Heading size="lg" color="navy.500">Real-Time Behavioral Monitor</Heading>
-                    <Badge colorScheme="yellow" fontSize="sm">Demo Mode</Badge>
+                    {useDemoData ? (
+                        <Badge colorScheme="yellow" fontSize="sm">Demo Mode</Badge>
+                    ) : (
+                        <Badge colorScheme="green" fontSize="sm">Live Data</Badge>
+                    )}
                 </HStack>
                 <Text color="gray.600" mt={2}>
                     Live tracking of typing/mouse rhythm with trust meter updates
                 </Text>
-                <Text fontSize="sm" color="orange.600" mt={1}>
-                    ⚠️ Showing simulated data for demonstration
-                </Text>
+                {useDemoData && (
+                    <Text fontSize="sm" color="orange.600" mt={1}>
+                        ⚠️ No real sessions yet - showing demo data. Complete enrollment to see real data!
+                    </Text>
+                )}
             </Box>
 
             {/* Stats Grid */}

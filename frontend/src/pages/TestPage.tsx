@@ -63,6 +63,11 @@ export default function TestPage() {
         }
     };
 
+    const handleAttack = asnc() => {
+        sdk.SimulateAttack();
+        
+    }
+
     const handleScore = async () => {
         sdk.endSession();
         setIsCapturing(false);

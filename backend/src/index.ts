@@ -46,6 +46,7 @@ app.use('/api/health', healthRoutes);
 
 // Protected routes (require API key)
 app.use('/api/session', apiKeyAuth, sessionRoutes);
+app.use('/api/sessions', apiKeyAuth, sessionRoutes); // Also mount on /sessions for GET routes
 app.use('/api/enroll', apiKeyAuth, enrollRoutes);
 
 // Public metrics routes (transparency)

@@ -38,31 +38,70 @@ interface Session {
 }
 
 export default function DashboardPage() {
-    const [sessions] = useState<Session[]>([
-        {
-            sessionId: 'demo-1',
-            userId: 'user-123',
-            trustScore: 88,
-            isAnomaly: false,
-            timestamp: new Date().toISOString()
-        },
-        {
-            sessionId: 'demo-2',
-            userId: 'user-123',
-            trustScore: 35,
-            isAnomaly: true,
-            timestamp: new Date(Date.now() - 300000).toISOString()
-        },
-        {
-            sessionId: 'demo-3',
-            userId: 'bot-detected',
-            trustScore: 12,
-            isAnomaly: true,
-            timestamp: new Date(Date.now() - 600000).toISOString()
-        }
-    ]);
-
+    const [sessions, setSessions] = useState<Session[]>([]);
     const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSessions = async () => {
+            try {
+                const response = await fetch('/api/sessions/recent?limit=20', {
+                    headers: {
+                        'x-api-key': 'dev_key_12345'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const formattedSessions = data.sessions.map((s: any) => ({
+                        sessionId: s.session_id,
+                        userId: s.user_id || 'anonymous',
+                        trustScore: s.trust_score || 0,
+                        isAnomaly: s.is_anomaly === 1,
+                        timestamp: new Date(s.scored_at || s.created_at).toISOString()
+                    }));
+
+                    if (formattedSessions.length > 0) {
+                        setSessions(formattedSessions);
+                    } else {
+                        // Load demo data if no real sessions
+                        setSessions([
+                            {
+                                sessionId: 'demo-1',
+                                userId: 'demo-user',
+                                trustScore: 88,
+                                isAnomaly: false,
+                                timestamp: new Date().toISOString()
+                            },
+                            {
+                                sessionId: 'demo-2',
+                                userId: 'demo-user',
+                                trustScore: 35,
+                                isAnomaly: true,
+                                timestamp: new Date(Date.now() - 300000).toISOString()
+                            }
+                        ]);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch sessions:', error);
+                // Load demo data on error
+                setSessions([
+                    {
+                        sessionId: 'demo-1',
+                        userId: 'demo-user',
+                        trustScore: 88,
+                        isAnomaly: false,
+                        timestamp: new Date().toISOString()
+                    }
+                ]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchSessions();
+    }, []);
 
     useEffect(() => {
         if (sessions.length > 0) {

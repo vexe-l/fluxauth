@@ -52,6 +52,25 @@ router.post('/start', (req, res, next) => {
     }
 });
 
+// GET /api/sessions/recent - Get recent sessions for live monitoring
+router.get('/recent', (req, res, next) => {
+    try {
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const sessions = db.prepare(`
+            SELECT session_id, user_id, trust_score, is_anomaly, events, created_at, scored_at
+            FROM sessions
+            WHERE scored_at IS NOT NULL
+            ORDER BY scored_at DESC
+            LIMIT ?
+        `).all(limit);
+
+        res.json({ sessions });
+    } catch (error) {
+        next(error);
+    }
+});
+
 // POST /api/session/score
 router.post('/score', (req, res, next) => {
     try {
