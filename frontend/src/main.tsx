@@ -76,13 +76,13 @@ const theme = extendTheme({
             baseStyle: {
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                 fontWeight: 700,
-                color: 'white',
+                color: 'white !important',
                 letterSpacing: '-0.02em'
             }
         },
         Text: {
             baseStyle: {
-                color: '#e2e8f0'
+                color: 'white'
             }
         },
         Button: {
